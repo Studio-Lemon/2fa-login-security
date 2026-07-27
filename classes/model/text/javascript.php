@@ -19,7 +19,7 @@ class Model_JavaScript
 	 */
 	public static function esc_js($content)
 	{
-		if (is_object($content) && ($content instanceof Model_HTML)) {
+		if ($content instanceof Model_HTML) {
 			return (string) $content;
 		}
 
@@ -30,7 +30,7 @@ class Model_JavaScript
 		return apply_filters('js_escape', $safe_text, $content);
 	}
 
-	public static function echo_string_literal($string)
+	public static function echo_string_literal($string): void
 	{
 		echo "'" . self::esc_js($string) . "'";
 	}
@@ -40,7 +40,7 @@ class Model_JavaScript
 		$this->_javaScript = $javaScript;
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->_javaScript;
 	}

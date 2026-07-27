@@ -12,7 +12,7 @@ class Model_HTML
 
 	public static function esc_html($content)
 	{
-		if (is_object($content) && ($content instanceof Model_HTML)) {
+		if ($content instanceof Model_HTML) {
 			return (string) $content;
 		}
 		return esc_html($content);
@@ -23,7 +23,7 @@ class Model_HTML
 		$this->_html = $html;
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->_html;
 	}

@@ -12,7 +12,7 @@ class Utility_Sleep
 	 * 
 	 * @param int|float $seconds
 	 */
-	public static function sleep($seconds)
+	public static function sleep($seconds): void
 	{
 		if ($seconds >= 1) {
 			sleep((int) $seconds);

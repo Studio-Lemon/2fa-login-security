@@ -18,10 +18,10 @@ class Utility_URL
 		$url = admin_url($path);
 		$components = parse_url($url);
 		$s = $components['path'];
-		if (!empty($components['query'])) {
+		if (isset($components['query']) && ($components['query'] !== '' && $components['query'] !== '0')) {
 			$s .= '?' . $components['query'];
 		}
-		if (!empty($components['fragment'])) {
+		if (isset($components['fragment']) && ($components['fragment'] !== '' && $components['fragment'] !== '0')) {
 			$s .= '#' . $components['fragment'];
 		}
 		return $s;

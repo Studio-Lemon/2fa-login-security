@@ -6,7 +6,7 @@ class Utility_MultisiteConfigurationExtractor
 {
 
 	private $prefix, $suffix;
-	private $suffixOffset;
+	private float|int $suffixOffset;
 
 	public function __construct($prefix, $suffix)
 	{
@@ -16,50 +16,47 @@ class Utility_MultisiteConfigurationExtractor
 	}
 
 	/**
-	 * Parses a `get_user_meta` result array into a more usable format. The input array will be something similar to
-	 * [
-	 * 		'wp_capabilities' => '...',
-	 * 		'wp_3_capabilities' => '...',
-	 * 		'wp_4_capabilities' => '...',
-	 * 		'wp_10_capabilities' => '...',
-	 * ]
-	 * 
-	 * This will return
-	 * [
-	 * 		1 => '...',
-	 * 		3 => '...',
-	 * 		4 => '...',
-	 * 		10 => '...',
-	 * ]
-	 * 
-	 * @param array $values
-	 * @return array
-	 */
-	private function parseBlogIds($values)
+  * Parses a `get_user_meta` result array into a more usable format. The input array will be something similar to
+  * [
+  * 		'wp_capabilities' => '...',
+  * 		'wp_3_capabilities' => '...',
+  * 		'wp_4_capabilities' => '...',
+  * 		'wp_10_capabilities' => '...',
+  * ]
+  *
+  * This will return
+  * [
+  * 		1 => '...',
+  * 		3 => '...',
+  * 		4 => '...',
+  * 		10 => '...',
+  * ]
+  *
+  * @param array $values
+  */
+ private function parseBlogIds($values): array
 	{
 		$parsed = array();
 		foreach ($values as $key => $value) {
 			if (substr($key, $this->suffixOffset) === $this->suffix->string && strpos($key, (string) $this->prefix) === 0) {
 				$blogId = substr($key, $this->prefix->length, strlen($key) - $this->prefix->length + $this->suffixOffset);
-				if (empty($blogId)) {
-					$parsed[1] = $value;
-				} else if (substr($blogId, -1) === '_') {
-					$parsed[(int) $blogId] = $value;
-				}
+				if ($blogId === '' || $blogId === '0') {
+        $parsed[1] = $value;
+    } elseif (substr($blogId, -1) === '_') {
+        $parsed[(int) $blogId] = $value;
+    }
 			}
 		}
 		return $parsed;
 	}
 
 	/**
-	 * Filters $values, which is the resulting array from `$this->parseBlogIds` so it contains only the values for the
-	 * sites in $sites.
-	 * 
-	 * @param array $values
-	 * @param array $sites
-	 * @return array
-	 */
-	private function filterValues($values, $sites)
+  * Filters $values, which is the resulting array from `$this->parseBlogIds` so it contains only the values for the
+  * sites in $sites.
+  *
+  * @param array $sites
+  */
+ private function filterValues(array $values, $sites): array
 	{
 		$filtered = array();
 		foreach ($sites as $site) {
@@ -79,8 +76,9 @@ class Utility_MultisiteConfigurationExtractor
 	public function extract($values)
 	{
 		$parsed = $this->parseBlogIds($values);
-		if (empty($parsed))
-			return $parsed;
+		if (empty($parsed)) {
+      return $parsed;
+  }
 		$sites = Utility_Multisite::retrieve_active_sites(array_keys($parsed));
 		return $this->filterValues($parsed, $sites);
 	}

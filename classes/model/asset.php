@@ -21,12 +21,13 @@ abstract class Model_Asset
 
 	public function getSourceUrl()
 	{
-		if (empty($this->source))
-			return null;
-		$url = $this->source;
-		if (is_string($this->version))
-			$url = add_query_arg('ver', $this->version, $this->source);
-		return $url;
+		if (empty($this->source)) {
+      return null;
+  }
+  if (is_string($this->version)) {
+      return add_query_arg('ver', $this->version, $this->source);
+  }
+  return $this->source;
 	}
 
 	public abstract function enqueue();
@@ -35,10 +36,11 @@ abstract class Model_Asset
 
 	public abstract function renderInline();
 
-	public function renderInlineIfNotEnqueued()
+	public function renderInlineIfNotEnqueued(): void
 	{
-		if (!$this->isEnqueued())
-			$this->renderInline();
+		if (!$this->isEnqueued()) {
+      $this->renderInline();
+  }
 	}
 
 	public function setRegistered()
@@ -52,17 +54,17 @@ abstract class Model_Asset
 		return $this->setRegistered();
 	}
 
-	public static function js($file)
+	public static function js(string $file)
 	{
 		return self::_pluginBaseURL() . 'js/' . $file;
 	}
 
-	public static function css($file)
+	public static function css(string $file)
 	{
 		return self::_pluginBaseURL() . 'css/' . $file;
 	}
 
-	public static function img($file)
+	public static function img(string $file)
 	{
 		return self::_pluginBaseURL() . 'img/' . $file;
 	}

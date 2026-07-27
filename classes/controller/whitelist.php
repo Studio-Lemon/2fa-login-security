@@ -4,8 +4,6 @@ namespace TFAuthLS;
 
 class Controller_Whitelist
 {
-	private $_cachedStatus = array();
-
 	/**
 	 * Returns the singleton Controller_Whitelist.
 	 *
@@ -20,7 +18,7 @@ class Controller_Whitelist
 		return $_shared;
 	}
 
-	public function is_whitelisted($ip)
+	public function is_whitelisted($ip): bool
 	{
 		return false;
 	}
@@ -33,84 +31,85 @@ class Controller_Whitelist
 	 */
 	public function ip_in_range($ip, $range)
 	{
-		if (strpos($range, '/') !== false) { //CIDR range -- 127.0.0.1/24
-			return $this->_cidr_contains_ip($range, $ip);
-		} else if (strpos($range, '[') !== false) { //Bracketed range -- 127.0.0.[1-100]
-			// IPv4 range
-			if (strpos($range, '.') !== false && strpos($ip, '.') !== false) {
-				// IPv4-mapped-IPv6
-				if (preg_match('/:ffff:([^:]+)$/i', $range, $matches)) {
-					$range = $matches[1];
-				}
-				if (preg_match('/:ffff:([^:]+)$/i', $ip, $matches)) {
-					$ip = $matches[1];
-				}
-
-				// Range check
-				if (preg_match('/\[\d+\-\d+\]/', $range)) {
-					$ipParts = explode('.', $ip);
-					$whiteParts = explode('.', $range);
-					$mismatch = false;
-					if (count($whiteParts) != 4 || count($ipParts) != 4) {
-						return false;
-					}
-
-					for ($i = 0; $i <= 3; $i++) {
-						if (preg_match('/^\[(\d+)\-(\d+)\]$/', $whiteParts[$i], $m)) {
-							if ($ipParts[$i] < $m[1] || $ipParts[$i] > $m[2]) {
-								$mismatch = true;
-							}
-						} else if ($whiteParts[$i] != $ipParts[$i]) {
-							$mismatch = true;
-						}
-					}
-					if ($mismatch === false) {
-						return true; // Is whitelisted because we did not get a mismatch
-					}
-				} else if ($range == $ip) {
-					return true;
-				}
-
-				// IPv6 range
-			} else if (strpos($range, ':') !== false && strpos($ip, ':') !== false) {
-				$ip = strtolower(Model_IP::expand_ipv6_address($ip));
-				$range = strtolower($this->_expand_ipv6_range($range));
-				if (preg_match('/\[[a-f0-9]+\-[a-f0-9]+\]/i', $range)) {
-					$IPparts = explode(':', $ip);
-					$whiteParts = explode(':', $range);
-					$mismatch = false;
-					if (count($whiteParts) != 8 || count($IPparts) != 8) {
-						return false;
-					}
-
-					for ($i = 0; $i <= 7; $i++) {
-						if (preg_match('/^\[([a-f0-9]+)\-([a-f0-9]+)\]$/i', $whiteParts[$i], $m)) {
-							$ip_group = hexdec($IPparts[$i]);
-							$range_group_from = hexdec($m[1]);
-							$range_group_to = hexdec($m[2]);
-							if ($ip_group < $range_group_from || $ip_group > $range_group_to) {
-								$mismatch = true;
-								break;
-							}
-						} else if ($whiteParts[$i] != $IPparts[$i]) {
-							$mismatch = true;
-							break;
-						}
-					}
-					if ($mismatch === false) {
-						return true; // Is whitelisted because we did not get a mismatch
-					}
-				} else if ($range == $ip) {
-					return true;
-				}
-			}
-		} else if (strpos($range, '-') !== false) { //Linear range -- 127.0.0.1 - 127.0.1.100
-			list($ip1, $ip2) = explode('-', $range);
-			$ip1N = Model_IP::inet_pton($ip1);
-			$ip2N = Model_IP::inet_pton($ip2);
-			$ipN = Model_IP::inet_pton($ip);
-			return (strcmp($ip1N, $ipN) <= 0 && strcmp($ip2N, $ipN) >= 0);
-		} else { //Treat as a literal IP
+		if (strpos($range, '/') !== false) {
+      //CIDR range -- 127.0.0.1/24
+      return $this->_cidr_contains_ip($range, $ip);
+  }
+  if (strpos($range, '[') !== false) { //Bracketed range -- 127.0.0.[1-100]
+   // IPv4 range
+   if (strpos($range, '.') !== false && strpos($ip, '.') !== false) {
+       // IPv4-mapped-IPv6
+       if (preg_match('/:ffff:([^:]+)$/i', $range, $matches)) {
+   					$range = $matches[1];
+   				}
+       if (preg_match('/:ffff:([^:]+)$/i', $ip, $matches)) {
+   					$ip = $matches[1];
+   				}
+       // Range check
+       if (preg_match('/\[\d+\-\d+\]/', $range)) {
+           $ipParts = explode('.', $ip);
+           $whiteParts = explode('.', $range);
+           $mismatch = false;
+           if (count($whiteParts) != 4 || count($ipParts) != 4) {
+      						return false;
+      					}
+           for ($i = 0; $i <= 3; $i++) {
+      						if (preg_match('/^\[(\d+)\-(\d+)\]$/', $whiteParts[$i], $m)) {
+                if ($ipParts[$i] < $m[1] || $ipParts[$i] > $m[2]) {
+         								$mismatch = true;
+         							}
+            } elseif ($whiteParts[$i] !== $ipParts[$i]) {
+                $mismatch = true;
+            }
+      					}
+           if ($mismatch === false) {
+      						return true; // Is whitelisted because we did not get a mismatch
+      					}
+       } elseif ($range == $ip) {
+           return true;
+       }
+       // IPv6 range
+   } elseif (strpos($range, ':') !== false && strpos($ip, ':') !== false) {
+       $ip = strtolower(Model_IP::expand_ipv6_address($ip));
+       $range = strtolower($this->_expand_ipv6_range($range));
+       if (preg_match('/\[[a-f0-9]+\-[a-f0-9]+\]/i', $range)) {
+           $IPparts = explode(':', $ip);
+           $whiteParts = explode(':', $range);
+           $mismatch = false;
+           if (count($whiteParts) != 8 || count($IPparts) != 8) {
+      						return false;
+      					}
+           for ($i = 0; $i <= 7; $i++) {
+      						if (preg_match('/^\[([a-f0-9]+)\-([a-f0-9]+)\]$/i', $whiteParts[$i], $m)) {
+                $ip_group = hexdec($IPparts[$i]);
+                $range_group_from = hexdec($m[1]);
+                $range_group_to = hexdec($m[2]);
+                if ($ip_group < $range_group_from || $ip_group > $range_group_to) {
+         								$mismatch = true;
+         								break;
+         							}
+            } elseif ($whiteParts[$i] !== $IPparts[$i]) {
+                $mismatch = true;
+                break;
+            }
+      					}
+           if ($mismatch === false) {
+      						return true; // Is whitelisted because we did not get a mismatch
+      					}
+       } elseif ($range === $ip) {
+           return true;
+       }
+   }
+		}
+  elseif (strpos($range, '-') !== false) {
+      //Linear range -- 127.0.0.1 - 127.0.1.100
+      list($ip1, $ip2) = explode('-', $range);
+      $ip1N = Model_IP::inet_pton($ip1);
+      $ip2N = Model_IP::inet_pton($ip2);
+      $ipN = Model_IP::inet_pton($ip);
+      return (strcmp($ip1N, $ipN) <= 0 && strcmp($ip2N, $ipN) >= 0);
+  }
+  else { //Treat as a literal IP
 			$ip1 = Model_IP::inet_pton($range);
 			$ip2 = Model_IP::inet_pton($ip);
 			if ($ip1 !== false && $ip1 === $ip2) {
@@ -166,8 +165,8 @@ class Controller_Whitelist
 		if ($prefix % 8 != 0) { //Adjust the last relevant character to fit the mask length since the character's bits are split over it
 			$pos = intval($prefix / 8);
 			$adjustment = chr(((0xff << (8 - ($prefix % 8))) & 0xff));
-			$bin_network[$pos] = ($bin_network[$pos] & $adjustment);
-			$bin_ip[$pos] = ($bin_ip[$pos] & $adjustment);
+			$bin_network[$pos] &= $adjustment;
+			$bin_ip[$pos] &= $adjustment;
 		}
 
 		return ($bin_network === $bin_ip);
@@ -179,7 +178,7 @@ class Controller_Whitelist
 	 * @param string $range
 	 * @return string
 	 */
-	protected function _expand_ipv6_range($range)
+	protected function _expand_ipv6_range($range): false|string
 	{
 		$colon_count = substr_count($range, ':');
 		$dbl_colon_count = substr_count($range, '::');
@@ -200,10 +199,10 @@ class Controller_Whitelist
 		$expanded = '';
 		foreach ($groups as $group) {
 			if (preg_match('/\[([a-f0-9]{1,4})\-([a-f0-9]{1,4})\]/i', $group, $matches)) {
-				$expanded .= sprintf('[%s-%s]', str_pad(strtolower($matches[1]), 4, '0', STR_PAD_LEFT), str_pad(strtolower($matches[2]), 4, '0', STR_PAD_LEFT)) . ':';
-			} else if (preg_match('/[a-f0-9]{1,4}/i', $group)) {
-				$expanded .= str_pad(strtolower($group), 4, '0', STR_PAD_LEFT) . ':';
-			} else {
+       $expanded .= sprintf('[%s-%s]', str_pad(strtolower($matches[1]), 4, '0', STR_PAD_LEFT), str_pad(strtolower($matches[2]), 4, '0', STR_PAD_LEFT)) . ':';
+   } elseif (preg_match('/[a-f0-9]{1,4}/i', $group)) {
+       $expanded .= str_pad(strtolower($group), 4, '0', STR_PAD_LEFT) . ':';
+   } else {
 				return false;
 			}
 		}
@@ -214,11 +213,20 @@ class Controller_Whitelist
 	 * @return bool
 	 */
 	public function is_valid_range($range)
-	{
-		return $this->_is_valid_cidr_range($range) || $this->_is_valid_bracketed_range($range) || $this->_is_valid_linear_range($range) || Model_IP::is_valid_ip($range);
-	}
+ {
+     if ($this->_is_valid_cidr_range($range)) {
+         return true;
+     }
+     if ($this->_is_valid_bracketed_range($range)) {
+         return true;
+     }
+     if ($this->_is_valid_linear_range($range)) {
+         return true;
+     }
+     return Model_IP::is_valid_ip($range);
+ }
 
-	protected function _is_valid_cidr_range($range)
+	protected function _is_valid_cidr_range($range): bool
 	{ //e.g., 192.0.2.1/24
 		if (preg_match('/[^0-9a-f:\/\.]/i', $range)) {
 			return false;
@@ -238,14 +246,12 @@ class Controller_Whitelist
 		}
 
 		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-			if ($prefix < 0 || $prefix > 32) {
-				return false;
-			}
-		} else {
-			if ($prefix < 1 || $prefix > 128) {
-				return false;
-			}
-		}
+      if ($prefix < 0 || $prefix > 32) {
+   				return false;
+   			}
+  } elseif ($prefix < 1 || $prefix > 128) {
+      return false;
+  }
 
 		return true;
 	}
@@ -265,7 +271,7 @@ class Controller_Whitelist
 				}
 			}
 
-			$group_regex = '([0-9]{1,3}|\[[0-9]{1,3}\-[0-9]{1,3}\])';
+			$group_regex = '(\d{1,3}|\[\d{1,3}\-\d{1,3}\])';
 			return preg_match('/^' . str_repeat("{$group_regex}\\.", 3) . $group_regex . '$/i', $range) > 0;
 		}
 
@@ -311,11 +317,6 @@ class Controller_Whitelist
 		$ipv6Count = 0;
 		$ipv6Count += filter_var($ip1, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ? 1 : 0;
 		$ipv6Count += filter_var($ip2, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ? 1 : 0;
-
-		if ($ipv4Count != 2 && $ipv6Count != 2) {
-			return true;
-		}
-
-		return false;
+  return $ipv4Count != 2 && $ipv6Count != 2;
 	}
 }

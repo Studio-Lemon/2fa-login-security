@@ -4,10 +4,7 @@ namespace TFAuthLS;
 
 class Model_View
 {
-	/**
-	 * @var string
-	 */
-	protected $path;
+	protected string $path;
 
 	/**
 	 * @var string
@@ -25,13 +22,12 @@ class Model_View
 	protected $data;
 
 	/**
-	 * Equivalent to the constructor but allows for call chaining.
-	 * 
-	 * @param string $view
-	 * @param array $data
-	 * @return Model_View
-	 */
-	public static function create($view, $data = array())
+  * Equivalent to the constructor but allows for call chaining.
+  *
+  * @param string $view
+  * @param array $data
+  */
+ public static function create($view, $data = array()): self
 	{
 		return new self($view, $data);
 	}
@@ -51,7 +47,7 @@ class Model_View
 	 * @return string
 	 * @throws ViewNotFoundException
 	 */
-	public function render()
+	public function render(): string|false
 	{
 		$view = preg_replace('/\.{2,}/', '.', $this->view);
 		$path = $this->path . '/' . $view . $this->file_extension;
@@ -67,10 +63,7 @@ class Model_View
 		return ob_get_clean();
 	}
 
-	/**
-	 * @return string
-	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		try {
 			return $this->render();
@@ -83,7 +76,7 @@ class Model_View
 	 * @param $data
 	 * @return $this
 	 */
-	public function addData($data)
+	public function addData($data): static
 	{
 		$this->data = array_merge($data, $this->data);
 		return $this;
@@ -101,7 +94,7 @@ class Model_View
 	 * @param array $data
 	 * @return $this
 	 */
-	public function setData($data)
+	public function setData($data): static
 	{
 		$this->data = $data;
 		return $this;
@@ -119,7 +112,7 @@ class Model_View
 	 * @param string $view
 	 * @return $this
 	 */
-	public function setView($view)
+	public function setView($view): static
 	{
 		$this->view = $view;
 		return $this;

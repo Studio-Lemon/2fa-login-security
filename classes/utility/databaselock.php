@@ -12,29 +12,31 @@ class Utility_DatabaseLock implements Utility_Lock
 
 	private $wpdb;
 	private $table;
-	private $key;
+	private string $key;
 	private $timeout;
-	private $expirationTimestamp;
+	private int|float|null $expirationTimestamp = null;
 
 	public function __construct($dbController, $key, $timeout = null)
 	{
 		$this->wpdb = $dbController->get_wpdb();
 		$this->table = $dbController->settings;
 		$this->key = "lock:{$key}";
-		$this->timeout = self::resolveTimeout($timeout);
+		$this->timeout = $this->resolveTimeout($timeout);
 	}
 
-	private static function resolveTimeout($timeout)
+	private function resolveTimeout($timeout): int
 	{
-		if ($timeout === null)
-			$timeout = ini_get('max_execution_time');
+		if ($timeout === null) {
+      $timeout = ini_get('max_execution_time');
+  }
 		$timeout = (int) $timeout;
-		if ($timeout <= 0 || $timeout > self::MAX_TIMEOUT)
-			return self::DEFAULT_TIMEOUT;
+		if ($timeout <= 0 || $timeout > self::MAX_TIMEOUT) {
+      return self::DEFAULT_TIMEOUT;
+  }
 		return $timeout;
 	}
 
-	private function clearExpired($timestamp)
+	private function clearExpired(int $timestamp): void
 	{
 		$this->wpdb->query($this->wpdb->prepare(
 			<<<SQL
@@ -49,7 +51,7 @@ SQL,
 		));
 	}
 
-	private function insert($expirationTimestamp)
+	private function insert(int|float $expirationTimestamp): bool
 	{
 		$result = $this->wpdb->query($this->wpdb->prepare(
 			<<<SQL
@@ -64,7 +66,7 @@ SQL,
 		return $result === 1;
 	}
 
-	public function acquire($delay = self::DEFAULT_DELAY)
+	public function acquire($delay = self::DEFAULT_DELAY): void
 	{
 		$attempts = (int) ($this->timeout * 1000000 / $delay);
 		for (; $attempts > 0; $attempts--) {
@@ -81,7 +83,7 @@ SQL,
 		throw new RuntimeException("Failed to acquire lock {$this->key}");
 	}
 
-	private function delete($expirationTimestamp)
+	private function delete($expirationTimestamp): void
 	{
 		$this->wpdb->delete(
 			$this->table,
@@ -96,10 +98,11 @@ SQL,
 		);
 	}
 
-	public function release()
+	public function release(): void
 	{
-		if ($this->expirationTimestamp === null)
-			return;
+		if ($this->expirationTimestamp === null) {
+      return;
+  }
 		$this->delete($this->expirationTimestamp);
 		$this->expirationTimestamp = null;
 	}

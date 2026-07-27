@@ -12,9 +12,7 @@ class Controller_TFAuthLS
 {
 	const VERSION_KEY = 'TFA_LS_version';
 	const USERS_PER_PAGE = 25;
-
-	private $management_assets_registered = false;
-	private $management_assets_enqueued = false;
+	private bool $management_assets_enqueued = false;
 
 	/**
 	 * Returns the singleton Controller_Wordfence2FA.
@@ -30,7 +28,7 @@ class Controller_TFAuthLS
 		return $_shared;
 	}
 
-	public function init()
+	public function init(): void
 	{
 		$this->_init_actions();
 		Controller_AJAX::shared()->init();
@@ -78,21 +76,19 @@ class Controller_TFAuthLS
 		Controller_Permissions::_init_actions();
 	}
 
-	public function _wordpress_init()
+	public function _wordpress_init(): void
 	{
 		load_plugin_textdomain('2fa-login-security', false, TFA_LS_PATH . 'languages');
 	}
 
-	public function _admin_init()
+	public function _admin_init(): void
 	{
-		if (Controller_Permissions::shared()->can_manage_settings()) {
-			if ((is_plugin_active('jetpack/jetpack.php') || (is_multisite() && is_plugin_active_for_network('jetpack/jetpack.php'))) && !Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_XML_RPC)) {
-				if (is_multisite()) {
+		if (Controller_Permissions::shared()->can_manage_settings() && ((is_plugin_active('jetpack/jetpack.php') || (is_multisite() && is_plugin_active_for_network('jetpack/jetpack.php'))) && !Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_XML_RPC))) {
+			if (is_multisite()) {
 					add_action('network_admin_notices', array($this, '_jetpack_xml_rpc_notice'));
 				} else {
 					add_action('admin_notices', array($this, '_jetpack_xml_rpc_notice'));
 				}
-			}
 		}
 	}
 
@@ -100,7 +96,7 @@ class Controller_TFAuthLS
 	 * Notices
 	 */
 
-	public function _jetpack_xml_rpc_notice()
+	public function _jetpack_xml_rpc_notice(): void
 	{
 		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf(/* translators: Configuration URL */__('XML-RPC authentication is disabled. Jetpack is currently active and requires XML-RPC authentication to work correctly. <a href="%s">Manage Settings</a>', '2fa-login-security'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), array('a' => array('href' => array()))) . '</p></div>';
 	}
@@ -109,12 +105,12 @@ class Controller_TFAuthLS
 	 * Installation/Uninstallation
 	 */
 
-	public function _install_plugin()
+	public function _install_plugin(): void
 	{
 		$this->_install();
 	}
 
-	public function _uninstall_plugin()
+	public function _uninstall_plugin(): void
 	{
 		Controller_Time::shared()->uninstall();
 		Controller_Permissions::shared()->uninstall();
@@ -149,7 +145,7 @@ class Controller_TFAuthLS
 			define('DONOTCACHEDB', true);
 		}
 
-		$previousVersion = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, self::VERSION_KEY, '0.0.0') : get_option(self::VERSION_KEY, '0.0.0'));
+		(is_multisite() && function_exists('get_network_option')) ? get_network_option(null, self::VERSION_KEY, '0.0.0') : get_option(self::VERSION_KEY, '0.0.0');
 		if (is_multisite() && function_exists('update_network_option')) {
 			update_network_option(null, self::VERSION_KEY, TFA_LS_VERSION); //In case we have a fatal error we don't want to keep running install.	
 		} else {
@@ -169,18 +165,18 @@ class Controller_TFAuthLS
 		$this->purge_rewrite_rules();
 	}
 
-	private function purge_rewrite_rules()
+	private function purge_rewrite_rules(): void
 	{
 		// This is usually done internally in WP_Rewrite::flush_rules, but is followed there by WP_Rewrite::wp_rewrite_rules which repopulates it. This should cause it to be repopulated on the next request.
 		update_option('rewrite_rules', '');
 	}
 
-	public function refresh_rewrite_rules()
+	public function refresh_rewrite_rules(): void
 	{
 		flush_rewrite_rules();
 	}
 
-	public function _block_xml_rpc()
+	public function _block_xml_rpc(): bool
 	{
 		/**
 		 * Fires just prior to blocking an XML-RPC request. After firing this action hook the XML-RPC request is blocked.
@@ -194,11 +190,11 @@ class Controller_TFAuthLS
 	/**
 	 * Login Page
 	 */
-	public function _login_enqueue_scripts()
+	public function _login_enqueue_scripts(): void
 	{
 		$useCAPTCHA = false;
 
-		if ($useCAPTCHA || Controller_Users::shared()->any_2fa_active()) {
+		if (Controller_Users::shared()->any_2fa_active()) {
 			$this->validate_email_verification_token(null, $verification);
 
 			Model_Script::create('wordfence-ls-login', Model_Asset::js('login.js'), array('jquery'), TFA_LS_VERSION)
@@ -230,7 +226,7 @@ class Controller_TFAuthLS
 		}
 	}
 
-	private function get_2fa_management_script_data()
+	private function get_2fa_management_script_data(): array
 	{
 		return array(
 			'WFLSVars' => array(
@@ -244,7 +240,7 @@ class Controller_TFAuthLS
 		);
 	}
 
-	private function get_2fa_management_assets($embedded = false)
+	private function get_2fa_management_assets($embedded = false): array
 	{
 		$assets = array(
 			Model_Script::create('wordfence-ls-jquery.qrcode', Model_Asset::js('jquery.qrcode.min.js'), array('jquery'), TFA_LS_VERSION),
@@ -264,7 +260,7 @@ class Controller_TFAuthLS
 		return $assets;
 	}
 
-	private function enqueue_2fa_management_assets($embedded = false)
+	private function enqueue_2fa_management_assets($embedded = false): void
 	{
 		if ($this->management_assets_enqueued) {
 			return;
@@ -283,7 +279,7 @@ class Controller_TFAuthLS
 	/**
 	 * Admin Pages
 	 */
-	public function _admin_enqueue_scripts($hookSuffix)
+	public function _admin_enqueue_scripts($hookSuffix): void
 	{
 		if (isset($_GET['page']) && $_GET['page'] == 'WFLS') {
 			$this->enqueue_2fa_management_assets();
@@ -301,7 +297,7 @@ class Controller_TFAuthLS
 		}
 	}
 
-	public function _save_settings_form()
+	public function _save_settings_form(): void
 	{
 		if (!current_user_can(Controller_Permissions::CAP_MANAGE_SETTINGS)) {
 			wp_die(esc_html__('You do not have permission to change options.', '2fa-login-security'));
@@ -363,7 +359,7 @@ class Controller_TFAuthLS
 		exit;
 	}
 
-	public function _edit_user_profile($user)
+	public function _edit_user_profile($user): void
 	{
 		if ($user->ID == get_current_user_id() || !current_user_can(Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS)) {
 			$manageURL = admin_url('admin.php?page=WFLS');
@@ -384,7 +380,7 @@ class Controller_TFAuthLS
 		$requires2fa = Controller_Users::shared()->requires_2fa($user, $inGracePeriod, $requiredAt);
 		$has2fa = Controller_Users::shared()->has_2fa_active($user);
 		$lockedOut = $requires2fa && !$has2fa;
-		$hasGracePeriod = Controller_Settings::shared()->get_user_2fa_grace_period() > 0;
+		Controller_Settings::shared()->get_user_2fa_grace_period();
 		if ($userAllowed2fa && ($viewerIsUser || $viewerCanManage2fa)):
 ?>
 			<h2 id="wfls-user-settings"><?php esc_html_e('2FA Login Security', '2fa-login-security'); ?></h2>
@@ -451,8 +447,7 @@ class Controller_TFAuthLS
 			return $user;
 		}
 
-		$isLogin = !(defined('TFA_LS_AUTHENTICATION_CHECK') && TFA_LS_AUTHENTICATION_CHECK); //Checking for the purpose of prompting for 2FA, don't enforce it here
-		$isCombinedCheck = (defined('TFA_LS_CHECKING_COMBINED') && TFA_LS_CHECKING_COMBINED);
+		$isLogin = !(defined('TFA_LS_AUTHENTICATION_CHECK') && TFA_LS_AUTHENTICATION_CHECK);
 		$combinedTwoFactor = false;
 
 		/*
@@ -469,17 +464,19 @@ class Controller_TFAuthLS
 				$combinedRecoveryRegex = '/(?<! wf)((?:[a-f0-9]{4}\s*){4})$/i';
 			}
 
-			if (preg_match($combinedTOTPRegex, $password, $matches)) { //Possible TOTP code
-				if (strlen($password) > strlen($matches[1])) {
-					$revisedPassword = substr($password, 0, strlen($password) - strlen($matches[1]));
-					$code = $matches[1];
-				}
-			} else if (preg_match($combinedRecoveryRegex, $password, $matches)) { //Possible recovery code
-				if (strlen($password) > strlen($matches[1])) {
-					$revisedPassword = substr($password, 0, strlen($password) - strlen($matches[1]));
-					$code = $matches[1];
-				}
-			}
+			if (preg_match($combinedTOTPRegex, $password, $matches)) {
+       //Possible TOTP code
+       if (strlen($password) > strlen($matches[1])) {
+   					$revisedPassword = substr($password, 0, strlen($password) - strlen($matches[1]));
+   					$code = $matches[1];
+   				}
+   } elseif (preg_match($combinedRecoveryRegex, $password, $matches)) {
+       //Possible recovery code
+       if (strlen($password) > strlen($matches[1])) {
+   					$revisedPassword = substr($password, 0, strlen($password) - strlen($matches[1]));
+   					$code = $matches[1];
+   				}
+   }
 
 			if (isset($revisedPassword)) {
 				define('TFA_LS_CHECKING_COMBINED', true); //Avoid recursing into this block
@@ -487,7 +484,7 @@ class Controller_TFAuthLS
 					define('TFA_LS_AUTHENTICATION_CHECK', true);
 				}
 				$revisedUser = wp_authenticate($username, $revisedPassword);
-				if (is_object($revisedUser) && ($revisedUser instanceof \WP_User) && Controller_TOTP::shared()->validate_2fa($revisedUser, $code, $isLogin)) {
+				if ($revisedUser instanceof \WP_User && Controller_TOTP::shared()->validate_2fa($revisedUser, $code, $isLogin)) {
 					define('TFA_LS_COMBINED_IS_VALID', true); //This will cause the front-end to skip the 2FA prompt
 					$user = $revisedUser;
 					$combinedTwoFactor = true;
@@ -495,39 +492,39 @@ class Controller_TFAuthLS
 			}
 		}
 
-		if (!$combinedTwoFactor) {
-			if ($isLogin && $user instanceof \WP_User) {
-				if (Controller_Users::shared()->has_2fa_active($user)) {
-					if (Controller_Users::shared()->has_remembered_2fa($user)) {
-						return $user;
-					} elseif (array_key_exists('wfls-token', $_POST)) {
-						if (is_string($_POST['wfls-token']) && Controller_TOTP::shared()->validate_2fa($user, $_POST['wfls-token'])) {
-							return $user;
-						} else {
-							return new \WP_Error('wfls_twofactor_failed', wp_kses(__('<strong>CODE INVALID</strong>: The 2FA code provided is either expired or invalid. Please try again.', '2fa-login-security'), array('strong' => array())));
-						}
-					}
-				}
-				$in2faGracePeriod = false;
-				$time2faRequired = null;
-				if (Controller_Users::shared()->has_2fa_active($user)) {
-					$legacy2FAActive = Controller_TFAuthLS::shared()->legacy_2fa_active();
-					if ($legacy2FAActive) {
-						return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field.', '2fa-login-security'), array('strong' => array())));
-					}
-					return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted.', '2fa-login-security'), array('strong' => array())));
-				} else if (Controller_Users::shared()->requires_2fa($user, $in2faGracePeriod, $time2faRequired)) {
-					return new \WP_Error('wfls_twofactor_blocked', wp_kses(__('<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your account. Please contact the site administrator.', '2fa-login-security'), array('strong' => array())));
-				} else if ($in2faGracePeriod) {
-					Controller_Notices::shared()->add_notice(Model_Notice::SEVERITY_CRITICAL, new Model_HTML(wp_kses(sprintf(/* translators: 1. Date; 2. Configuration URL */__('You do not currently have two-factor authentication active on your account, which will be required beginning %1$s. <a href="%2$s">Configure 2FA</a>', '2fa-login-security'), Controller_Time::format_local_time('F j, Y g:i A', $time2faRequired), esc_url((is_multisite() && is_super_admin($user->ID)) ? network_admin_url('admin.php?page=WFLS') : admin_url('admin.php?page=WFLS'))), array('a' => array('href' => array())))), 'wfls-will-be-required', $user);
-				}
-			}
-		}
+		if (!$combinedTwoFactor && ($isLogin && $user instanceof \WP_User)) {
+      if (Controller_Users::shared()->has_2fa_active($user)) {
+          if (Controller_Users::shared()->has_remembered_2fa($user)) {
+              return $user;
+          }
+          if (array_key_exists('wfls-token', $_POST)) {
+              if (is_string($_POST['wfls-token']) && Controller_TOTP::shared()->validate_2fa($user, $_POST['wfls-token'])) {
+        							return $user;
+        						}
+              return new \WP_Error('wfls_twofactor_failed', wp_kses(__('<strong>CODE INVALID</strong>: The 2FA code provided is either expired or invalid. Please try again.', '2fa-login-security'), array('strong' => array())));
+          }
+      }
+      $in2faGracePeriod = false;
+      $time2faRequired = null;
+      if (Controller_Users::shared()->has_2fa_active($user)) {
+          $legacy2FAActive = Controller_TFAuthLS::shared()->legacy_2fa_active();
+          if ($legacy2FAActive) {
+     						return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field.', '2fa-login-security'), array('strong' => array())));
+     					}
+          return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted.', '2fa-login-security'), array('strong' => array())));
+      }
+      if (Controller_Users::shared()->requires_2fa($user, $in2faGracePeriod, $time2faRequired)) {
+          return new \WP_Error('wfls_twofactor_blocked', wp_kses(__('<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your account. Please contact the site administrator.', '2fa-login-security'), array('strong' => array())));
+      }
+      if ($in2faGracePeriod) {
+          Controller_Notices::shared()->add_notice(Model_Notice::SEVERITY_CRITICAL, new Model_HTML(wp_kses(sprintf(/* translators: 1. Date; 2. Configuration URL */__('You do not currently have two-factor authentication active on your account, which will be required beginning %1$s. <a href="%2$s">Configure 2FA</a>', '2fa-login-security'), Controller_Time::format_local_time('F j, Y g:i A', $time2faRequired), esc_url((is_multisite() && is_super_admin($user->ID)) ? network_admin_url('admin.php?page=WFLS') : admin_url('admin.php?page=WFLS'))), array('a' => array('href' => array())))), 'wfls-will-be-required', $user);
+      }
+  }
 
 		return $user;
 	}
 
-	public function _set_logged_in_cookie($logged_in_cookie, $expire, $expiration, $user_id)
+	public function _set_logged_in_cookie($logged_in_cookie, $expire, $expiration, $user_id): void
 	{
 		$user = new \WP_User($user_id);
 		if (Controller_Users::shared()->has_2fa_active($user) && isset($_POST['wfls-remember-device']) && $_POST['wfls-remember-device']) {
@@ -535,24 +532,25 @@ class Controller_TFAuthLS
 		}
 	}
 
-	public function _record_login($user_login/*, $user -- we'd like to use the second parameter instead, but too many plugins call this hook and only provide one of the two required parameters*/)
+	public function _record_login($user_login/*, $user -- we'd like to use the second parameter instead, but too many plugins call this hook and only provide one of the two required parameters*/): void
 	{
 		$user = get_user_by('login', $user_login);
-		if (is_object($user) && $user instanceof \WP_User && $user->exists()) {
+		if ($user instanceof \WP_User && $user->exists()) {
 			update_user_meta($user->ID, 'wfls-last-login', Controller_Time::time());
 		}
 	}
 
-	public function _register_post($sanitized_user_login, $user_email, $errors)
+	public function _register_post($sanitized_user_login, $user_email, $errors): void
 	{
 		// CAPTCHA checks have been removed from registration flow.
 	}
 
-	private function validate_email_verification_token($user = null, &$token = null)
+	private function validate_email_verification_token($user = null, &$token = null): ?bool
 	{
 		$token = isset($_REQUEST['wfls-email-verification']) ? $_REQUEST['wfls-email-verification'] : null;
-		if (empty($token))
-			return null;
+		if (empty($token)) {
+      return null;
+  }
 		return is_string($token) && Controller_Users::shared()->validate_verification_token($token, $user);
 	}
 
@@ -575,7 +573,7 @@ class Controller_TFAuthLS
 		return $errors;
 	}
 
-	public function legacy_2fa_active()
+	public function legacy_2fa_active(): bool
 	{
 		return false;
 	}
@@ -584,7 +582,7 @@ class Controller_TFAuthLS
 	 * Menu
 	 */
 
-	public function _admin_menu()
+	public function _admin_menu(): void
 	{
 		$user = wp_get_current_user();
 		if (Controller_Notices::shared()->has_notice($user)) {
@@ -608,7 +606,7 @@ class Controller_TFAuthLS
 		add_menu_page(__('Login Security', '2fa-login-security'), __('Login Security', '2fa-login-security'), Controller_Permissions::CAP_ACTIVATE_2FA_SELF, 'WFLS', array($this, '_menu'), Model_Asset::img('menu.svg'));
 	}
 
-	public function _menu()
+	public function _menu(): void
 	{
 		$user = wp_get_current_user();
 		$administrator = false;
@@ -650,10 +648,11 @@ class Controller_TFAuthLS
 				$page = isset($_GET[$pageKey]) ? max((int) $_GET[$pageKey], 1) : 1;
 				$title = $state['title'];
 				$lastPage = true;
-				if ($requiredAt === false)
-					$users = array();
-				else
-					$users = Controller_Users::shared()->get_inactive_2fa_users($roleKey, $state['gracePeriod'], $page, self::USERS_PER_PAGE, $lastPage);
+				if ($requiredAt === false) {
+        $users = array();
+    } else {
+        $users = Controller_Users::shared()->get_inactive_2fa_users($roleKey, $state['gracePeriod'], $page, self::USERS_PER_PAGE, $lastPage);
+    }
 				$sections[] = array(
 					'tab' => new Model_Tab($key, $key, $title, $title),
 					'title' => new Model_Title($key, sprintf(/* translators: User count */__('Users without 2FA active (%s)', '2fa-login-security'), $title) . ' - ' . $roleTitle),
@@ -698,18 +697,21 @@ class Controller_TFAuthLS
 		echo $view->render();
 	}
 
-	public function _user_new_form()
+	public function _user_new_form(): void
 	{
-		if (Controller_Settings::shared()->get_user_2fa_grace_period())
-			echo Model_View::create('user/grace-period-toggle', array())->render();
+		if (Controller_Settings::shared()->get_user_2fa_grace_period()) {
+      echo Model_View::create('user/grace-period-toggle', array())->render();
+  }
 	}
 
-	public function _user_register($newUserId)
+	public function _user_register($newUserId): void
 	{
 		$creator = wp_get_current_user();
-		if (!Controller_Permissions::shared()->can_manage_settings($creator) || $creator->ID == $newUserId)
-			return;
-		if (isset($_POST['wfls-grace-period-toggle']))
-			Controller_Users::shared()->allow_grace_period($newUserId);
+		if (!Controller_Permissions::shared()->can_manage_settings($creator) || $creator->ID == $newUserId) {
+      return;
+  }
+		if (isset($_POST['wfls-grace-period-toggle'])) {
+      Controller_Users::shared()->allow_grace_period($newUserId);
+  }
 	}
 }

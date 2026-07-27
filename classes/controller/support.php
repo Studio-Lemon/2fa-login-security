@@ -44,7 +44,7 @@ class Controller_Support
 		return esc_url(self::supportURL($item));
 	}
 
-	public static function supportURL($item = self::ITEM_INDEX)
+	public static function supportURL(string $item = self::ITEM_INDEX): string
 	{
 		$base = 'https://wordpress.org/plugins/2fa-login-security/';
 		switch ($item) {

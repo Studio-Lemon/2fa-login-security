@@ -74,7 +74,7 @@ class Controller_Settings
 	 * Returns a key/value array of all defaults. The value is the storage-ready value (e.g., a JSON string for array
 	 * settings).
 	 */
-	protected function _defaults()
+	protected function _defaults(): array
 	{
 		return array(
 			self::OPTION_XMLRPC_ENABLED => true,
@@ -102,10 +102,10 @@ class Controller_Settings
 		);
 	}
 
-	public function set_defaults()
+	public function set_defaults(): void
 	{
 		$defaults = $this->_defaults();
-		$defaults = array_column(array_map(function ($k, $v) {
+		$defaults = array_column(array_map(function ($k, $v): array {
 			return array('k' => $k, 'v' => array(
 				'value' => $v,
 				'autoload' => Model_Settings::AUTOLOAD_YES,
@@ -120,7 +120,7 @@ class Controller_Settings
 		return $this->set_multiple(array($key => $value), $already_validated);
 	}
 
-	public function set_multiple($changes, $already_validated = false)
+	public function set_multiple($changes, $already_validated = false): bool
 	{
 		if (!$already_validated && $this->validate_multiple($changes) !== true) {
 			return false;
@@ -141,12 +141,12 @@ class Controller_Settings
 		return Utility_Number::truthyToBool($this->get($key, $default));
 	}
 
-	public function get_int($key, $default = 0)
+	public function get_int($key, $default = 0): int
 	{
 		return intval($this->get($key, $default));
 	}
 
-	public function get_float($key, $default = 0.0)
+	public function get_float($key, $default = 0.0): float
 	{
 		return (float) $this->get($key, $default);
 	}
@@ -154,15 +154,11 @@ class Controller_Settings
 	public function get_array($key, $default = array())
 	{
 		$value = $this->get($key, null);
-		if (is_string($value)) {
-			$value = @json_decode($value, true);
-		} else {
-			$value = null;
-		}
+		$value = is_string($value) ? @json_decode($value, true) : null;
 		return is_array($value) ? $value : $default;
 	}
 
-	public function remove($key)
+	public function remove($key): void
 	{
 		$this->_settingsStorage->remove($key);
 	}
@@ -212,8 +208,8 @@ class Controller_Settings
 
 				//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
-				$value = !is_string($value) ? '' : $value;
-				$parsed = array_filter(array_map(function ($s) {
+				$value = is_string($value) ? $value : '';
+				$parsed = array_filter(array_map(function ($s): string {
 					return trim($s);
 				}, preg_split('/[\r\n]/', $value)));
 				foreach ($parsed as $entry) {
@@ -254,7 +250,7 @@ class Controller_Settings
 			}
 		}
 
-		if (!empty($errors)) {
+		if ($errors !== []) {
 			return $errors;
 		}
 
@@ -298,8 +294,8 @@ class Controller_Settings
 
 				//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
-				$value = !is_string($value) ? '' : $value;
-				$parsed = array_filter(array_map(function ($s) {
+				$value = is_string($value) ? $value : '';
+				$parsed = array_filter(array_map(function ($s): string {
 					return trim($s);
 				}, preg_split('/[\r\n]/', $value)));
 				$cleaned = array();
@@ -351,15 +347,18 @@ class Controller_Settings
 
 				//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
-				$value = !is_string($value) ? '' : $value;
-				return implode("\n", array_filter(array_map(function ($s) {
+				$value = is_string($value) ? $value : '';
+				return implode("\n", array_filter(array_map(function ($s): string {
 					return trim($s);
 				}, preg_split('/[\r\n]/', $value))));
 		}
 		return $value;
 	}
 
-	public function clean_multiple($changes)
+	/**
+  * @return mixed[]
+  */
+ public function clean_multiple($changes): array
 	{
 		$cleaned = array();
 		foreach ($changes as $key => $value) {
@@ -368,7 +367,7 @@ class Controller_Settings
 		return $cleaned;
 	}
 
-	private function get_required_2fa_role_key($role)
+	private function get_required_2fa_role_key($role): string
 	{
 		return implode('.', array(self::OPTION_PREFIX_REQUIRED_2FA_ROLE, $role));
 	}
@@ -376,8 +375,9 @@ class Controller_Settings
 	public function get_required_2fa_role_activation_time($role)
 	{
 		$time = $this->get_int($this->get_required_2fa_role_key($role), -1);
-		if ($time < 0)
-			return false;
+		if ($time < 0) {
+      return false;
+  }
 		return $time;
 	}
 
@@ -387,23 +387,22 @@ class Controller_Settings
 	}
 
 	/**
-	 * Preprocesses the value, returning true if it was saved here (e.g., saved 2fa enabled by assigning a role 
-	 * capability) or false if it is to be saved by the backing storage.
-	 * 
-	 * @param string $key
-	 * @param mixed $value
-	 * @param array &$settings the array of settings to process, this function may append additional values from preprocessing
-	 * @return bool
-	 */
-	public function preprocess($key, $value, &$settings)
+  * Preprocesses the value, returning true if it was saved here (e.g., saved 2fa enabled by assigning a role
+  * capability) or false if it is to be saved by the backing storage.
+  *
+  * @param string $key
+  * @param mixed $value
+  * @param array &$settings the array of settings to process, this function may append additional values from preprocessing
+  */
+ public function preprocess($key, $value, array &$settings): bool
 	{
 		if (preg_match('/^enabled-roles\.(.+)$/', $key, $matches)) { //Enabled roles are stored as capabilities rather than in the settings storage
 			$role = $matches[1];
 			if ($role === 'super-admin') {
-				$roleValid = true;
-			} else if (in_array($value, array(self::STATE_2FA_OPTIONAL, self::STATE_2FA_REQUIRED))) {
-				$roleValid = Controller_Permissions::shared()->allow_2fa_self($role);
-			} else {
+       $roleValid = true;
+   } elseif (in_array($value, array(self::STATE_2FA_OPTIONAL, self::STATE_2FA_REQUIRED))) {
+       $roleValid = Controller_Permissions::shared()->allow_2fa_self($role);
+   } else {
 				$roleValid = Controller_Permissions::shared()->disallow_2fa_self($role);
 			}
 
@@ -466,7 +465,7 @@ class Controller_Settings
 				$before = $this->trusted_proxies();
 				$after = explode("\n", $value); //Already cleaned here so just re-split
 
-				if (count($before) == count($after) && empty(array_diff($before, $after))) {
+				if (count($before) === count($after) && array_diff($before, $after) === []) {
 					/**
 					 * Fires when the trusted proxy list changes.
 					 *
@@ -527,17 +526,14 @@ class Controller_Settings
 	}
 
 	/**
-	 * Convenience
-	 */
-
-	/**
-	 * Returns a cleaned array containing the trusted proxy entries.
-	 *
-	 * @return array
-	 */
-	public function trusted_proxies()
+  * Convenience
+  */
+ /**
+  * Returns a cleaned array containing the trusted proxy entries.
+  */
+ public function trusted_proxies(): array
 	{
-		return array_filter(array_map(function ($s) {
+		return array_filter(array_map(function ($s): string {
 			return trim($s);
 		}, preg_split('/[\r\n]/', $this->get(self::OPTION_IP_TRUSTED_PROXIES, ''))));
 	}
@@ -547,56 +543,59 @@ class Controller_Settings
 		return $this->get_int(self::OPTION_NTP_FAILURE_COUNT, 0);
 	}
 
-	public function reset_ntp_failure_count()
+	public function reset_ntp_failure_count(): void
 	{
 		$this->set(self::OPTION_NTP_FAILURE_COUNT, 0);
 	}
 
-	public function increment_ntp_failure_count()
+	public function increment_ntp_failure_count(): false|int|float
 	{
 		$count = $this->get_ntp_failure_count();
-		if ($count < 0)
-			return false;
+		if ($count < 0) {
+      return false;
+  }
 		$count++;
 		$this->set(self::OPTION_NTP_FAILURE_COUNT, $count);
 		return $count;
 	}
 
-	public function is_ntp_disabled_via_constant()
+	public function is_ntp_disabled_via_constant(): bool
 	{
 		return defined('TFA_LS_DISABLE_NTP') && TFA_LS_DISABLE_NTP;
 	}
 
 	public function is_ntp_enabled($requireOffset = true)
 	{
-		if ($this->is_ntp_cron_disabled())
-			return false;
+		if ($this->is_ntp_cron_disabled()) {
+      return false;
+  }
 		if ($this->get_bool(self::OPTION_USE_NTP, true)) {
 			if ($requireOffset) {
 				$offset = $this->get(self::OPTION_NTP_OFFSET, null);
 				return $offset !== null && abs((int)$offset) <= Controller_TOTP::TIME_WINDOW_LENGTH;
-			} else {
-				return true;
 			}
+   return true;
 		}
 		return false;
 	}
 
-	public function is_ntp_cron_disabled(&$failureCount = null)
+	public function is_ntp_cron_disabled(&$failureCount = null): bool
 	{
-		if ($this->is_ntp_disabled_via_constant())
-			return true;
+		if ($this->is_ntp_disabled_via_constant()) {
+      return true;
+  }
 		$failureCount = $this->get_ntp_failure_count();
-		if ($failureCount >= Controller_Time::FAILURE_LIMIT) {
-			return true;
-		} else if ($failureCount < 0) {
-			$failureCount = 0;
-			return true;
-		}
+  if ($failureCount >= Controller_Time::FAILURE_LIMIT) {
+      return true;
+  }
+		if ($failureCount < 0) {
+      $failureCount = 0;
+      return true;
+  }
 		return false;
 	}
 
-	public function disable_ntp_cron()
+	public function disable_ntp_cron(): void
 	{
 		$this->set(self::OPTION_NTP_FAILURE_COUNT, -1);
 	}
@@ -612,49 +611,31 @@ class Controller_Settings
 	}
 
 	/**
-	 * Utility
-	 */
-
-	/**
-	 * Parses the given time string and returns its DateTime with the server's configured time zone.
-	 * 
-	 * @param string $timestring
-	 * @return \DateTime
-	 */
-	protected function _parse_local_time($timestring)
+  * Utility
+  */
+ /**
+  * Parses the given time string and returns its DateTime with the server's configured time zone.
+  *
+  * @param string $timestring
+  */
+ protected function _parse_local_time($timestring): \DateTime
 	{
-		$utc = new \DateTimeZone('UTC');
+		new \DateTimeZone('UTC');
 		$tz = get_option('timezone_string');
 		if (!empty($tz)) {
 			$tz = new \DateTimeZone($tz);
 			return new \DateTime($timestring, $tz);
-		} else {
-			$gmt = get_option('gmt_offset');
-			if (!empty($gmt)) {
-				if (PHP_VERSION_ID < 50510) {
-					$timestamp = strtotime($timestring);
-					$dtStr = gmdate("c", (int) ($timestamp + $gmt * 3600)); //Have to do it this way because of < PHP 5.5.10
-					return new \DateTime($dtStr, $utc);
-				} else {
-					$direction = ($gmt > 0 ? '+' : '-');
-					$gmt = abs($gmt);
-					$h = (int) $gmt;
-					$m = ($gmt - $h) * 60;
-					$tz = new \DateTimeZone($direction . str_pad($h, 2, '0', STR_PAD_LEFT) . str_pad($m, 2, '0', STR_PAD_LEFT));
-					return new \DateTime($timestring, $tz);
-				}
-			}
 		}
+  get_option('gmt_offset');
 		return new \DateTime($timestring);
 	}
 
 	/**
-	 * Cleans a user-entered IP range of unnecessary characters and normalizes some glyphs.
-	 *
-	 * @param string $range
-	 * @return string
-	 */
-	protected function _sanitize_ip_range($range)
+  * Cleans a user-entered IP range of unnecessary characters and normalizes some glyphs.
+  *
+  * @param string $range
+  */
+ protected function _sanitize_ip_range($range): string
 	{
 		$range = preg_replace('/\s/', '', $range); //Strip whitespace
 		$range = preg_replace('/[\\x{2013}-\\x{2015}]/u', '-', $range); //Non-hyphen dashes to hyphen
@@ -670,10 +651,11 @@ class Controller_Settings
 		return $range;
 	}
 
-	private function _migrate_admin_2fa_requirements_to_roles()
+	private function _migrate_admin_2fa_requirements_to_roles(): void
 	{
-		if (!$this->get_bool(self::OPTION_REQUIRE_2FA_ADMIN))
-			return;
+		if (!$this->get_bool(self::OPTION_REQUIRE_2FA_ADMIN)) {
+      return;
+  }
 		$time = time();
 		if (is_multisite()) {
 			$this->set($this->get_required_2fa_role_key('super-admin'), $time, true);
@@ -691,7 +673,7 @@ class Controller_Settings
 		$this->remove(self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED);
 	}
 
-	public function reset_ntp_disabled_flag()
+	public function reset_ntp_disabled_flag(): void
 	{
 		$this->remove(self::OPTION_USE_NTP);
 		$this->remove(self::OPTION_NTP_OFFSET);

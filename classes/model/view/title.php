@@ -25,7 +25,7 @@ class Model_Title
 		$this->_helpLink = $helpLink;
 	}
 
-	public function __get($name)
+	public function __get(string $name)
 	{
 		switch ($name) {
 			case 'id':

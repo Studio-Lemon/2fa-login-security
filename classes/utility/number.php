@@ -4,13 +4,15 @@ namespace TFAuthLS;
 
 class Utility_Number
 {
-	public static function isInteger($value, $min = null, $max = null)
+	public static function isInteger($value, $min = null, $max = null): bool
 	{
 		$options = array();
-		if ($min !== null)
-			$options['min_range'] = $min;
-		if ($max !== null)
-			$options['max_range'] = $max;
+		if ($min !== null) {
+      $options['min_range'] = $min;
+  }
+		if ($max !== null) {
+      $options['max_range'] = $max;
+  }
 		return filter_var($value, FILTER_VALIDATE_INT, array('options' => $options)) !== false;
 	}
 
@@ -36,12 +38,13 @@ class Utility_Number
 		}
 
 		if (is_numeric($value)) {
-			return !!$value;
+			return (bool) $value;
 		}
+  if (preg_match('/^(?:f(?:alse)?|no?|off)$/i', $value)) {
+      return false;
+  }
 
-		if (preg_match('/^(?:f(?:alse)?|no?|off)$/i', $value)) {
-			return false;
-		} else if (preg_match('/^(?:t(?:rue)?|y(?:es)?|on)$/i', $value)) {
+		if (preg_match('/^(?:t(?:rue)?|y(?:es)?|on)$/i', $value)) {
 			return true;
 		}
 

@@ -11,12 +11,12 @@ class Model_Request
 
 	private $_cachedIP;
 
-	public static function current()
+	public static function current(): \TFAuthLS\Model_Request
 	{
 		return new Model_Request();
 	}
 
-	public function detected_ip_preview($source = null, $trusted_proxies = null)
+	public function detected_ip_preview($source = null, $trusted_proxies = null): array|false
 	{
 		if ($source === null) {
 			$source = Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE);
@@ -29,11 +29,7 @@ class Model_Request
 				$items = preg_replace('/[\s,]/', '', explode(',', $_SERVER[$variable]));
 				$output = array();
 				foreach ($items as $i) {
-					if ($ip == $i) {
-						$output[] = array('ip' => $i, 'selected' => true);
-					} else {
-						$output[] = array('ip' => $i, 'selected' => false);
-					}
+					$output[] = $ip == $i ? array('ip' => $i, 'selected' => true) : array('ip' => $i, 'selected' => false);
 				}
 
 				return $output;
@@ -45,7 +41,7 @@ class Model_Request
 
 	public function ip($refreshCache = false)
 	{
-		if (!isset($this->_cachedIP) || $refreshCache) {
+		if ($this->_cachedIP === null || $refreshCache) {
 			$this->_cachedIP = $this->_ip(Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE), Controller_Settings::shared()->trusted_proxies());
 		}
 
@@ -70,7 +66,10 @@ class Model_Request
 		return $this->_find_preferred_ip($possible_ips, $trusted_proxies);
 	}
 
-	protected function _possible_ips($source = null)
+	/**
+  * @return mixed[][]
+  */
+ protected function _possible_ips($source = null): array
 	{
 		$defaultIP = (is_array($_SERVER) && isset($_SERVER[self::IP_SOURCE_REMOTE_ADDR])) ? array($_SERVER[self::IP_SOURCE_REMOTE_ADDR], self::IP_SOURCE_REMOTE_ADDR) : array('127.0.0.1', self::IP_SOURCE_REMOTE_ADDR);
 
@@ -78,12 +77,10 @@ class Model_Request
 			if ($source == self::IP_SOURCE_REMOTE_ADDR) {
 				return array($defaultIP);
 			}
-
-			$check = array(
+			return array(
 				array((isset($_SERVER[$source]) ? $_SERVER[$source] : ''), $source),
 				$defaultIP,
 			);
-			return $check;
 		}
 
 		$check = array($defaultIP);
@@ -96,7 +93,7 @@ class Model_Request
 		return $check;
 	}
 
-	protected function _find_preferred_ip($possible_ips, $trusted_proxies)
+	protected function _find_preferred_ip($possible_ips, $trusted_proxies): array|false
 	{
 		$privates = array();
 		foreach ($possible_ips as $entry) {
@@ -113,12 +110,17 @@ class Model_Request
 						}
 
 						foreach ($trusted_proxies as $proxy) {
-							if (!empty($proxy)) {
-								if (Controller_Whitelist::shared()->ip_in_range($j, $proxy) && $index < count($value) - 1) {
-									continue 2;
-								}
-							}
-						}
+          if (empty($proxy)) {
+              continue;
+          }
+          if (!Controller_Whitelist::shared()->ip_in_range($j, $proxy)) {
+              continue;
+          }
+          if (!($index < count($value) - 1)) {
+              continue;
+          }
+          continue 2;
+      }
 
 						if (filter_var($j, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
 							$privates[] = array($j, $var);
@@ -148,12 +150,17 @@ class Model_Request
 							}
 
 							foreach ($trusted_proxies as $proxy) {
-								if (!empty($proxy)) {
-									if (Controller_Whitelist::shared()->ip_in_range($j, $proxy) && $index < count($sp) - 1) {
-										continue 2;
-									}
-								}
-							}
+           if (empty($proxy)) {
+               continue;
+           }
+           if (!Controller_Whitelist::shared()->ip_in_range($j, $proxy)) {
+               continue;
+           }
+           if (!($index < count($sp) - 1)) {
+               continue;
+           }
+           continue 2;
+       }
 
 							if (filter_var($j, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
 								$privates[] = array($j, $var);
@@ -188,7 +195,7 @@ class Model_Request
 			}
 		}
 
-		if (count($privates) > 0) {
+		if ($privates !== []) {
 			return $privates[0];
 		}
 

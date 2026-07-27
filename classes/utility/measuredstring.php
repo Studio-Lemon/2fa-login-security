@@ -6,7 +6,10 @@ class Utility_MeasuredString
 {
 
 	public $string;
-	public $length;
+	/**
+  * @var int
+  */
+ public $length;
 
 	public function __construct($string)
 	{
@@ -14,7 +17,7 @@ class Utility_MeasuredString
 		$this->length = strlen($string);
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->string;
 	}

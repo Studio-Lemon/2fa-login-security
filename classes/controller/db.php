@@ -39,17 +39,14 @@ class Controller_DB
 	}
 
 	/**
-	 * Returns the table with the site (single site installations) or network (multisite) prefix added.
-	 *
-	 * @param string $table
-	 * @return string
-	 */
-	public static function network_table($table)
+  * Returns the table with the site (single site installations) or network (multisite) prefix added.
+  */
+ public static function network_table(string $table): string
 	{
 		return self::network_prefix() . $table;
 	}
 
-	public function __get($key)
+	public function __get(string $key)
 	{
 		switch ($key) {
 			case 'secrets':
@@ -65,7 +62,7 @@ class Controller_DB
 		throw new \OutOfBoundsException('Unknown key: ' . $key);
 	}
 
-	public function install()
+	public function install(): void
 	{
 		$this->_create_schema();
 
@@ -74,7 +71,7 @@ class Controller_DB
 		$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `vtime` = LEAST(`vtime`, %d)", Controller_Time::time()));
 	}
 
-	public function uninstall()
+	public function uninstall(): void
 	{
 		$tables = array(self::TABLE_2FA_SECRETS, self::TABLE_SETTINGS, self::TABLE_ROLE_COUNTS);
 		foreach ($tables as $table) {
@@ -83,31 +80,33 @@ class Controller_DB
 		}
 	}
 
-	private function create_table($name, $definition, $temporary = false)
+	private function create_table($name, array|string $definition, $temporary = false): bool
 	{
 		global $wpdb;
 		if (is_array($definition)) {
 			foreach ($definition as $attempt) {
-				if ($this->create_table($name, $attempt, $temporary))
+				if ($this->create_table($name, $attempt, $temporary)) {
 					return true;
+				}
 			}
 			return false;
-		} else {
-			return $wpdb->query('CREATE ' . ($temporary ? 'TEMPORARY ' : '') . 'TABLE IF NOT EXISTS `' . self::network_table($name) . '` ' . $definition);
 		}
+		return $wpdb->query('CREATE ' . ($temporary ? 'TEMPORARY ' : '') . 'TABLE IF NOT EXISTS `' . self::network_table($name) . '` ' . $definition) !== false;
 	}
 
-	private function create_temporary_table($name, $definition)
+	private function create_temporary_table(string $name, array|string $definition): bool
 	{
-		if (Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_DISABLE_TEMPORARY_TABLES))
+		if (Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_DISABLE_TEMPORARY_TABLES)) {
 			return false;
-		if ($this->create_table($name, $definition, true))
+		}
+		if ($this->create_table($name, $definition, true)) {
 			return true;
+		}
 		Controller_Settings::shared()->set(Controller_Settings::OPTION_DISABLE_TEMPORARY_TABLES, true);
 		return false;
 	}
 
-	private function get_role_counts_table_definition($engine = null)
+	private function get_role_counts_table_definition($engine = null): string
 	{
 		$engineClause = $engine === null ? '' : "ENGINE={$engine}";
 		return <<<SQL
@@ -120,7 +119,7 @@ class Controller_DB
 SQL;
 	}
 
-	private function get_role_counts_table_definition_options()
+	private function get_role_counts_table_definition_options(): array
 	{
 		return array(
 			$this->get_role_counts_table_definition('MEMORY'),
@@ -159,7 +158,7 @@ SQL;
 		Controller_Settings::shared()->set(Controller_Settings::OPTION_SCHEMA_VERSION, self::SCHEMA_VERSION);
 	}
 
-	public function require_schema_version($version)
+	public function require_schema_version($version): void
 	{
 		$current = Controller_Settings::shared()->get_int(Controller_Settings::OPTION_SCHEMA_VERSION);
 		if ($current < $version) {
@@ -167,11 +166,12 @@ SQL;
 		}
 	}
 
-	public function query($query)
+	public function query($query): void
 	{
 		global $wpdb;
-		if ($wpdb->query($query) === false)
-			throw new RuntimeException("Failed to execute query: {$query}");
+		if ($wpdb->query($query) === false) {
+      throw new RuntimeException("Failed to execute query: {$query}");
+  }
 	}
 
 	public function get_wpdb()

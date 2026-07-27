@@ -22,7 +22,7 @@ class Model_JWT
 	 * @param string $token
 	 * @return Model_JWT|bool The decoded JWT or false if the token is invalid or fails validation.
 	 */
-	public static function decode_jwt($token)
+	public static function decode_jwt($token): false|\TFAuthLS\Crypto\Model_JWT
 	{
 		$components = explode('.', $token);
 		if (count($components) != 3) {
@@ -40,17 +40,16 @@ class Model_JWT
 		$json = self::base64url_decode($components[1]);
 		$payload = @json_decode($json, true);
 		$expiration = false;
-		if (!is_array($payload)) {
-			return false;
-		} else if (isset($payload['_exp'])) {
-			$expiration = $payload['_exp'];
-
-			if ($payload['_exp'] < Controller_Time::time()) {
-				return false;
-			}
-
-			unset($payload['_exp']);
-		}
+  if (!is_array($payload)) {
+      return false;
+  }
+		if (isset($payload['_exp'])) {
+      $expiration = $payload['_exp'];
+      if ($payload['_exp'] < Controller_Time::time()) {
+   				return false;
+   			}
+      unset($payload['_exp']);
+  }
 
 		return new self($payload, $expiration);
 	}
@@ -67,7 +66,7 @@ class Model_JWT
 		$this->_expiration = $expiration;
 	}
 
-	public function __toString()
+	public function __toString(): string
 	{
 		$payload = $this->_payload;
 		if ($this->_expiration !== false) {
@@ -80,7 +79,7 @@ class Model_JWT
 		return $body . '.' . self::base64url_encode($signature);
 	}
 
-	public function __isset($key)
+	public function __isset(string $key)
 	{
 		switch ($key) {
 			case 'payload':
@@ -91,7 +90,7 @@ class Model_JWT
 		throw new \OutOfBoundsException('Invalid key: ' . $key);
 	}
 
-	public function __get($key)
+	public function __get(string $key)
 	{
 		switch ($key) {
 			case 'payload':
@@ -119,30 +118,27 @@ class Model_JWT
 		return self::base64url_convert_to(base64_encode($payload));
 	}
 
-	public static function base64url_convert_to($base64)
+	public static function base64url_convert_to($base64): string
 	{
 		$intermediate = rtrim($base64, '=');
 		$intermediate = str_replace('+', '-', $intermediate);
-		$intermediate = str_replace('/', '_', $intermediate);
-		return $intermediate;
+		return str_replace('/', '_', $intermediate);
 	}
 
 	/**
-	 * Base64URL-decodes the given payload. This is identical to base64_encode except it allows for the characters
-	 * substituted by base64url_encode.
-	 *
-	 * @param string $payload
-	 * @return string
-	 */
-	public static function base64url_decode($payload)
+  * Base64URL-decodes the given payload. This is identical to base64_encode except it allows for the characters
+  * substituted by base64url_encode.
+  *
+  * @param string $payload
+  */
+ public static function base64url_decode($payload): string
 	{
 		return base64_decode(self::base64url_convert_from($payload));
 	}
 
-	public static function base64url_convert_from($base64url)
+	public static function base64url_convert_from($base64url): array|string
 	{
 		$intermediate = str_replace('_', '/', $base64url);
-		$intermediate = str_replace('-', '+', $intermediate);
-		return $intermediate;
+		return str_replace('-', '+', $intermediate);
 	}
 }

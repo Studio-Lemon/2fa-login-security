@@ -10,9 +10,9 @@ class Model_DB extends Model_Settings
 	const AUTOLOAD_NO = 'no';
 	const AUTOLOAD_YES = 'yes';
 
-	private static $_cache = array();
+	private static array $_cache = array();
 
-	public function set($key, $value, $autoload = self::AUTOLOAD_YES, $allowOverwrite = true)
+	public function set($key, $value, $autoload = self::AUTOLOAD_YES, $allowOverwrite = true): void
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->settings;
@@ -33,7 +33,7 @@ class Model_DB extends Model_Settings
 		}
 	}
 
-	public function set_multiple($values)
+	public function set_multiple($values): void
 	{
 		foreach ($values as $key => $value) {
 			if (is_array($value)) {
@@ -50,7 +50,7 @@ class Model_DB extends Model_Settings
 		return $results[$key];
 	}
 
-	public function get_multiple($keysDefaults)
+	public function get_multiple($keysDefaults): array
 	{
 		global $wpdb;
 
@@ -64,7 +64,7 @@ class Model_DB extends Model_Settings
 			}
 		}
 
-		if (!empty($remaining)) {
+		if ($remaining !== []) {
 			$sanitizedKeys = esc_sql(array_keys($remaining));
 			$keysINClause = "'" . implode("','", $sanitizedKeys) . "'";
 
@@ -85,7 +85,7 @@ class Model_DB extends Model_Settings
 		return array_merge($remaining, $result);
 	}
 
-	public function remove($key)
+	public function remove($key): void
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->settings;
@@ -113,14 +113,14 @@ class Model_DB extends Model_Settings
 		return self::$_cache;
 	}
 
-	private function _update_cached($key, $value)
+	private function _update_cached($key, $value): void
 	{
 		$settings = $this->_cached();
 		$settings[$key] = $value;
 		self::$_cache = $settings;
 	}
 
-	private function _remove_cached($key)
+	private function _remove_cached($key): void
 	{
 		$settings = $this->_cached();
 		if (isset($settings[$key])) {
@@ -146,7 +146,7 @@ class Model_DB extends Model_Settings
 		}
 		return $value;
 	}
-	public function _has_cached($key)
+	public function _has_cached($key): bool
 	{
 		$settings = $this->_cached();
 		return isset($settings[$key]);

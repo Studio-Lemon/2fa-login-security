@@ -5,7 +5,7 @@ namespace TFAuthLS;
 class Model_Style extends Model_Asset
 {
 
-	public function enqueue()
+	public function enqueue(): void
 	{
 		if ($this->registered) {
 			wp_enqueue_style($this->handle);
@@ -19,10 +19,11 @@ class Model_Style extends Model_Asset
 		return wp_style_is($this->handle);
 	}
 
-	public function renderInline()
+	public function renderInline(): void
 	{
-		if (empty($this->source))
-			return;
+		if (empty($this->source)) {
+      return;
+  }
 		$url = esc_attr($this->getSourceUrl());
 		$linkTag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$url}\">";
 ?>

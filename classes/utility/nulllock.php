@@ -8,12 +8,12 @@ namespace TFAuthLS;
 class Utility_NullLock implements Utility_Lock
 {
 
-	public function acquire($delay = self::DEFAULT_DELAY)
+	public function acquire($delay = self::DEFAULT_DELAY): void
 	{
 		//Do nothing
 	}
 
-	public function release()
+	public function release(): void
 	{
 		//Do nothing
 	}

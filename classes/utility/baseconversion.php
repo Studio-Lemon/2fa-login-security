@@ -10,8 +10,9 @@ class Utility_BaseConversion
 	public static function get_base32()
 	{
 		static $base32 = null;
-		if ($base32 === null)
-			$base32 = new Model_Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', false, true, true);
+		if ($base32 === null) {
+      $base32 = new Model_Base2n(5, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', false, true, true);
+  }
 		return $base32;
 	}
 

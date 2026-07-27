@@ -44,7 +44,7 @@ if (!defined('TFA_LS_FCPATH')) {
 }
 
 if (!function_exists('TFA_LS_autoload')) {
-	function TFA_LS_autoload($class)
+	function TFA_LS_autoload($class): bool
 	{
 		$class = str_replace('\\', '/', $class);
 		$class = str_replace('\\\\', '/', $class);
@@ -53,7 +53,7 @@ if (!function_exists('TFA_LS_autoload')) {
 			return false;
 		}
 
-		if ($components[0] != 'TFAuthLS') {
+		if ($components[0] !== 'TFAuthLS') {
 			return false;
 		}
 

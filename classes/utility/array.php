@@ -5,22 +5,24 @@ namespace TFAuthLS;
 class Utility_Array
 {
 
-	public static function findOffset($array, $key)
+	public static function findOffset($array, $key): ?int
 	{
 		$offset = 0;
 		foreach ($array as $index => $value) {
-			if ($index === $key)
-				return $offset;
+			if ($index === $key) {
+       return $offset;
+   }
 			$offset++;
 		}
 		return null;
 	}
 
-	public static function insertAfter(&$array, $targetKey, $key, $value)
+	public static function insertAfter(&$array, $targetKey, $key, $value): bool
 	{
 		$offset = self::findOffset($array, $targetKey);
-		if ($offset === null)
-			return false;
+		if ($offset === null) {
+      return false;
+  }
 		$array = array_merge(
 			array_slice($array, 0, $offset + 1),
 			array($key => $value),
@@ -44,7 +46,7 @@ class Utility_Array
 			$keys = array($keys);
 		}
 
-		$matches = array_filter($array, function ($k) use ($keys) {
+		$matches = array_filter($array, function ($k) use ($keys): bool {
 			return in_array($k, $keys);
 		}, ARRAY_FILTER_USE_KEY);
 		if ($single) {

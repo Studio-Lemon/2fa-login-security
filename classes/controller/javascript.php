@@ -13,15 +13,13 @@ use TFAuthLS\Controller_Time;
 class Controller_Javascript
 {
 	/**
-	 * Returns a mapping of translation strings for the Javascript frontend to use, populated via the WordPress
-	 * translation system.
-	 *
-	 * It would be nice to be less redundant here, but the support for that is in WP 5.0 and unavailable in our
-	 * current oldest supported version.
-	 *
-	 * @return array
-	 */
-	public static function i18nStrings()
+  * Returns a mapping of translation strings for the Javascript frontend to use, populated via the WordPress
+  * translation system.
+  *
+  * It would be nice to be less redundant here, but the support for that is in WP 5.0 and unavailable in our
+  * current oldest supported version.
+  */
+ public static function i18nStrings(): array
 	{
 		return array(
 			'(definitely a human)' => __('(definitely a human)', '2fa-login-security'),
@@ -33,7 +31,6 @@ class Controller_Javascript
 			'2FA Role' => __('2FA Role', '2fa-login-security'),
 			'2FA Roles' => __('2FA Roles', '2fa-login-security'),
 			'2FA management shortcode' => __('2FA management shortcode', '2fa-login-security'),
-			'A reCAPTCHA score equal to or higher than this value will be considered human. Anything lower will be treated as a bot and require additional verification for login and registration.' => __('A reCAPTCHA score equal to or higher than this value will be considered human. Anything lower will be treated as a bot and require additional verification for login and registration.', '2fa-login-security'),
 			'Allow remembering device for 30 days' => __('Allow remembering device for 30 days', '2fa-login-security'),
 			'An error occurred' => __('An error occurred', '2fa-login-security'),
 			'An error was encountered while trying to disable NTP. Please try again.' => __('An error was encountered while trying to disable NTP. Please try again.', '2fa-login-security'),
@@ -50,10 +47,8 @@ class Controller_Javascript
 			'Disable XML-RPC authentication' => __('Disable XML-RPC authentication', '2fa-login-security'),
 			'Edit trusted proxies' => __('Edit trusted proxies', '2fa-login-security'),
 			'e.g., /my-account/' => __('e.g., /my-account/', '2fa-login-security'),
-			'Enable reCAPTCHA on the login and user registration pages' => __('Enable reCAPTCHA on the login and user registration pages', '2fa-login-security'),
 			'Error Disabling NTP' => __('Error Disabling NTP', '2fa-login-security'),
 			'Error Resetting NTP' => __('Error Resetting NTP', '2fa-login-security'),
-			'Error Resetting reCAPTCHA Statistics' => __('Error Resetting reCAPTCHA Statistics', '2fa-login-security'),
 			'Error Saving Option' => __('Error Saving Option', '2fa-login-security'),
 			'Error Saving Options' => __('Error Saving Options', '2fa-login-security'),
 			'Error Sending Notification' => __('Error Sending Notification', '2fa-login-security'),
@@ -74,22 +69,14 @@ class Controller_Javascript
 			'NTP was manually disabled.' => __('NTP was manually disabled.', '2fa-login-security'),
 			'NTP will be automatically disabled after %d more attempts.' => /* translators: number of attempts */ __('NTP will be automatically disabled after %d more attempts.', '2fa-login-security'),
 			'NTP will be automatically disabled after 1 more attempt.' => __('NTP will be automatically disabled after 1 more attempt.', '2fa-login-security'),
-			'Note: This feature requires a free site key and secret for the <a href="https://www.google.com/recaptcha/about/" target="_blank" rel="noopener noreferrer">Google reCAPTCHA v3 Service</a>. To set up new reCAPTCHA keys, log into your Google account and go to the <a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener noreferrer">reCAPTCHA admin page</a>.' => __('Note: This feature requires a free site key and secret for the <a href="https://www.google.com/recaptcha/about/" target="_blank" rel="noopener noreferrer">Google reCAPTCHA v3 Service</a>. To set up new reCAPTCHA keys, log into your Google account and go to the <a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener noreferrer">reCAPTCHA admin page</a>.', '2fa-login-security'),
 			'Notification Results' => __('Notification Results', '2fa-login-security'),
 			'Notification Sent' => __('Notification Sent', '2fa-login-security'),
 			'Notify' => __('Notify', '2fa-login-security'),
-			'reCAPTCHA' => __('reCAPTCHA', '2fa-login-security'),
-			'reCAPTCHA human/bot threshold score' => __('reCAPTCHA human/bot threshold score', '2fa-login-security'),
-			'reCAPTCHA Score History' => __('reCAPTCHA Score History', '2fa-login-security'),
-			'reCAPTCHA v3 does not make users solve puzzles or click a checkbox like previous versions. The only visible part is the reCAPTCHA logo. If a visitor\'s browser fails the CAPTCHA, Wordfence will send an email to the user\'s address with a link they can click to verify that they are a user of your site. You can read further details <a href="%s" target="_blank" rel="noopener noreferrer">in our documentation</a>.' => /* translators: Support URL */ __('reCAPTCHA v3 does not make users solve puzzles or click a checkbox like previous versions. The only visible part is the reCAPTCHA logo. If a visitor\'s browser fails the CAPTCHA, Wordfence will send an email to the user\'s address with a link they can click to verify that they are a user of your site. You can read further details <a href="%s" target="_blank" rel="noopener noreferrer">in our documentation</a>.', '2fa-login-security'),
-			'reCAPTCHA v3 Secret' => __('reCAPTCHA v3 Secret', '2fa-login-security'),
-			'reCAPTCHA v3 Site Key' => __('reCAPTCHA v3 Site Key', '2fa-login-security'),
 			'Requests' => __('Requests', '2fa-login-security'),
 			'Required' => __('Required', '2fa-login-security'),
 			'Requiring 2FA for customers is not recommended as some customers may experience difficulties setting up or using two-factor authentication. Instead, using the "Optional" mode for users with the customer role is recommended which will allow customers to enable 2FA, but will not require them to do so.' => __('Requiring 2FA for customers is not recommended as some customers may experience difficulties setting up or using two-factor authentication. Instead, using the "Optional" mode for users with the customer role is recommended which will allow customers to enable 2FA, but will not require them to do so.', '2fa-login-security'),
 			'Reset' => __('Reset', '2fa-login-security'),
 			'Reset Score Statistics' => __('Reset Score Statistics', '2fa-login-security'),
-			'Run reCAPTCHA in test mode' => __('Run reCAPTCHA in test mode', '2fa-login-security'),
 			'Save' => __('Save', '2fa-login-security'),
 			'Save Changes' => __('Save Changes', '2fa-login-security'),
 			'Send Anyway' => __('Send Anyway', '2fa-login-security'),
@@ -102,12 +89,8 @@ class Controller_Javascript
 			'These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.' => __('These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.', '2fa-login-security'),
 			'Trusted Proxies' => __('Trusted Proxies', '2fa-login-security'),
 			'Use single-column layout for WooCommerce/shortcode 2FA management interface' => __('Use single-column layout for WooCommerce/shortcode 2FA management interface', '2fa-login-security'),
-			'When enabled, a 2FA tab will be added to the WooCommerce account menu which will provide access for users to manage 2FA settings outside of the WordPress admin area. Testing the WooCommerce account interface after enabling this feature is recommended to ensure theme compatibility.' => __('When enabled, a 2FA tab will be added to the WooCommerce account menu which will provide access for users to manage 2FA settings outside of the WordPress admin area. Testing the WooCommerce account interface after enabling this feature is recommended to ensure theme compatibility.', '2fa-login-security'),
-			'When enabled, reCAPTCHA and 2FA prompt support will be added to WooCommerce login and registration forms in addition to the default WordPress forms. Testing WooCommerce forms after enabling this feature is recommended to ensure plugin compatibility.' => __('When enabled, reCAPTCHA and 2FA prompt support will be added to WooCommerce login and registration forms in addition to the default WordPress forms. Testing WooCommerce forms after enabling this feature is recommended to ensure plugin compatibility.', '2fa-login-security'),
 			'When enabled, the "wordfence_2fa_management" shortcode may be used to provide access for users to manage 2FA settings on custom pages.' => __('When enabled, the "wordfence_2fa_management" shortcode may be used to provide access for users to manage 2FA settings on custom pages.', '2fa-login-security'),
 			'When enabled, the 2FA management interface embedded through the WooCommerce integration or via a shortcode will use a vertical stacked layout as opposed to horizontal columns. Adjust this setting as appropriate to match your theme. This may be overridden using the "stacked" attribute for individual shortcodes.' => __('When enabled, the 2FA management interface embedded through the WooCommerce integration or via a shortcode will use a vertical stacked layout as opposed to horizontal columns. Adjust this setting as appropriate to match your theme. This may be overridden using the "stacked" attribute for individual shortcodes.', '2fa-login-security'),
-			'When enabled, the last login timestamp will be displayed for each user on the WP Users page. When used in conjunction with reCAPTCHA, the most recent score will also be displayed for each user.' => __('When enabled, the last login timestamp will be displayed for each user on the WP Users page. When used in conjunction with reCAPTCHA, the most recent score will also be displayed for each user.', '2fa-login-security'),
-			'While in test mode, reCAPTCHA will score login and registration requests but not actually block them. The scores will be recorded and can be used to select a human/bot threshold value.' => __('While in test mode, reCAPTCHA will score login and registration requests but not actually block them. The scores will be recorded and can be used to select a human/bot threshold value.', '2fa-login-security'),
 			'2FA Login Security Installed' => __('2FA Login Security Installed', '2fa-login-security'),
 			'You have just installed 2FA Login Security. Use the Login Security menu to activate and manage two-factor authentication for user accounts.' => __('You have just installed 2FA Login Security. Use the Login Security menu to activate and manage two-factor authentication for user accounts.', '2fa-login-security'),
 			'Visit the plugin page for updates and documentation.' => __('Visit the plugin page for updates and documentation.', '2fa-login-security'),
@@ -118,11 +101,9 @@ class Controller_Javascript
 	}
 
 	/**
-	 * Returns an array of constants/initial state values for use on the Javascript frontend to avoid hardcoding values.
-	 *
-	 * @return array
-	 */
-	public static function jsConstants()
+  * Returns an array of constants/initial state values for use on the Javascript frontend to avoid hardcoding values.
+  */
+ public static function jsConstants(): array
 	{
 		$response = array();
 
@@ -200,9 +181,10 @@ class Controller_Javascript
 	}
 
 	/**
-	 * Prefixes all keys in the given options with "wfls-" to avoid name collisions with the main plugin.
-	 */
-	private static function _prefixOptions($options)
+  * Prefixes all keys in the given options with "wfls-" to avoid name collisions with the main plugin.
+  * @return mixed[]
+  */
+ private static function _prefixOptions($options): array
 	{
 		$result = array();
 		foreach ($options as $key => $value) {

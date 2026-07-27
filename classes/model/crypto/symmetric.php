@@ -46,7 +46,6 @@ abstract class Model_Symmetric
 		$symmetricKey = Model_Crypto::shared_symmetric_secret();
 		$iv = base64_decode($encrypted['iv']);
 		$encrypted = base64_decode($encrypted['data']);
-		$data = @openssl_decrypt($encrypted, 'aes-256-cbc', $symmetricKey, OPENSSL_RAW_DATA, $iv);
-		return $data;
+		return @openssl_decrypt($encrypted, 'aes-256-cbc', $symmetricKey, OPENSSL_RAW_DATA, $iv);
 	}
 }

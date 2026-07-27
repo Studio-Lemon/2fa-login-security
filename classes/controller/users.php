@@ -35,7 +35,7 @@ class Controller_Users
 		return $_shared;
 	}
 
-	public function init()
+	public function init(): void
 	{
 		$this->_init_actions();
 	}
@@ -46,7 +46,7 @@ class Controller_Users
 	 * @param array $secrets An array of secrets in the format array(<user id> => array('secret' => <secret in hex>, 'recovery' => <recovery keys in hex>, 'ctime' => <timestamp>, 'vtime' => <timestamp>, 'type' => <type>), ...)
 	 * @return int The number imported.
 	 */
-	public function import_2fa($secrets)
+	public function import_2fa($secrets): int
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
@@ -54,9 +54,18 @@ class Controller_Users
 		$count = 0;
 		foreach ($secrets as $id => $parameters) {
 			$user = new \WP_User($id);
-			if (!$user->exists() || !$this->can_activate_2fa($user) || $parameters['type'] != 'authenticator' || $this->has_2fa_active($user)) {
-				continue;
-			}
+   if (!$user->exists()) {
+       continue;
+   }
+   if (!$this->can_activate_2fa($user)) {
+       continue;
+   }
+   if ($parameters['type'] != 'authenticator') {
+       continue;
+   }
+   if ($this->has_2fa_active($user)) {
+       continue;
+   }
 			$secret = Model_Compat::hex2bin($parameters['secret']);
 			$recovery = Model_Compat::hex2bin($parameters['recovery']);
 			$ctime = (int) $parameters['ctime'];
@@ -95,10 +104,9 @@ class Controller_Users
 				$superAdmins[] = new \WP_User($username);
 			}
 			return $superAdmins;
-		} else {
-			$query = new \WP_User_Query(http_build_query(array('role' => $role, 'number' => is_int($limit) ? $limit : -1)));
-			return $query->get_results();
 		}
+  $query = new \WP_User_Query(http_build_query(array('role' => $role, 'number' => is_int($limit) ? $limit : -1)));
+  return $query->get_results();
 	}
 
 	/**
@@ -131,9 +139,12 @@ class Controller_Users
 			}
 
 			$jwt = Model_JWT::decode_jwt($value);
-			if (!$jwt || !isset($jwt->payload['iv'])) {
-				continue;
-			}
+   if (!$jwt) {
+       continue;
+   }
+   if (!isset($jwt->payload['iv'])) {
+       continue;
+   }
 
 			if (\TFAuthLS\Controller_Time::time() > min($jwt->expiration, $maxExpiration)) { //Either JWT is expired or the remember period was shortened since generating it
 				continue;
@@ -158,7 +169,7 @@ class Controller_Users
 	 * 
 	 * @param \WP_User $user
 	 */
-	public function remember_2fa($user)
+	public function remember_2fa($user): void
 	{
 		if (!Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_REMEMBER_DEVICE_ENABLED)) {
 			return;
@@ -174,7 +185,7 @@ class Controller_Users
 		}
 
 		//Remove old cookies
-		foreach ($_COOKIE as $name => $value) {
+		foreach (array_keys($_COOKIE) as $name) {
 			if (!preg_match('/^wfls\-remembered\-(.+)$/', $name, $matches)) {
 				continue;
 			}
@@ -204,28 +215,25 @@ class Controller_Users
 	}
 
 	/**
-	 * Returns whether or not any user has 2FA activated.
-	 *
-	 * @return bool
-	 */
-	public function any_2fa_active()
+  * Returns whether or not any user has 2FA activated.
+  */
+ public function any_2fa_active(): bool
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
-		return !!intval($wpdb->get_var("SELECT COUNT(*) FROM `{$table}`"));
+		return (bool) intval($wpdb->get_var("SELECT COUNT(*) FROM `{$table}`"));
 	}
 
 	/**
-	 * Returns whether or not the user has 2FA activated.
-	 *
-	 * @param \WP_User $user
-	 * @return bool
-	 */
-	public function has_2fa_active($user)
+  * Returns whether or not the user has 2FA activated.
+  *
+  * @param \WP_User $user
+  */
+ public function has_2fa_active($user): bool
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
-		return $this->can_activate_2fa($user) && !!intval($wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM `{$table}` WHERE `user_id` = %d", $user->ID)));
+		return $this->can_activate_2fa($user) && (bool) intval($wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM `{$table}` WHERE `user_id` = %d", $user->ID)));
 	}
 
 	/**
@@ -233,7 +241,7 @@ class Controller_Users
 	 *
 	 * @param \WP_User $user
 	 */
-	public function deactivate_2fa($user)
+	public function deactivate_2fa($user): void
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
@@ -280,22 +288,20 @@ class Controller_Users
 		if (array_key_exists($user->ID, $cache)) {
 			list($required, $gracePeriod, $requiredAt) = $cache[$user->ID];
 			return $required;
-		} else {
-			$gracePeriod = false;
-			$requiredAt = null;
-			$required = $this->does_user_role_require_2fa($user, $gracePeriod, $requiredAt);
-			$cache[$user->ID] = array($required, $gracePeriod, $requiredAt);
-			return $required;
 		}
+  $gracePeriod = false;
+  $requiredAt = null;
+  $required = $this->does_user_role_require_2fa($user, $gracePeriod, $requiredAt);
+  $cache[$user->ID] = array($required, $gracePeriod, $requiredAt);
+  return $required;
 	}
 
 	/**
-	 * Returns the number of recovery codes remaining for the user or null if the user does not have 2FA active.
-	 *
-	 * @param \WP_User $user
-	 * @return float|null
-	 */
-	public function recovery_code_count($user)
+  * Returns the number of recovery codes remaining for the user or null if the user does not have 2FA active.
+  *
+  * @param \WP_User $user
+  */
+ public function recovery_code_count($user): ?float
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
@@ -308,13 +314,12 @@ class Controller_Users
 	}
 
 	/**
-	 * Generates a new set of recovery codes and saves them to $user if provided.
-	 *
-	 * @param \WP_User|bool $user The user to save the codes to or false to just return codes.
-	 * @param int $count
-	 * @return array
-	 */
-	public function regenerate_recovery_codes($user = false, $count = self::RECOVERY_CODE_COUNT)
+  * Generates a new set of recovery codes and saves them to $user if provided.
+  *
+  * @param \WP_User|bool $user The user to save the codes to or false to just return codes.
+  * @param int $count
+  */
+ public function regenerate_recovery_codes($user = false, $count = self::RECOVERY_CODE_COUNT): array
 	{
 		$codes = array();
 		for ($i = 0; $i < $count; $i++) {
@@ -332,11 +337,9 @@ class Controller_Users
 	}
 
 	/**
-	 * Returns the active and inactive user counts.
-	 * 
-	 * @return array
-	 */
-	public function user_counts()
+  * Returns the active and inactive user counts.
+  */
+ public function user_counts(): array
 	{
 		if (is_multisite() && function_exists('get_user_count')) {
 			$total_users = get_user_count();
@@ -359,7 +362,7 @@ class Controller_Users
 		$counts = array();
 		$groups = array('avail_roles' => 0, 'active_avail_roles' => 0);
 
-		foreach ($groups as $group => $count) {
+		foreach (array_keys($groups) as $group) {
 			$counts[$group] = array();
 			foreach ($roles as $role_key => $role_name) {
 				$counts[$group][$role_key] = 0;
@@ -380,8 +383,9 @@ class Controller_Users
 		try {
 			$lock->acquire();
 
-			if (!$force && Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_USER_COUNT_QUERY_STATE))
-				throw new RuntimeException('Previous user count query failed to completed successfully. User count queries are currently disabled');
+			if (!$force && Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_USER_COUNT_QUERY_STATE)) {
+       throw new RuntimeException('Previous user count query failed to completed successfully. User count queries are currently disabled');
+   }
 			Controller_Settings::shared()->set(Controller_Settings::OPTION_USER_COUNT_QUERY_STATE, true);
 
 			$dbController->require_schema_version(2);
@@ -435,12 +439,14 @@ SQL,
 				$truncated_role = true;
 			}
 			foreach ($row_roles as $row_role => $state) {
-				if ($state !== true || (!$truncated_role && !is_string($row_role)))
-					continue;
+				if ($state !== true || (!$truncated_role && !is_string($row_role))) {
+        continue;
+    }
 				if (array_key_exists($row_role, $roles) || $row_role === self::TRUNCATED_ROLE_KEY) {
 					foreach ($groups as $group => &$group_count) {
-						if ($group === 'active_avail_roles' && $row->two_factor_inactive)
-							continue;
+						if ($group === 'active_avail_roles' && $row->two_factor_inactive) {
+          continue;
+      }
 						$counts[$group][$row_role] += $row->user_count;
 						$group_count += $row->user_count;
 					}
@@ -477,11 +483,9 @@ SQL,
 	}
 
 	/**
-	 * Returns the number of users with 2FA active.
-	 * 
-	 * @return int
-	 */
-	public function active_count()
+  * Returns the number of users with 2FA active.
+  */
+ public function active_count(): int
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
@@ -511,17 +515,17 @@ SQL,
 		}
 	}
 
-	public function _deleted_user($id)
+	public function _deleted_user($id): void
 	{
 		$user = new \WP_User($id);
-		if ($user instanceof \WP_User && !$user->exists()) {
+		if (!$user->exists()) {
 			global $wpdb;
 			$table = Controller_DB::shared()->secrets;
 			$wpdb->query($wpdb->prepare("DELETE FROM `{$table}` WHERE `user_id` = %d", $id));
 		}
 	}
 
-	public function _manage_users_columns($columns = array())
+	public function _manage_users_columns(array $columns = array()): array
 	{
 		if (user_can(wp_get_current_user(), Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS)) {
 			$columns['wfls_2fa_status'] = esc_html__('2FA Status', '2fa-login-security');
@@ -564,7 +568,7 @@ SQL,
 		return $value;
 	}
 
-	public function _manage_users_sortable_columns($sortable_columns)
+	public function _manage_users_sortable_columns($sortable_columns): array
 	{
 		return array_merge($sortable_columns, array(
 			'wfls_last_login' => 'wfls-lastlogin',
@@ -582,17 +586,17 @@ SQL,
 	{
 		if (isset($_REQUEST['wf2fa']) && preg_match('/^(?:in)?active$/i', $_REQUEST['wf2fa'])) {
 			$mode = strtolower($_REQUEST['wf2fa']);
-			if ($mode == 'active') {
-				$args['include'] = $this->_user_ids_with_2fa_active();
-			} else if ($mode == 'inactive') {
-				unset($args['include']);
-				$args['exclude'] = $this->_user_ids_with_2fa_active();
-			}
+			if ($mode === 'active') {
+       $args['include'] = $this->_user_ids_with_2fa_active();
+   } elseif ($mode === 'inactive') {
+       unset($args['include']);
+       $args['exclude'] = $this->_user_ids_with_2fa_active();
+   }
 		}
 
 		if (isset($args['orderby'])) {
 			if (is_string($args['orderby'])) {
-				if ($args['orderby'] == 'wfls-lastlogin') {
+				if ($args['orderby'] === 'wfls-lastlogin') {
 					$args['meta_key'] = 'wfls-last-login';
 					$args['orderby'] = 'meta_value';
 				}
@@ -618,7 +622,7 @@ SQL,
 		return $args;
 	}
 
-	public function _user_row_actions($actions, $user)
+	public function _user_row_actions(array $actions, $user): array
 	{
 		//Format is 'view' => '<a href="https://wfpremium.dev1.ryanbritton.com/author/ryan/" aria-label="View posts by ryan">View</a>'
 		if (user_can(wp_get_current_user(), Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS) && (Controller_Users::shared()->can_activate_2fa($user) || Controller_Users::shared()->has_2fa_active($user))) {
@@ -628,7 +632,7 @@ SQL,
 		return $actions;
 	}
 
-	public function _views_users($views)
+	public function _views_users(array $views): array
 	{
 		//Format is 'subscriber' => '<a href=\\'users.php?role=subscriber\\'>Subscriber <span class="count">(40,002)</span></a>',
 		include(ABSPATH . WPINC . '/version.php');
@@ -642,73 +646,83 @@ SQL,
 		return $views;
 	}
 
-	private function get_grace_period_reset_time($user)
+	private function get_grace_period_reset_time($user): ?int
 	{
 		$time = get_user_option(self::META_KEY_GRACE_PERIOD_RESET, $user->ID);
-		if (empty($time))
-			return null;
+		if (empty($time)) {
+      return null;
+  }
 		return (int) $time;
 	}
 
-	public function get_grace_period_override($user)
+	public function get_grace_period_override($user): ?int
 	{
 		$override = get_user_option(self::META_KEY_GRACE_PERIOD_OVERRIDE, $user->ID);
-		if ($override === false)
-			return null;
+		if ($override === false) {
+      return null;
+  }
 		return (int) $override;
 	}
 
-	private function does_user_role_require_2fa($user, &$inGracePeriod = null, &$requiredAt = null)
+	private function does_user_role_require_2fa($user, &$inGracePeriod = null, &$requiredAt = null): bool
 	{
 		$is2faAdmin = Controller_Permissions::shared()->can_manage_settings($user);
 		$userDate = self::get_grace_period_reset_time($user);
-		if ($userDate === null)
-			$userDate = self::get_registration_date($user);
+		if ($userDate === null) {
+      $userDate = $this->get_registration_date($user);
+  }
 		if ($is2faAdmin && !$this->get_grace_period_allowed_flag($user->ID)) {
 			$gracePeriod = 0;
 			$inGracePeriod = null;
 		} else {
 			$gracePeriod = self::get_grace_period_override($user);
-			if ($gracePeriod === null)
-				$gracePeriod = Controller_Settings::shared()->get_user_2fa_grace_period();
+			if ($gracePeriod === null) {
+       $gracePeriod = Controller_Settings::shared()->get_user_2fa_grace_period();
+   }
 			$gracePeriod *= self::SECONDS_PER_DAY;
 			$inGracePeriod = false;
 		}
 		$now = time();
 		foreach (Controller_Permissions::shared()->get_all_roles($user) as $role) {
 			$roleDate = Controller_Settings::shared()->get_required_2fa_role_activation_time($role);
-			if ($roleDate === false)
-				continue;
+			if ($roleDate === false) {
+       continue;
+   }
 			$effectiveDate = max($userDate, $roleDate) + $gracePeriod;
-			if ($requiredAt === null || $effectiveDate < $requiredAt)
-				$requiredAt = $effectiveDate;
-			if ($effectiveDate <= $now && (!$is2faAdmin || $this->has_admin_with_2fa_active())) {
-				if ($inGracePeriod)
-					$inGracePeriod = false;
-				return true;
-			} else if ($inGracePeriod !== null) {
-				$inGracePeriod = true;
-			}
+   if ($requiredAt === null || $effectiveDate < $requiredAt) {
+       $requiredAt = $effectiveDate;
+   }
+   if ($effectiveDate <= $now && (!$is2faAdmin || $this->has_admin_with_2fa_active())) {
+       if ($inGracePeriod) {
+           $inGracePeriod = false;
+       }
+       return true;
+   }
+			if ($inGracePeriod !== null) {
+       $inGracePeriod = true;
+   }
 		}
 		return false;
 	}
 
-	private static function get_registration_date($user)
+	private function get_registration_date($user): int|false
 	{
 		return strtotime($user->user_registered);
 	}
 
-	public function reset_2fa_grace_period($user, $override = null)
+	public function reset_2fa_grace_period($user, $override = null): bool
 	{
-		if (!$this->can_activate_2fa($user) || $this->has_2fa_active($user))
-			return false;
+		if (!$this->can_activate_2fa($user) || $this->has_2fa_active($user)) {
+      return false;
+  }
 		update_user_option($user->ID, self::META_KEY_GRACE_PERIOD_RESET, time(), true);
-		if ($override !== null)
-			update_user_option($user->ID, self::META_KEY_GRACE_PERIOD_OVERRIDE, (int) $override, true);
+		if ($override !== null) {
+      update_user_option($user->ID, self::META_KEY_GRACE_PERIOD_OVERRIDE, (int) $override, true);
+  }
 		return true;
 	}
 
-	public function revoke_grace_period($user)
+	public function revoke_grace_period($user): void
 	{
 		foreach (
 			array(
@@ -721,22 +735,28 @@ SQL,
 		}
 	}
 
-	public function allow_grace_period($userId)
+	public function allow_grace_period($userId): void
 	{
 		update_user_option($userId, self::META_KEY_ALLOW_GRACE_PERIOD, true, true);
 	}
 
-	public function get_grace_period_allowed_flag($userId)
+	public function get_grace_period_allowed_flag($userId): bool
 	{
 		return (bool) get_user_option(self::META_KEY_ALLOW_GRACE_PERIOD, $userId);
 	}
 
 	public function has_revokable_grace_period($user)
-	{
-		return $this->get_grace_period_allowed_flag($user->ID) || $this->get_grace_period_reset_time($user) !== null;
-	}
+ {
+     if ($this->get_grace_period_allowed_flag($user->ID)) {
+         return true;
+     }
+     return $this->get_grace_period_reset_time($user) !== null;
+ }
 
-	private function get_inactive_2fa_super_admins($gracePeriod = false)
+	/**
+  * @return \StdClass[]
+  */
+ private function get_inactive_2fa_super_admins($gracePeriod = false): array
 	{
 		$inactive = array();
 		foreach (get_super_admins() as $username) {
@@ -758,7 +778,7 @@ SQL,
 	private function generate_inactive_2fa_user_query($roleKey, $gracePeriod = null, $page = null, $perPage = null)
 	{
 		global $wpdb;
-		$secondsPerDay = (int) self::SECONDS_PER_DAY;
+		$secondsPerDay = self::SECONDS_PER_DAY;
 		$gracePeriodSeconds = (int) (Controller_Settings::shared()->get_user_2fa_grace_period() * self::SECONDS_PER_DAY);
 		$roleTime = (int) (Controller_Settings::shared()->get_required_2fa_role_activation_time($roleKey));
 		$siteId = get_current_blog_id();
@@ -839,13 +859,15 @@ SQL;
 		if ($admin) {
 			$conditions[] = $allowedClause . ' = ' . ($gracePeriod ? 1 : 0);
 		}
-		if (!empty($conditions))
-			$query .= ' AND (' . implode(" $operator ", $conditions) . ')';
+		if ($conditions !== []) {
+      $query .= ' AND (' . implode(" $operator ", $conditions) . ')';
+  }
 		if ($page !== null && $perPage !== null) {
 			$offset = (int) (($page - 1) * $perPage);
 			$limit = (int) ($perPage + 1);
-			if ($offset >= 0 && $perPage > 0)
-				$query .= " LIMIT $offset, $limit";
+			if ($offset >= 0 && $perPage > 0) {
+       $query .= " LIMIT $offset, $limit";
+   }
 		}
 		$serializedRoleKey = serialize($roleKey);
 		$roleMatch = '%' . (method_exists($wpdb, 'esc_like') ? $wpdb->esc_like($serializedRoleKey) : addcslashes($serializedRoleKey, '_%\\')) . '%';
@@ -868,42 +890,46 @@ SQL;
 				$superAdmins = array_slice($superAdmins, $start, $perPage);
 			}
 			return $superAdmins;
-		} else {
-			$query = $this->generate_inactive_2fa_user_query($roleKey, $gracePeriod, $page, $perPage);
-			$results = $wpdb->get_results($query);
-			if (count($results) > $perPage) {
+		}
+  $query = $this->generate_inactive_2fa_user_query($roleKey, $gracePeriod, $page, $perPage);
+  $results = $wpdb->get_results($query);
+  if (count($results) > $perPage) {
 				$lastPage = false;
 				array_pop($results);
 			} else {
 				$lastPage = true;
 			}
-			return $results;
-		}
+  return $results;
 	}
 
-	private function get_verification_token_transient_key($hash)
+	private function get_verification_token_transient_key(string $hash): string
 	{
 		return self::VERIFICATION_TOKEN_TRANSIENT_PREFIX . $hash;
 	}
 
-	private function load_verification_token($hash)
+	private function load_verification_token($hash): ?int
 	{
 		$key = $this->get_verification_token_transient_key($hash);
 		$userId = get_transient($key);
-		if ($userId === false)
-			return null;
+		if ($userId === false) {
+      return null;
+  }
 		return intval($userId);
 	}
 
-	private function load_verification_tokens($user)
+	/**
+  * @return mixed[]
+  */
+ private function load_verification_tokens($user): array
 	{
 		$storedHashes = get_user_meta($user->ID, self::META_KEY_VERIFICATION_TOKENS, true);
 		$validHashes = array();
 		if (is_array($storedHashes)) {
 			foreach ($storedHashes as $hash) {
 				$userId = $this->load_verification_token($hash);
-				if ($userId === $user->ID)
-					$validHashes[] = $hash;
+				if ($userId === $user->ID) {
+        $validHashes[] = $hash;
+    }
 			}
 		}
 		return $validHashes;
@@ -914,7 +940,7 @@ SQL;
 		return wp_hash($token);
 	}
 
-	public function generate_verification_token($user)
+	public function generate_verification_token($user): string
 	{
 		$token = Model_Crypto::random_bytes(self::VERIFICATION_TOKEN_BYTES);
 		$hash = $this->hash_verification_token($token);
@@ -930,7 +956,7 @@ SQL;
 		return base64_encode($token);
 	}
 
-	public function validate_verification_token($token, $user = null)
+	public function validate_verification_token($token, $user = null): bool
 	{
 		$hash = $this->hash_verification_token(base64_decode($token));
 		$userId = $this->load_verification_token($hash);
@@ -940,17 +966,18 @@ SQL;
 	public function get_user_count()
 	{
 		global $wpdb;
-		if (function_exists('get_user_count'))
-			return get_user_count();
+		if (function_exists('get_user_count')) {
+      return get_user_count();
+  }
 		return $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->users}");
 	}
 
-	public function has_large_user_base()
+	public function has_large_user_base(): bool
 	{
 		return $this->get_user_count() >= self::LARGE_USER_BASE_THRESHOLD;
 	}
 
-	public function should_force_user_counts()
+	public function should_force_user_counts(): bool
 	{
 		return isset($_GET['wfls-show-user-counts']);
 	}
@@ -958,8 +985,9 @@ SQL;
 	public function get_detailed_user_counts_if_enabled()
 	{
 		$force = $this->should_force_user_counts();
-		if ($this->has_large_user_base() && !$force)
-			return null;
+		if ($this->has_large_user_base() && !$force) {
+      return null;
+  }
 		return $this->detailed_user_counts($force);
 	}
 }

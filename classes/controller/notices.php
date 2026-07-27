@@ -24,7 +24,7 @@ class Controller_Notices
 		return $_shared;
 	}
 
-	private $persistentNotices = array();
+	private array $persistentNotices = array();
 
 	/**
 	 * Adds an admin notice to the display queue. If $user is provided, it will show only for that user, otherwise it
@@ -36,7 +36,7 @@ class Controller_Notices
 	 * @param bool|\WP_User $user If not false, the user that the notice should show for.
 	 * @param array $buttons Additional buttons to display before the dismiss button.
 	 */
-	public function add_notice($severity, $message, $category = false, $user = false, $buttons = array())
+	public function add_notice($severity, $message, $category = false, $user = false, $buttons = array()): void
 	{
 		$notices = $this->_notices($user);
 		foreach ($notices as $id => $n) {
@@ -69,22 +69,24 @@ class Controller_Notices
 	 * @param bool|string $category
 	 * @param bool|\WP_User $user
 	 */
-	public function remove_notice($id = false, $category = false, $user = false)
+	public function remove_notice($id = false, $category = false, $user = false): void
 	{
 		if ($id === false && $category === false) {
-			return;
-		} else if ($id !== false) {
+      return;
+  }
+  if ($id !== false) {
 			$category = false;
 		}
 
 		$notices = $this->_notices($user);
 		foreach ($notices as $nid => $n) {
-			if ($id == $nid) { //ID match
-				unset($notices[$nid]);
-				break;
-			} else if ($id !== false) {
-				continue;
-			}
+			if ($id == $nid) {
+       //ID match
+       unset($notices[$nid]);
+       break;
+   } elseif ($id !== false) {
+       continue;
+   }
 
 			if ($category !== false && isset($n['category']) && $category == $n['category']) { //Category match
 				unset($notices[$nid]);
@@ -94,15 +96,14 @@ class Controller_Notices
 	}
 
 	/**
-	 * Returns whether or not a notice exists for the given user.
-	 * 
-	 * @param bool|\WP_User $user
-	 * @return bool
-	 */
-	public function has_notice($user)
+  * Returns whether or not a notice exists for the given user.
+  *
+  * @param bool|\WP_User $user
+  */
+ public function has_notice($user): bool
 	{
 		$notices = $this->_notices($user);
-		return !!count($notices) || $this->has_persistent_notices();
+		return (bool) count($notices) || $this->has_persistent_notices();
 	}
 
 	/**
@@ -175,38 +176,39 @@ class Controller_Notices
 		Controller_Settings::shared()->set(Controller_Settings::OPTION_GLOBAL_NOTICES, $notices, true);
 	}
 
-	public function get_persistent_notice_ids()
+	public function get_persistent_notice_ids(): array
 	{
 		return array(
 			self::PERSISTENT_NOTICE_STANDALONE_DISCONTINUING,
 		);
 	}
 
-	private static function get_persistent_notice_dismiss_key($noticeId)
+	private function get_persistent_notice_dismiss_key(string $noticeId): string
 	{
 		return self::PERSISTENT_NOTICE_DISMISS_PREFIX . $noticeId;
 	}
 
-	public function register_persistent_notice($noticeId)
+	public function register_persistent_notice($noticeId): void
 	{
 		$this->persistentNotices[] = $noticeId;
 	}
 
-	public function has_persistent_notices()
+	public function has_persistent_notices(): bool
 	{
 		return count($this->persistentNotices) > 0;
 	}
 
-	public function dismiss_persistent_notice($userId, $noticeId)
+	public function dismiss_persistent_notice($userId, $noticeId): bool
 	{
-		if (!in_array($noticeId, $this->get_persistent_notice_ids(), true))
-			return false;
-		update_user_option($userId, self::get_persistent_notice_dismiss_key($noticeId), true, true);
+		if (!in_array($noticeId, $this->get_persistent_notice_ids(), true)) {
+      return false;
+  }
+		update_user_option($userId, $this->get_persistent_notice_dismiss_key($noticeId), true, true);
 		return true;
 	}
 
-	public function is_persistent_notice_dismissed($userId, $noticeId)
+	public function is_persistent_notice_dismissed($userId, $noticeId): bool
 	{
-		return (bool) get_user_option(self::get_persistent_notice_dismiss_key($noticeId), $userId);
+		return (bool) get_user_option($this->get_persistent_notice_dismiss_key($noticeId), $userId);
 	}
 }

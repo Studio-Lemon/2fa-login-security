@@ -30,7 +30,7 @@ class Controller_TOTP
 	 * @param string[] $recovery An array of recovery codes as hex strings.
 	 * @param bool|int $vtime The timestamp of the verification code or false to use the current timestamp.
 	 */
-	public function activate_2fa($user, $secret, $recovery, $vtime = false)
+	public function activate_2fa($user, $secret, $recovery, $vtime = false): void
 	{
 		if ($vtime === false) {
 			$vtime = Controller_Time::time();
@@ -60,7 +60,7 @@ class Controller_TOTP
 	 * @param string $code
 	 * @return bool|null Returns null if the user does not have 2FA enabled, false if the code is invalid, and true if valid.
 	 */
-	public function validate_2fa($user, $code, $update = true)
+	public function validate_2fa($user, $code, $update = true): ?bool
 	{
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
@@ -69,33 +69,33 @@ class Controller_TOTP
 			return null;
 		}
 
-		if (preg_match('/^(?:[a-f0-9]{4}\s*){4}$/i', $code)) { //Recovery code
-			$code = strtolower(preg_replace('/\s/i', '', $code));
-			$recoveryCodes = str_split(strtolower(bin2hex($record['recovery'])), 16);
-
-			$index = array_search($code, $recoveryCodes);
-			if ($index !== false) {
-				if ($update) {
-					unset($recoveryCodes[$index]);
-					$updatedRecoveryCodes = implode('', $recoveryCodes);
-					$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `recovery` = X%s WHERE `id` = %d", $updatedRecoveryCodes, $record['id']));
-				}
-				$wpdb->query('COMMIT');
-				return true;
-			}
-		} else if (preg_match('/^(?:[0-9]{3}\s*){2}$/i', $code)) { //TOTP code
-			$code = preg_replace('/\s/i', '', $code);
-			$secret = bin2hex($record['secret']);
-
-			$matches = $this->check_code($secret, $code, floor($record['vtime'] / self::TIME_WINDOW_LENGTH));
-			if ($matches !== false) {
-				if ($update) {
-					$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `vtime` = %d WHERE `id` = %d", $matches, $record['id']));
-				}
-				$wpdb->query('COMMIT');
-				return true;
-			}
-		}
+		if (preg_match('/^(?:[a-f0-9]{4}\s*){4}$/i', $code)) {
+      //Recovery code
+      $code = strtolower(preg_replace('/\s/i', '', $code));
+      $recoveryCodes = str_split(strtolower(bin2hex($record['recovery'])), 16);
+      $index = array_search($code, $recoveryCodes);
+      if ($index !== false) {
+   				if ($update) {
+   					unset($recoveryCodes[$index]);
+   					$updatedRecoveryCodes = implode('', $recoveryCodes);
+   					$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `recovery` = X%s WHERE `id` = %d", $updatedRecoveryCodes, $record['id']));
+   				}
+   				$wpdb->query('COMMIT');
+   				return true;
+   			}
+  } elseif (preg_match('/^(?:[0-9]{3}\s*){2}$/i', $code)) {
+      //TOTP code
+      $code = preg_replace('/\s/i', '', $code);
+      $secret = bin2hex($record['secret']);
+      $matches = $this->check_code($secret, $code, floor($record['vtime'] / self::TIME_WINDOW_LENGTH));
+      if ($matches !== false) {
+   				if ($update) {
+   					$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `vtime` = %d WHERE `id` = %d", $matches, $record['id']));
+   				}
+   				$wpdb->query('COMMIT');
+   				return true;
+   			}
+  }
 
 		$wpdb->query('ROLLBACK');
 		return false;
@@ -111,7 +111,7 @@ class Controller_TOTP
 	 * @param null|array $windows An array of time windows or null to use the default.
 	 * @return bool|int The time window if matches, otherwise false.
 	 */
-	public function check_code($secret, $code, $previous = null, $windows = null)
+	public function check_code($secret, $code, $previous = null, $windows = null): int|float|false
 	{
 		$timeCode = floor(Controller_Time::time() / self::TIME_WINDOW_LENGTH);
 
@@ -151,7 +151,7 @@ class Controller_TOTP
 	 * @param int $digits The number of digits.
 	 * @return string The TOTP value.
 	 */
-	private function _generate_totp($key, $time, $digits = 6)
+	private function _generate_totp($key, string $time, $digits = 6): string
 	{
 		$time = Model_Compat::hex2bin(str_pad($time, 16, '0', STR_PAD_LEFT));
 		$key = Model_Compat::hex2bin($key);

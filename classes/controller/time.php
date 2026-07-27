@@ -22,7 +22,7 @@ class Controller_Time
 		return $_shared;
 	}
 
-	public function install()
+	public function install(): void
 	{
 		wp_clear_scheduled_hook('TFA_LS_ntp_cron');
 		if (is_main_site()) {
@@ -31,26 +31,27 @@ class Controller_Time
 		Controller_Settings::shared()->reset_ntp_disabled_flag();
 	}
 
-	public function uninstall()
+	public function uninstall(): void
 	{
 		wp_clear_scheduled_hook('TFA_LS_ntp_cron');
 		Controller_Settings::shared()->reset_ntp_disabled_flag();
 	}
 
-	public function init()
+	public function init(): void
 	{
 		$this->_init_actions();
 	}
 
-	public function _init_actions()
+	public function _init_actions(): void
 	{
 		add_action('TFA_LS_ntp_cron', array($this, '_TFA_LS_ntp_cron'));
 	}
 
-	public function _TFA_LS_ntp_cron()
+	public function _TFA_LS_ntp_cron(): void
 	{
-		if (Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_DISABLING_NTP) && Controller_Settings::shared()->is_ntp_cron_disabled())
-			return;
+		if (Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_DISABLING_NTP) && Controller_Settings::shared()->is_ntp_cron_disabled()) {
+      return;
+  }
 		$ntp = self::ntp_time();
 		$time = time();
 
@@ -74,7 +75,7 @@ class Controller_Time
 	 * @param bool|int $time The timestamp to apply any offset to. If `false`, it will use the current timestamp.
 	 * @return int
 	 */
-	public static function time($time = false)
+	public static function time($time = false): float|int|array
 	{
 		if ($time === false) {
 			$time = time();
@@ -94,7 +95,7 @@ class Controller_Time
 	 * 
 	 * @return bool|float
 	 */
-	public static function ntp_time()
+	public static function ntp_time(): float|int|false
 	{
 		$servers = array('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org');
 
@@ -143,22 +144,19 @@ class Controller_Time
 			$remote_transmitted = $remote_transmitted_seconds + $remote_transmitted_fraction;
 
 			$delay = (($local_transmitted - $remote_originate) / 2)  - ($remote_transmitted - $remote_received);
-
-			$ntp_time =  $remote_transmitted - $delay;
-			return $ntp_time;
+			return $remote_transmitted - $delay;
 		}
 
 		return false;
 	}
 
 	/**
-	 * Formats and returns the given timestamp using the time zone set for the WordPress installation.
-	 *
-	 * @param string $format See the PHP docs on DateTime for the format options.
-	 * @param int|bool $timestamp Assumed to be in UTC. If false, defaults to the current timestamp.
-	 * @return string
-	 */
-	public static function format_local_time($format, $timestamp = false)
+  * Formats and returns the given timestamp using the time zone set for the WordPress installation.
+  *
+  * @param string $format See the PHP docs on DateTime for the format options.
+  * @param int|bool $timestamp Assumed to be in UTC. If false, defaults to the current timestamp.
+  */
+ public static function format_local_time($format, $timestamp = false): string
 	{
 		if ($timestamp === false) {
 			$timestamp = self::time();
@@ -178,18 +176,6 @@ class Controller_Time
 			$dt->setTimezone(new \DateTimeZone($tz));
 		} else {
 			$gmt = get_option('gmt_offset');
-			if (!empty($gmt)) {
-				if (PHP_VERSION_ID < 50510) {
-					$dtStr = gmdate("c", (int) ($timestamp + $gmt * 3600)); //Have to do it this way because of < PHP 5.5.10
-					$dt = new \DateTime($dtStr, $utc);
-				} else {
-					$direction = ($gmt > 0 ? '+' : '-');
-					$gmt = abs($gmt);
-					$h = (int) $gmt;
-					$m = ($gmt - $h) * 60;
-					$dt->setTimezone(new \DateTimeZone($direction . str_pad($h, 2, '0', STR_PAD_LEFT) . str_pad($m, 2, '0', STR_PAD_LEFT)));
-				}
-			}
 		}
 		return $dt->format($format);
 	}

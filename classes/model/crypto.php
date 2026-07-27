@@ -7,7 +7,7 @@ abstract class Model_Crypto
 	/**
 	 * Refreshes the secrets used by the plugin.
 	 */
-	public static function refresh_secrets()
+	public static function refresh_secrets(): void
 	{
 		Controller_Settings::shared()->set(Controller_Settings::OPTION_SHARED_HASH_SECRET_KEY, bin2hex(self::random_bytes(32)));
 		Controller_Settings::shared()->set(Controller_Settings::OPTION_SHARED_SYMMETRIC_SECRET_KEY, bin2hex(self::random_bytes(32)));
@@ -43,7 +43,7 @@ abstract class Model_Crypto
 	{
 		if (function_exists('openssl_get_publickey') && function_exists('openssl_get_cipher_methods')) {
 			$ciphers = openssl_get_cipher_methods();
-			return array_search('aes-256-cbc', $ciphers) !== false;
+			return in_array('aes-256-cbc', $ciphers);
 		}
 		return false;
 	}
@@ -58,7 +58,7 @@ abstract class Model_Crypto
 		if (function_exists('random_bytes')) {
 			try {
 				$rand = random_bytes($bytes);
-				if (is_string($rand) && self::strlen($rand) === $bytes) {
+				if (self::strlen($rand) === $bytes) {
 					return $rand;
 				}
 			} catch (\Exception $e) {
@@ -78,7 +78,7 @@ abstract class Model_Crypto
 		}
 		if (function_exists('openssl_random_pseudo_bytes')) {
 			$rand = @openssl_random_pseudo_bytes($bytes, $strong);
-			if (is_string($rand) && self::strlen($rand) === $bytes) {
+			if (self::strlen($rand) === $bytes) {
 				return $rand;
 			}
 		}
@@ -188,7 +188,7 @@ abstract class Model_Crypto
 
 		if (!$reset) {
 			$encoding = mb_internal_encoding();
-			array_push($encodings, $encoding);
+			$encodings[] = $encoding;
 			mb_internal_encoding('ISO-8859-1');
 		}
 

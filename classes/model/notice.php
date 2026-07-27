@@ -23,14 +23,14 @@ class Model_Notice
 		$this->_buttons = $buttons;
 	}
 
-	public function display_notice()
+	public function display_notice(): void
 	{
 		$severityClass = 'notice-info';
 		if ($this->_severity == self::SEVERITY_CRITICAL) {
-			$severityClass = 'notice-error';
-		} else if ($this->_severity == self::SEVERITY_WARNING) {
-			$severityClass = 'notice-warning';
-		}
+      $severityClass = 'notice-error';
+  } elseif ($this->_severity == self::SEVERITY_WARNING) {
+      $severityClass = 'notice-warning';
+  }
 
 		if (!preg_match('/^<p>/', $this->_messageHTML)) {
 			$this->_messageHTML = '<p>' . $this->_messageHTML . '</p>';
@@ -39,7 +39,7 @@ class Model_Notice
 		echo '<div class="wfls-notice notice ' . $severityClass . '" data-notice-id="' . esc_attr($this->_id) . '" data-notice-type="' . esc_attr($this->_category) . '">' .
 			$this->_messageHTML .
 			'<p>' .
-			implode('', array_map(function ($b) {
+			implode('', array_map(function (array $b): string {
 				return sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm" href="%1$s">%2$s</a>&nbsp;', esc_url($b['href']), esc_html($b['label']));
 			}, $this->_buttons)) .
 			sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm wfls-dismiss-link" href="#" onclick="GWFLS.dismiss_notice(\'%s\'); return false;">' . __('Dismiss', '2fa-login-security') . '</a>', esc_attr($this->_id)) .
