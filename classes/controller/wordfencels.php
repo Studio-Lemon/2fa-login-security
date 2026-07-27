@@ -284,7 +284,7 @@ class Controller_TFAuthLS
 		);
 	}
 
-	private function get_2fa_management_assets($embedded = false): array
+	private function get_2fa_management_assets(): array
 	{
 		$assets   = array(
 			Model_Script::create('wordfence-ls-jquery.qrcode', Model_Asset::js('jquery.qrcode.min.js'), array('jquery'), TFA_LS_VERSION),
@@ -293,27 +293,21 @@ class Controller_TFAuthLS
 			->withTranslation('You have unsaved changes to your options. If you leave this page, those changes will be lost.', __('You have unsaved changes to your options. If you leave this page, those changes will be lost.', '2fa-login-security'))
 			->setTranslationObjectName('WFLS_ADMIN_TRANSLATIONS');
 		$assets[] = Model_Style::create('wordfence-ls-admin', Model_Asset::css('admin.css'), array(), TFA_LS_VERSION);
-		$assets[] = Model_Style::create('wordfence-ls-ionicons', Model_Asset::css('ionicons.css'), array(), TFA_LS_VERSION);
-		if ($embedded) {
-			$assets[] = Model_Style::create('dashicons');
-			$assets[] = Model_Style::create('wordfence-ls-embedded', Model_Asset::css('embedded.css'), array(), TFA_LS_VERSION);
-		} else {
-			$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), TFA_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('TFAuthLSI18nStrings');
-		}
+
+		$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), TFA_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('TFAuthLSI18nStrings');
+
 
 		return $assets;
 	}
 
-	private function enqueue_2fa_management_assets($embedded = false): void
+	private function enqueue_2fa_management_assets(): void
 	{
 		if ($this->management_assets_enqueued) {
 			return;
 		}
 		wp_enqueue_script('jquery-ui-dialog');
 		wp_enqueue_style('wp-jquery-ui-dialog');
-		foreach ($this->get_2fa_management_assets($embedded) as $asset) {
-			$asset->enqueue();
-		}
+
 		foreach ($this->get_2fa_management_script_data() as $key => $data) {
 			wp_localize_script('wordfence-ls-admin', $key, $data);
 		}
