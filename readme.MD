@@ -7,11 +7,7 @@ This file tracks implementation changes made while creating the public fork.
 - Committed untouched upstream snapshot from Wordfence Login Security 1.1.16.
 
 ## Step 1 - Rename to 2FA Login Security
-- Renamed plugin bootstrap file from `wordfence-login-security.php` to `2fa-login-security.php`.
-- Updated plugin metadata and standalone bootstrap identity constants/functions.
-- Removed main Wordfence plugin runtime coupling from bootstrap loading flow.
-- Updated plugin text domain loading call to `2fa-login-security`.
-- Removed the standalone-discontinuation admin notice that instructed users to install the main Wordfence plugin.
+- Replaced remaining PHP translation text domain usages from `wordfence-login-security` to `2fa-login-security`.
 
 ## Ongoing
 - Additional changes will be appended here as implementation continues.

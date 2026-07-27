@@ -38,7 +38,7 @@ class Model_Notice {
 				$this->_messageHTML .
 				'<p>' .
 					implode('', array_map(function($b) { return sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm" href="%1$s">%2$s</a>&nbsp;', esc_url($b['href']), esc_html($b['label'])); }, $this->_buttons)) .
-					sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm wfls-dismiss-link" href="#" onclick="GWFLS.dismiss_notice(\'%s\'); return false;">' . __('Dismiss', 'wordfence-login-security') . '</a>', esc_attr($this->_id)) .
+					sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm wfls-dismiss-link" href="#" onclick="GWFLS.dismiss_notice(\'%s\'); return false;">' . __('Dismiss', '2fa-login-security') . '</a>', esc_attr($this->_id)) .
 				'</p>' .
 			'</div>';
 	}

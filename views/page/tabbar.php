@@ -1,5 +1,7 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('WORDFENCE_LS_VERSION')) {
+	exit;
+}
 /**
  * @var array $tabs An array of Tab instances. Required.
  */
@@ -8,7 +10,6 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 	<div class="wfls-col-xs-12">
 		<div class="wp-header-end"></div>
 		<ul class="wfls-page-tabs">
-			<li class="wfls-header-icon"></li>
 			<?php foreach ($tabs as $t): ?>
 				<?php
 				$a = $t->a;

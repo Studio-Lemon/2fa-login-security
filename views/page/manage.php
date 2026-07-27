@@ -21,14 +21,14 @@ $requires2fa = \WordfenceLS\Controller_Users::shared()->requires_2fa($user, $inG
 $lockedOut = $requires2fa && !$enabled;
 
 ?>
-<p><?php echo wp_kses(sprintf(/* translators: Support URL */ __('Two-Factor Authentication, or 2FA, significantly improves login security for your website. Wordfence 2FA works with a number of TOTP-based apps like Google Authenticator, FreeOTP, and Authy. For a full list of tested TOTP-based apps, <a href="%s" target="_blank" rel="noopener noreferrer">click here</a>.', 'wordfence-login-security'), \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
+<p><?php echo wp_kses(sprintf(/* translators: Support URL */ __('Two-Factor Authentication, or 2FA, significantly improves login security for your website. Wordfence 2FA works with a number of TOTP-based apps like Google Authenticator, FreeOTP, and Authy. For a full list of tested TOTP-based apps, <a href="%s" target="_blank" rel="noopener noreferrer">click here</a>.', '2fa-login-security'), \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
 <?php if ($canEditUsers): ?>
 <div id="wfls-editing-display" class="wfls-flex-row wfls-flex-row-xs-wrappable wfls-flex-row-equal-heights">
 	<div class="wfls-block wfls-always-active wfls-flex-item-full-width wfls-add-bottom">
 		<div class="wfls-block-header wfls-block-header-border-bottom">
 			<div class="wfls-block-header-content">
 				<div class="wfls-block-title">
-					<strong><?php echo wp_kses(sprintf(/* translators: 1. WordPress avatar tag; 2. WordPress username */ __('Editing User:&nbsp;&nbsp;%1$s <span class="wfls-text-plain">%2$s</span>', 'wordfence-login-security'), get_avatar($user->ID, 16, '', $user->user_login), \WordfenceLS\Text\Model_HTML::esc_html($user->user_login) . ($ownAccount ? ' ' . __('(you)', 'wordfence-login-security') : '')), array('span'=>array('class'=>array()))); ?></strong>
+					<strong><?php echo wp_kses(sprintf(/* translators: 1. WordPress avatar tag; 2. WordPress username */ __('Editing User:&nbsp;&nbsp;%1$s <span class="wfls-text-plain">%2$s</span>', '2fa-login-security'), get_avatar($user->ID, 16, '', $user->user_login), \WordfenceLS\Text\Model_HTML::esc_html($user->user_login) . ($ownAccount ? ' ' . __('(you)', '2fa-login-security') : '')), array('span'=>array('class'=>array()))); ?></strong>
 				</div>
 			</div>
 		</div>
@@ -105,15 +105,15 @@ if (empty($tz)) {
 }
 ?>
 <?php if (\WordfenceLS\Controller_Permissions::shared()->can_manage_settings()): ?>
-<p><?php esc_html_e('Server Time:', 'wordfence-login-security'); ?> <?php echo date('Y-m-d H:i:s', $time); ?> UTC (<?php echo \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $time) . ' ' . $tz; ?>)<br>
-	<?php esc_html_e('Browser Time:', 'wordfence-login-security'); ?> <script type="application/javascript">var date = new Date(); document.write(date.toUTCString() + ' (' + date.toString() + ')');</script><br>
+<p><?php esc_html_e('Server Time:', '2fa-login-security'); ?> <?php echo date('Y-m-d H:i:s', $time); ?> UTC (<?php echo \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $time) . ' ' . $tz; ?>)<br>
+	<?php esc_html_e('Browser Time:', '2fa-login-security'); ?> <script type="application/javascript">var date = new Date(); document.write(date.toUTCString() + ' (' + date.toString() + ')');</script><br>
 <?php
 if (\WordfenceLS\Controller_Settings::shared()->is_ntp_enabled()) {
-	echo esc_html__('Corrected Time (NTP):', 'wordfence-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
+	echo esc_html__('Corrected Time (NTP):', '2fa-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
 }
 else if (WORDFENCE_LS_FROM_CORE && $correctedTime != $time) {
-	echo esc_html__('Corrected Time (WF):', 'wordfence-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
+	echo esc_html__('Corrected Time (WF):', '2fa-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
 }
 ?>
-<?php esc_html_e('Detected IP:', 'wordfence-login-security'); ?> <?php echo \WordfenceLS\Text\Model_HTML::esc_html(\WordfenceLS\Model_Request::current()->ip()); ?></p>
+<?php esc_html_e('Detected IP:', '2fa-login-security'); ?> <?php echo \WordfenceLS\Text\Model_HTML::esc_html(\WordfenceLS\Model_Request::current()->ip()); ?></p>
 <?php endif; ?>

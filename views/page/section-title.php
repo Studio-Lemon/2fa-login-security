@@ -1,5 +1,7 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('WORDFENCE_LS_VERSION')) {
+	exit;
+}
 /**
  * @var \WordfenceLS\Page\Model_Title $title The page title parameters.
  * @var bool $showIcon Whether or not to show the header icon. Optional, defaults to false.

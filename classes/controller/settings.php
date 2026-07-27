@@ -6,7 +6,8 @@ use WordfenceLS\Settings\Model_DB;
 use WordfenceLS\Settings\Model_WPOptions;
 use WordfenceLS\Utility_Number;
 
-class Controller_Settings {
+class Controller_Settings
+{
 	//Configurable
 	const OPTION_XMLRPC_ENABLED = 'xmlrpc-enabled';
 	const OPTION_IP_SOURCE = 'ip-source';
@@ -22,7 +23,7 @@ class Controller_Settings {
 	const OPTION_PREFIX_REQUIRED_2FA_ROLE = 'required-2fa-role';
 	const OPTION_ENABLE_LOGIN_HISTORY_COLUMNS = 'enable-login-history-columns';
 	const OPTION_STACK_UI_COLUMNS = 'stack-ui-columns';
-	
+
 	//Internal
 	const OPTION_GLOBAL_NOTICES = 'global-notices';
 	const OPTION_LAST_SECRET_REFRESH = 'last-secret-refresh';
@@ -43,35 +44,38 @@ class Controller_Settings {
 	const STATE_2FA_DISABLED = 'disabled';
 	const STATE_2FA_OPTIONAL = 'optional';
 	const STATE_2FA_REQUIRED = 'required';
-	
+
 	protected $_settingsStorage;
-	
+
 	/**
 	 * Returns the singleton Controller_Settings.
 	 *
 	 * @return Controller_Settings
 	 */
-	public static function shared() {
+	public static function shared()
+	{
 		static $_shared = null;
 		if ($_shared === null) {
 			$_shared = new Controller_Settings();
 		}
 		return $_shared;
 	}
-	
-	public function __construct($settingsStorage = false) {
+
+	public function __construct($settingsStorage = false)
+	{
 		if (!$settingsStorage) {
 			$settingsStorage = new Model_DB();
 		}
 		$this->_settingsStorage = $settingsStorage;
 		$this->_migrate_admin_2fa_requirements_to_roles();
 	}
-	
+
 	/**
 	 * Returns a key/value array of all defaults. The value is the storage-ready value (e.g., a JSON string for array
 	 * settings).
 	 */
-	protected function _defaults() {
+	protected function _defaults()
+	{
 		return array(
 			self::OPTION_XMLRPC_ENABLED => true,
 			self::OPTION_IP_SOURCE => Model_Request::IP_SOURCE_AUTOMATIC,
@@ -97,24 +101,27 @@ class Controller_Settings {
 			self::OPTION_DISMISSED_FRESH_INSTALL_MODAL => false,
 		);
 	}
-	
-	public function set_defaults() {
+
+	public function set_defaults()
+	{
 		$defaults = $this->_defaults();
-		$defaults = array_column(array_map(function($k, $v) {
+		$defaults = array_column(array_map(function ($k, $v) {
 			return array('k' => $k, 'v' => array(
 				'value' => $v,
 				'autoload' => Model_Settings::AUTOLOAD_YES,
 				'allowOverwrite' => false,
 			));
-			}, array_keys($defaults), array_values($defaults)), 'v', 'k');
+		}, array_keys($defaults), array_values($defaults)), 'v', 'k');
 		$this->_settingsStorage->set_multiple($defaults);
 	}
-	
-	public function set($key, $value, $already_validated = false) {
+
+	public function set($key, $value, $already_validated = false)
+	{
 		return $this->set_multiple(array($key => $value), $already_validated);
 	}
-	
-	public function set_multiple($changes, $already_validated = false) {
+
+	public function set_multiple($changes, $already_validated = false)
+	{
 		if (!$already_validated && $this->validate_multiple($changes) !== true) {
 			return false;
 		}
@@ -123,46 +130,52 @@ class Controller_Settings {
 		$this->_settingsStorage->set_multiple($changes);
 		return true;
 	}
-	
-	public function get($key, $default = false) {
+
+	public function get($key, $default = false)
+	{
 		return $this->_settingsStorage->get($key, $default);
 	}
-	
-	public function get_bool($key, $default = false) {
+
+	public function get_bool($key, $default = false)
+	{
 		return Utility_Number::truthyToBool($this->get($key, $default));
 	}
-	
-	public function get_int($key, $default = 0) {
+
+	public function get_int($key, $default = 0)
+	{
 		return intval($this->get($key, $default));
 	}
-	
-	public function get_float($key, $default = 0.0) {
+
+	public function get_float($key, $default = 0.0)
+	{
 		return (float) $this->get($key, $default);
 	}
-	
-	public function get_array($key, $default = array()) {
+
+	public function get_array($key, $default = array())
+	{
 		$value = $this->get($key, null);
 		if (is_string($value)) {
 			$value = @json_decode($value, true);
-		}
-		else {
+		} else {
 			$value = null;
 		}
 		return is_array($value) ? $value : $default;
 	}
-	
-	public function remove($key) {
+
+	public function remove($key)
+	{
 		$this->_settingsStorage->remove($key);
 	}
-	
-	public function all() {
+
+	public function all()
+	{
 		$result = $this->_settingsStorage->get_multiple($this->_defaults());
 		foreach ($result as $key => &$value) {
 			$value = $this->inflate($key, $value);
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Validates whether a user-entered setting value is acceptable. Returns true if valid or an error message if not.
 	 *
@@ -170,7 +183,8 @@ class Controller_Settings {
 	 * @param mixed $value
 	 * @return bool|string
 	 */
-	public function validate($key, $value) {
+	public function validate($key, $value)
+	{
 		switch ($key) {
 			//Boolean
 			case self::OPTION_XMLRPC_ENABLED:
@@ -185,65 +199,68 @@ class Controller_Settings {
 			case self::OPTION_USER_COUNT_QUERY_STATE:
 			case self::OPTION_DISABLE_TEMPORARY_TABLES:
 				return true;
-				
-			//Int
+
+				//Int
 			case self::OPTION_LAST_SECRET_REFRESH:
 				return is_numeric($value); //Left using is_numeric to prevent issues with existing values
 			case self::OPTION_SCHEMA_VERSION:
 				return Utility_Number::isInteger($value, 0);
-				
-			//Array
+
+				//Array
 			case self::OPTION_GLOBAL_NOTICES:
 				return is_array($value);
-				
-			//Special
+
+				//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
 				$value = !is_string($value) ? '' : $value;
-				$parsed = array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $value)));
+				$parsed = array_filter(array_map(function ($s) {
+					return trim($s);
+				}, preg_split('/[\r\n]/', $value)));
 				foreach ($parsed as $entry) {
 					if (!Controller_Whitelist::shared()->is_valid_range($entry)) {
-						return sprintf(/* translators: IP or range */ __('The IP/range %s is invalid.', 'wordfence-login-security'), esc_html($entry));
+						return sprintf(/* translators: IP or range */__('The IP/range %s is invalid.', '2fa-login-security'), esc_html($entry));
 					}
 				}
 				return true;
 			case self::OPTION_IP_SOURCE:
 				if (!in_array($value, array(Model_Request::IP_SOURCE_AUTOMATIC, Model_Request::IP_SOURCE_REMOTE_ADDR, Model_Request::IP_SOURCE_X_FORWARDED_FOR, Model_Request::IP_SOURCE_X_REAL_IP))) {
-					return __('An invalid IP source was provided.', 'wordfence-login-security');
+					return __('An invalid IP source was provided.', '2fa-login-security');
 				}
 				return true;
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD:
 				$gracePeriodEnd = strtotime($value);
 				if ($gracePeriodEnd <= \WordfenceLS\Controller_Time::time()) {
-					return __('The grace period end time must be in the future.', 'wordfence-login-security');
+					return __('The grace period end time must be in the future.', '2fa-login-security');
 				}
 				return true;
 			case self::OPTION_REMEMBER_DEVICE_DURATION:
 				return is_numeric($value) && $value > 0;
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
 				if (!is_numeric($value) || $value < 0 || $value > self::MAX_REQUIRE_2FA_USER_GRACE_PERIOD) {
-					return sprintf(/* translators: 1. Minimum number of days. 2. Maximum number of days. */ __('The grace period day limit must be between %1$d and %2$d.', 'wordfence-login-security'), 0, self::MAX_REQUIRE_2FA_USER_GRACE_PERIOD);
+					return sprintf(/* translators: 1. Minimum number of days. 2. Maximum number of days. */__('The grace period day limit must be between %1$d and %2$d.', '2fa-login-security'), 0, self::MAX_REQUIRE_2FA_USER_GRACE_PERIOD);
 				}
 				return true;
 		}
 		return true;
 	}
-	
-	public function validate_multiple($values) {
+
+	public function validate_multiple($values)
+	{
 		$errors = array();
 		foreach ($values as $key => $value) {
-			$status = $this->validate($key, $value); 
+			$status = $this->validate($key, $value);
 			if ($status !== true) {
 				$errors[$key] = $status;
 			}
 		}
-		
+
 		if (!empty($errors)) {
 			return $errors;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Cleans and normalizes a setting value for use in saving.
 	 *
@@ -251,7 +268,8 @@ class Controller_Settings {
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public function clean($key, $value) {
+	public function clean($key, $value)
+	{
 		switch ($key) {
 			//Boolean
 			case self::OPTION_XMLRPC_ENABLED:
@@ -266,22 +284,24 @@ class Controller_Settings {
 			case self::OPTION_USER_COUNT_QUERY_STATE:
 			case self::OPTION_DISABLE_TEMPORARY_TABLES:
 				return Utility_Number::truthyToBool($value);
-				
-			//Int
+
+				//Int
 			case self::OPTION_REMEMBER_DEVICE_DURATION:
 			case self::OPTION_LAST_SECRET_REFRESH:
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
 			case self::OPTION_SCHEMA_VERSION:
 				return (int) $value;
-				
-			//Array
+
+				//Array
 			case self::OPTION_GLOBAL_NOTICES:
 				return json_encode($value);
-			
-			//Special
+
+				//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
 				$value = !is_string($value) ? '' : $value;
-				$parsed = array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $value)));
+				$parsed = array_filter(array_map(function ($s) {
+					return trim($s);
+				}, preg_split('/[\r\n]/', $value)));
 				$cleaned = array();
 				foreach ($parsed as $item) {
 					$cleaned[] = $this->_sanitize_ip_range($item);
@@ -290,11 +310,10 @@ class Controller_Settings {
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD:
 				$dt = $this->_parse_local_time($value);
 				return $dt->format('U');
-
 		}
 		return $value;
 	}
-	
+
 	/**
 	 * Normalizes a setting value from its saved state into the desired type.
 	 *
@@ -302,7 +321,8 @@ class Controller_Settings {
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	public function inflate($key, $value) {
+	public function inflate($key, $value)
+	{
 		switch ($key) {
 			//Boolean
 			case self::OPTION_XMLRPC_ENABLED:
@@ -317,27 +337,30 @@ class Controller_Settings {
 			case self::OPTION_USER_COUNT_QUERY_STATE:
 			case self::OPTION_DISABLE_TEMPORARY_TABLES:
 				return Utility_Number::truthyToBool($value);
-			
-			//Int
+
+				//Int
 			case self::OPTION_REMEMBER_DEVICE_DURATION:
 			case self::OPTION_LAST_SECRET_REFRESH:
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
 			case self::OPTION_SCHEMA_VERSION:
 				return (int) $value;
-			
-			//Array
+
+				//Array
 			case self::OPTION_GLOBAL_NOTICES:
 				return json_decode($value, true);
-			
-			//Special
+
+				//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
 				$value = !is_string($value) ? '' : $value;
-				return implode("\n", array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $value))));
+				return implode("\n", array_filter(array_map(function ($s) {
+					return trim($s);
+				}, preg_split('/[\r\n]/', $value))));
 		}
 		return $value;
 	}
-	
-	public function clean_multiple($changes) {
+
+	public function clean_multiple($changes)
+	{
 		$cleaned = array();
 		foreach ($changes as $key => $value) {
 			$cleaned[$key] = $this->clean($key, $value);
@@ -345,18 +368,21 @@ class Controller_Settings {
 		return $cleaned;
 	}
 
-	private function get_required_2fa_role_key($role) {
+	private function get_required_2fa_role_key($role)
+	{
 		return implode('.', array(self::OPTION_PREFIX_REQUIRED_2FA_ROLE, $role));
 	}
 
-	public function get_required_2fa_role_activation_time($role) {
+	public function get_required_2fa_role_activation_time($role)
+	{
 		$time = $this->get_int($this->get_required_2fa_role_key($role), -1);
 		if ($time < 0)
 			return false;
 		return $time;
 	}
 
-	public function get_user_2fa_grace_period() {
+	public function get_user_2fa_grace_period()
+	{
 		return $this->get_int(self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD, self::DEFAULT_REQUIRE_2FA_USER_GRACE_PERIOD);
 	}
 
@@ -369,27 +395,26 @@ class Controller_Settings {
 	 * @param array &$settings the array of settings to process, this function may append additional values from preprocessing
 	 * @return bool
 	 */
-	public function preprocess($key, $value, &$settings) {
+	public function preprocess($key, $value, &$settings)
+	{
 		if (preg_match('/^enabled-roles\.(.+)$/', $key, $matches)) { //Enabled roles are stored as capabilities rather than in the settings storage
 			$role = $matches[1];
 			if ($role === 'super-admin') {
 				$roleValid = true;
-			}
-			else if (in_array($value, array(self::STATE_2FA_OPTIONAL, self::STATE_2FA_REQUIRED))) {
+			} else if (in_array($value, array(self::STATE_2FA_OPTIONAL, self::STATE_2FA_REQUIRED))) {
 				$roleValid = Controller_Permissions::shared()->allow_2fa_self($role);
-			}
-			else {
+			} else {
 				$roleValid = Controller_Permissions::shared()->disallow_2fa_self($role);
 			}
-			
+
 			if (!in_array($value, array(self::STATE_2FA_OPTIONAL, self::STATE_2FA_REQUIRED))) {
 				$value = self::STATE_2FA_DISABLED;
 			}
-			
+
 			if ($roleValid) {
 				$settings[$this->get_required_2fa_role_key($role)] = ($value === self::STATE_2FA_REQUIRED ? time() : -1);
 			}
-			
+
 			/**
 			 * Fires when 2FA availability/required on a role changes.
 			 *
@@ -399,16 +424,16 @@ class Controller_Settings {
 			 * @param string $state The state of 2FA on the role.
 			 */
 			do_action('wordfence_ls_changed_2fa_required', $role, $value);
-			
+
 			return true;
 		}
-		
+
 		//Settings that will dispatch actions
 		switch ($key) {
 			case self::OPTION_XMLRPC_ENABLED:
 				$before = $this->get($key);
 				$after = $value;
-				
+
 				if ($before != $after) {
 					/**
 					 * Fires when the XML-RPC 2FA requirement changes.
@@ -424,7 +449,7 @@ class Controller_Settings {
 			case self::OPTION_IP_SOURCE:
 				$before = $this->get($key);
 				$after = $value;
-				
+
 				if ($before != $after) {
 					/**
 					 * Fires when the IP source changes.
@@ -440,7 +465,7 @@ class Controller_Settings {
 			case self::OPTION_IP_TRUSTED_PROXIES:
 				$before = $this->trusted_proxies();
 				$after = explode("\n", $value); //Already cleaned here so just re-split
-				
+
 				if (count($before) == count($after) && empty(array_diff($before, $after))) {
 					/**
 					 * Fires when the trusted proxy list changes.
@@ -456,7 +481,7 @@ class Controller_Settings {
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
 				$before = $this->get($key);
 				$after = $value;
-				
+
 				if ($before != $after) {
 					/**
 					 * Fires when the grace period changes.
@@ -472,7 +497,7 @@ class Controller_Settings {
 			case self::OPTION_ALLOW_XML_RPC:
 				$before = $this->get($key);
 				$after = $value;
-				
+
 				if ($before != $after) {
 					/**
 					 * Fires when the XML-RPC is enabled/disabled.
@@ -486,11 +511,12 @@ class Controller_Settings {
 				}
 				break;
 		}
-		
+
 		return false;
 	}
-	
-	public function preprocess_multiple($changes) {
+
+	public function preprocess_multiple($changes)
+	{
 		$remaining = array();
 		foreach ($changes as $key => $value) {
 			if (!$this->preprocess($key, $value, $remaining)) {
@@ -499,29 +525,35 @@ class Controller_Settings {
 		}
 		return $remaining;
 	}
-	
+
 	/**
 	 * Convenience
 	 */
-	
+
 	/**
 	 * Returns a cleaned array containing the trusted proxy entries.
 	 *
 	 * @return array
 	 */
-	public function trusted_proxies() {
-		return array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $this->get(self::OPTION_IP_TRUSTED_PROXIES, ''))));
+	public function trusted_proxies()
+	{
+		return array_filter(array_map(function ($s) {
+			return trim($s);
+		}, preg_split('/[\r\n]/', $this->get(self::OPTION_IP_TRUSTED_PROXIES, ''))));
 	}
 
-	public function get_ntp_failure_count() {
+	public function get_ntp_failure_count()
+	{
 		return $this->get_int(self::OPTION_NTP_FAILURE_COUNT, 0);
 	}
 
-	public function reset_ntp_failure_count() {
+	public function reset_ntp_failure_count()
+	{
 		$this->set(self::OPTION_NTP_FAILURE_COUNT, 0);
 	}
 
-	public function increment_ntp_failure_count() {
+	public function increment_ntp_failure_count()
+	{
 		$count = $this->get_ntp_failure_count();
 		if ($count < 0)
 			return false;
@@ -530,77 +562,80 @@ class Controller_Settings {
 		return $count;
 	}
 
-	public function is_ntp_disabled_via_constant() {
+	public function is_ntp_disabled_via_constant()
+	{
 		return defined('WORDFENCE_LS_DISABLE_NTP') && WORDFENCE_LS_DISABLE_NTP;
 	}
 
-	public function is_ntp_enabled($requireOffset = true) {
+	public function is_ntp_enabled($requireOffset = true)
+	{
 		if ($this->is_ntp_cron_disabled())
 			return false;
 		if ($this->get_bool(self::OPTION_USE_NTP, true)) {
 			if ($requireOffset) {
 				$offset = $this->get(self::OPTION_NTP_OFFSET, null);
 				return $offset !== null && abs((int)$offset) <= Controller_TOTP::TIME_WINDOW_LENGTH;
-			}
-			else {
+			} else {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public function is_ntp_cron_disabled(&$failureCount = null) {
+	public function is_ntp_cron_disabled(&$failureCount = null)
+	{
 		if ($this->is_ntp_disabled_via_constant())
 			return true;
 		$failureCount = $this->get_ntp_failure_count();
 		if ($failureCount >= Controller_Time::FAILURE_LIMIT) {
 			return true;
-		}
-		else if ($failureCount < 0) {
+		} else if ($failureCount < 0) {
 			$failureCount = 0;
 			return true;
 		}
 		return false;
 	}
 
-	public function disable_ntp_cron() {
+	public function disable_ntp_cron()
+	{
 		$this->set(self::OPTION_NTP_FAILURE_COUNT, -1);
 	}
 
-	public function are_login_history_columns_enabled() {
+	public function are_login_history_columns_enabled()
+	{
 		return Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS, true);
 	}
 
-	public function should_stack_ui_columns() {
+	public function should_stack_ui_columns()
+	{
 		return self::shared()->get_bool(Controller_Settings::OPTION_STACK_UI_COLUMNS, true);
 	}
 
 	/**
 	 * Utility
 	 */
-	
+
 	/**
 	 * Parses the given time string and returns its DateTime with the server's configured time zone.
 	 * 
 	 * @param string $timestring
 	 * @return \DateTime
 	 */
-	protected function _parse_local_time($timestring) {
+	protected function _parse_local_time($timestring)
+	{
 		$utc = new \DateTimeZone('UTC');
 		$tz = get_option('timezone_string');
 		if (!empty($tz)) {
 			$tz = new \DateTimeZone($tz);
 			return new \DateTime($timestring, $tz);
-		}
-		else {
+		} else {
 			$gmt = get_option('gmt_offset');
 			if (!empty($gmt)) {
 				if (PHP_VERSION_ID < 50510) {
 					$timestamp = strtotime($timestring);
 					$dtStr = gmdate("c", (int) ($timestamp + $gmt * 3600)); //Have to do it this way because of < PHP 5.5.10
 					return new \DateTime($dtStr, $utc);
-				}
-				else {
+				} else {
 					$direction = ($gmt > 0 ? '+' : '-');
 					$gmt = abs($gmt);
 					$h = (int) $gmt;
@@ -612,36 +647,37 @@ class Controller_Settings {
 		}
 		return new \DateTime($timestring);
 	}
-	
+
 	/**
 	 * Cleans a user-entered IP range of unnecessary characters and normalizes some glyphs.
 	 *
 	 * @param string $range
 	 * @return string
 	 */
-	protected function _sanitize_ip_range($range) {
+	protected function _sanitize_ip_range($range)
+	{
 		$range = preg_replace('/\s/', '', $range); //Strip whitespace
 		$range = preg_replace('/[\\x{2013}-\\x{2015}]/u', '-', $range); //Non-hyphen dashes to hyphen
 		$range = strtolower($range);
-		
+
 		if (preg_match('/^\d+-\d+$/', $range)) { //v5 32 bit int style format
 			list($start, $end) = explode('-', $range);
 			$start = long2ip($start);
 			$end = long2ip($end);
 			$range = "{$start}-{$end}";
 		}
-		
+
 		return $range;
 	}
 
-	private function _migrate_admin_2fa_requirements_to_roles() {
+	private function _migrate_admin_2fa_requirements_to_roles()
+	{
 		if (!$this->get_bool(self::OPTION_REQUIRE_2FA_ADMIN))
 			return;
 		$time = time();
 		if (is_multisite()) {
 			$this->set($this->get_required_2fa_role_key('super-admin'), $time, true);
-		}
-		else {
+		} else {
 			$roles = new \WP_Roles();
 			foreach ($roles->roles as $key => $data) {
 				$role = $roles->get_role($key);
@@ -655,7 +691,8 @@ class Controller_Settings {
 		$this->remove(self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED);
 	}
 
-	public function reset_ntp_disabled_flag() {
+	public function reset_ntp_disabled_flag()
+	{
 		$this->remove(self::OPTION_USE_NTP);
 		$this->remove(self::OPTION_NTP_OFFSET);
 		$this->remove(self::OPTION_NTP_FAILURE_COUNT);
