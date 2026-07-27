@@ -1,8 +1,8 @@
 === 2FA Login Security ===
 Contributors: 2fa-login-security
 Tags: security, login security, 2fa, two factor authentication, xml-rpc, mfa, 2 factor
-Requires at least: 4.7
-Requires PHP: 7.0
+Requires at least: 6.0
+Requires PHP: 8.1
 Tested up to: 7.0
 Stable tag: 1.1.16
 
