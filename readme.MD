@@ -58,3 +58,8 @@ This file tracks implementation changes made while creating the public fork.
 - Added a dedicated authenticated form handler (`admin_post_wfls_save_settings`) to validate and persist settings updates.
 - Removed Vue-specific script loading, import-map injection, script tag mutation hooks, and Vue mount points.
 - Removed bundled Vue runtime and Vue settings app assets from the plugin package.
+
+## Step 9 - Start source CSS/JS files
+- Added `src/css/` and `src/js/` directories as stable source locations for front-end assets.
+- Seeded source files from currently shipped versioned assets to establish an editable baseline.
+- Added `src/README.md` documenting source-to-bundle mapping and current workflow state.
