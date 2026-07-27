@@ -21,7 +21,7 @@ $requires2fa = \WordfenceLS\Controller_Users::shared()->requires_2fa($user, $inG
 $lockedOut = $requires2fa && !$enabled;
 
 ?>
-<p><?php echo wp_kses(sprintf(/* translators: Support URL */ __('Two-Factor Authentication, or 2FA, significantly improves login security for your website. Wordfence 2FA works with a number of TOTP-based apps like Google Authenticator, FreeOTP, and Authy. For a full list of tested TOTP-based apps, <a href="%s" target="_blank" rel="noopener noreferrer">click here</a>.', '2fa-login-security'), \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
+<p><?php echo wp_kses(sprintf(/* translators: Support URL */ __('Two-Factor Authentication, or 2FA, significantly improves login security for your website. 2FA Login Security works with a number of TOTP-based apps like Google Authenticator, FreeOTP, and Authy. For more details, <a href="%s" target="_blank" rel="noopener noreferrer">visit the plugin page</a>.', '2fa-login-security'), \WordfenceLS\Controller_Support::esc_supportURL(\WordfenceLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA)), array('a'=>array('href'=>array(), 'target'=>array(), 'rel'=>array()))); ?></p>
 <?php if ($canEditUsers): ?>
 <div id="wfls-editing-display" class="wfls-flex-row wfls-flex-row-xs-wrappable wfls-flex-row-equal-heights">
 	<div class="wfls-block wfls-always-active wfls-flex-item-full-width wfls-add-bottom">
@@ -110,9 +110,6 @@ if (empty($tz)) {
 <?php
 if (\WordfenceLS\Controller_Settings::shared()->is_ntp_enabled()) {
 	echo esc_html__('Corrected Time (NTP):', '2fa-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
-}
-else if (WORDFENCE_LS_FROM_CORE && $correctedTime != $time) {
-	echo esc_html__('Corrected Time (WF):', '2fa-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \WordfenceLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
 }
 ?>
 <?php esc_html_e('Detected IP:', '2fa-login-security'); ?> <?php echo \WordfenceLS\Text\Model_HTML::esc_html(\WordfenceLS\Model_Request::current()->ip()); ?></p>

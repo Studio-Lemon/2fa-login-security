@@ -19,9 +19,6 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-
-define('WORDFENCE_LS_FROM_CORE', false);
-
 define('WORDFENCE_LS_VERSION', '1.1.16');
 define('WORDFENCE_LS_BUILD_NUMBER', '1777414061');
 
@@ -31,14 +28,12 @@ if (!defined('WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
 	define('WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15);
 }
 
-if (!WORDFENCE_LS_FROM_CORE) {
-	global $wp_plugin_paths;
-	foreach ($wp_plugin_paths as $dir => $realdir) {
-		if (strpos(__FILE__, $realdir) === 0) {
-			define('WORDFENCE_LS_FCPATH', $dir . '/' . basename(__FILE__));
-			define('WORDFENCE_LS_PATH', trailingslashit($dir));
-			break;
-		}
+global $wp_plugin_paths;
+foreach ($wp_plugin_paths as $dir => $realdir) {
+	if (strpos(__FILE__, $realdir) === 0) {
+		define('WORDFENCE_LS_FCPATH', $dir . '/' . basename(__FILE__));
+		define('WORDFENCE_LS_PATH', trailingslashit($dir));
+		break;
 	}
 }
 
@@ -85,6 +80,6 @@ if (!defined('WORDFENCE_LS_AUTOLOADER_REGISTERED')) {
 	spl_autoload_register('wordfence_ls_autoload');
 }
 
-if (!defined('WORDFENCE_LS_VERSIONONLY_MODE') && (!defined('WORDFENCE_USE_LEGACY_2FA') || (defined('WORDFENCE_USE_LEGACY_2FA') && !WORDFENCE_USE_LEGACY_2FA))) { //Used to get version from file
+if (!defined('WORDFENCE_LS_VERSIONONLY_MODE')) { //Used to get version from file
 	\WordfenceLS\Controller_WordfenceLS::shared()->init();
 }

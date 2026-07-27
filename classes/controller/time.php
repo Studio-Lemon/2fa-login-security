@@ -63,8 +63,7 @@ class Controller_Time {
 	}
 	
 	/**
-	 * Returns the current UTC timestamp, offset as needed to reflect the time retrieved from an NTP request or (if
-	 * running in the complete plugin) offset as needed from the Wordfence server's true time.
+	 * Returns the current UTC timestamp, offset as needed to reflect the time retrieved from an NTP request.
 	 * 
 	 * @param bool|int $time The timestamp to apply any offset to. If `false`, it will use the current timestamp.
 	 * @return int
@@ -78,10 +77,7 @@ class Controller_Time {
 		if (Controller_Settings::shared()->is_ntp_enabled()) {
 			$offset = Controller_Settings::shared()->get_int(Controller_Settings::OPTION_NTP_OFFSET);
 		}
-		else if (WORDFENCE_LS_FROM_CORE) {
-			$offset = \wfUtils::normalizedTime($time) - $time;
-		}
-		
+
 		return $time + $offset;
 	}
 	

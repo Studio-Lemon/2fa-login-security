@@ -63,14 +63,9 @@ class Controller_WordfenceLS
 		add_action('user_new_form', array($this, '_user_new_form'));
 		add_action('user_register', array($this, '_user_register'));
 
-		$useSubmenu = WORDFENCE_LS_FROM_CORE;
-		if (is_multisite() && !is_network_admin()) {
-			$useSubmenu = false;
-		}
-
-		add_action('admin_menu', array($this, '_admin_menu'), $useSubmenu ? 55 : 10);
+		add_action('admin_menu', array($this, '_admin_menu'), 10);
 		if (is_multisite()) {
-			add_action('network_admin_menu', array($this, '_admin_menu'), $useSubmenu ? 55 : 10);
+			add_action('network_admin_menu', array($this, '_admin_menu'), 10);
 		}
 		add_action('admin_enqueue_scripts', array($this, '_admin_enqueue_scripts'));
 		add_action('admin_post_wfls_save_settings', array($this, '_save_settings_form'));
@@ -85,59 +80,11 @@ class Controller_WordfenceLS
 
 	public function _wordpress_init()
 	{
-		if (!WORDFENCE_LS_FROM_CORE)
-			load_plugin_textdomain('2fa-login-security', false, WORDFENCE_LS_PATH . 'languages');
+		load_plugin_textdomain('2fa-login-security', false, WORDFENCE_LS_PATH . 'languages');
 	}
 
 	public function _admin_init()
 	{
-		if (WORDFENCE_LS_FROM_CORE) {
-			\wfModuleController::shared()->addOptionIndex('wfls-option-enable-2fa-roles', __('Login Security: Enable 2FA for these roles', '2fa-login-security'));
-			\wfModuleController::shared()->addOptionIndex('wfls-option-allow-remember', __('Login Security: Allow remembering device for 30 days', '2fa-login-security'));
-			\wfModuleController::shared()->addOptionIndex('wfls-option-require-2fa-xml-rpc', __('Login Security: Require 2FA for XML-RPC call authentication', '2fa-login-security'));
-			\wfModuleController::shared()->addOptionIndex('wfls-option-disable-xml-rpc', __('Login Security: Disable XML-RPC authentication', '2fa-login-security'));
-			\wfModuleController::shared()->addOptionIndex('wfls-option-enable-captcha', __('Login Security: Enable reCAPTCHA on the login and user registration pages', '2fa-login-security'));
-
-			$title = __('Login Security Options', '2fa-login-security');
-			$description = __('Login Security options are available on the Login Security options page', '2fa-login-security');
-			$url = esc_url(network_admin_url('admin.php?page=WFLS#top#settings'));
-			$link = __('Login Security Options', '2fa-login-security');;
-			\wfModuleController::shared()->addOptionBlock(
-				<<<END
-<div class="wf-row">
-	<div class="wf-col-xs-12">
-		<div class="wf-block wf-always-active" data-persistence-key="">
-			<div class="wf-block-header">
-				<div class="wf-block-header-content">
-					<div class="wf-block-title">
-						<strong>{$title}</strong>
-					</div>
-				</div>
-			</div>
-			<div class="wf-block-content">
-				<ul class="wf-block-list">
-					<li>
-						<ul class="wf-flex-horizontal wf-flex-vertical-xs wf-flex-full-width wf-add-top wf-add-bottom">
-							<li>{$description}</li>
-							<li class="wf-right wf-left-xs wf-padding-add-top-xs-small">
-								<a href="{$url}" class="wf-btn wf-btn-primary wf-btn-callout-subtle" id="wf-login-security-options">{$link}</a>
-							</li>
-						</ul>
-						<input type="hidden" id="wfls-option-enable-2fa-roles">
-						<input type="hidden" id="wfls-option-allow-remember">
-						<input type="hidden" id="wfls-option-require-2fa-xml-rpc">
-						<input type="hidden" id="wfls-option-disable-xml-rpc">
-						<input type="hidden" id="wfls-option-enable-captcha">
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div> <!-- end ls options -->
-END
-			);
-		}
-
 		if (Controller_Permissions::shared()->can_manage_settings()) {
 			if ((is_plugin_active('jetpack/jetpack.php') || (is_multisite() && is_plugin_active_for_network('jetpack/jetpack.php'))) && !Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_XML_RPC)) {
 				if (is_multisite()) {
@@ -264,11 +211,11 @@ END
 					'<strong>ERROR</strong>: Login failed with status code 403. Please contact the site administrator.' => wp_kses(__('<strong>ERROR</strong>: Login failed with status code 403. Please contact the site administrator.', '2fa-login-security'), array('strong' => array())),
 					'Login failed with status code 503. Please contact the site administrator.' => __('Login failed with status code 503. Please contact the site administrator.', '2fa-login-security'),
 					'<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.' => wp_kses(__('<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.', '2fa-login-security'), array('strong' => array())),
-					'Wordfence 2FA Code' => __('Wordfence 2FA Code', '2fa-login-security'),
+					'2FA Code' => __('2FA Code', '2fa-login-security'),
 					'Remember for 30 days' => __('Remember for 30 days', '2fa-login-security'),
 					'Log In' => __('Log In', '2fa-login-security'),
 					'<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again.' => wp_kses(__('<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again.', '2fa-login-security'), array('strong' => array())),
-					'The Wordfence 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.' => __('The Wordfence 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.', '2fa-login-security')
+					'The 2FA code can be found in the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.' => __('The 2FA code can be found in the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.', '2fa-login-security')
 				))
 				->setTranslationObjectName('WFLS_LOGIN_TRANSLATIONS')
 				->enqueue();
@@ -440,7 +387,7 @@ END
 		$hasGracePeriod = Controller_Settings::shared()->get_user_2fa_grace_period() > 0;
 		if ($userAllowed2fa && ($viewerIsUser || $viewerCanManage2fa)):
 ?>
-			<h2 id="wfls-user-settings"><?php esc_html_e('Wordfence Login Security', '2fa-login-security'); ?></h2>
+			<h2 id="wfls-user-settings"><?php esc_html_e('2FA Login Security', '2fa-login-security'); ?></h2>
 			<table class="form-table">
 				<tr id="wordfence-ls">
 					<th><label for="wordfence-ls-btn"><?php esc_html_e('2FA Status', '2fa-login-security'); ?></label></th>
@@ -450,7 +397,7 @@ END
 								<strong><?php echo $lockedOut ? esc_html__('Locked Out', '2fa-login-security') : ($has2fa ? esc_html__('Active', '2fa-login-security') :  esc_html__('Inactive', '2fa-login-security')); ?>:</strong>
 								<?php echo $lockedOut ?
 									($viewerIsUser ? esc_html__('Two-factor authentication is required for your account, but has not been configured.', '2fa-login-security') : esc_html__('Two-factor authentication is required for this account, but has not been configured.', '2fa-login-security'))
-									: ($has2fa ? esc_html__('Wordfence 2FA is active.', '2fa-login-security') :  esc_html__('Wordfence 2FA is inactive.', '2fa-login-security')); ?>
+									: ($has2fa ? esc_html__('2FA is active.', '2fa-login-security') :  esc_html__('2FA is inactive.', '2fa-login-security')); ?>
 								<a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', '2fa-login-security'); ?></a>
 							</p>
 							<?php if (!$has2fa && $inGracePeriod): ?>
@@ -465,7 +412,7 @@ END
 						<?php endif ?>
 						<?php if ($viewerCanManage2fa): ?>
 							<?php if (!$userAllowed2fa): ?>
-								<p><strong><?php esc_html_e('Disabled', '2fa-login-security'); ?>:</strong> <?php esc_html_e('Two-factor authentication is not currently enabled for this account type. To enable it, visit the Wordfence 2FA Settings page.', '2fa-login-security'); ?> <a href="#"><?php esc_html_e('Learn More', '2fa-login-security'); ?></a></p>
+								<p><strong><?php esc_html_e('Disabled', '2fa-login-security'); ?>:</strong> <?php esc_html_e('Two-factor authentication is not currently enabled for this account type. To enable it, visit the 2FA Settings page.', '2fa-login-security'); ?> <a href="#"><?php esc_html_e('Learn More', '2fa-login-security'); ?></a></p>
 							<?php endif ?>
 							<?php if ($lockedOut): ?>
 								<?php echo Model_View::create(
@@ -630,26 +577,7 @@ END
 
 	public function legacy_2fa_active()
 	{
-		$wfLegacy2FAActive = false;
-		if (class_exists('wfConfig') && \wfConfig::get('isPaid')) {
-			$twoFactorUsers = \wfConfig::get_ser('twoFactorUsers', array());
-			if (is_array($twoFactorUsers) && count($twoFactorUsers) > 0) {
-				foreach ($twoFactorUsers as $t) {
-					if ($t[3] == 'activated') {
-						$testUser = get_user_by('ID', $t[0]);
-						if (is_object($testUser) && $testUser instanceof \WP_User && \wfUtils::isAdmin($testUser)) {
-							$wfLegacy2FAActive = true;
-							break;
-						}
-					}
-				}
-			}
-
-			if ($wfLegacy2FAActive && class_exists('wfCredentialsController') && method_exists('wfCredentialsController', 'useLegacy2FA') && !\wfCredentialsController::useLegacy2FA()) {
-				$wfLegacy2FAActive = false;
-			}
-		}
-		return $wfLegacy2FAActive;
+		return false;
 	}
 
 	/**
@@ -668,7 +596,7 @@ END
 
 		Controller_Notices::shared()->enqueue_notices();
 
-		$useSubmenu = WORDFENCE_LS_FROM_CORE && current_user_can('activate_plugins');
+		$useSubmenu = false;
 		if (is_multisite() && !is_network_admin()) {
 			$useSubmenu = false;
 
@@ -677,11 +605,7 @@ END
 			}
 		}
 
-		if ($useSubmenu) {
-			add_submenu_page('Wordfence', __('Login Security', '2fa-login-security'), __('Login Security', '2fa-login-security'), Controller_Permissions::CAP_ACTIVATE_2FA_SELF, 'WFLS', array($this, '_menu'));
-		} else {
-			add_menu_page(__('Login Security', '2fa-login-security'), __('Login Security', '2fa-login-security'), Controller_Permissions::CAP_ACTIVATE_2FA_SELF, 'WFLS', array($this, '_menu'), Model_Asset::img('menu.svg'));
-		}
+		add_menu_page(__('Login Security', '2fa-login-security'), __('Login Security', '2fa-login-security'), Controller_Permissions::CAP_ACTIVATE_2FA_SELF, 'WFLS', array($this, '_menu'), Model_Asset::img('menu.svg'));
 	}
 
 	public function _menu()

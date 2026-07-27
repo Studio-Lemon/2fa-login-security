@@ -42,10 +42,6 @@ class Model_Request {
 	}
 	
 	public function ip($refreshCache = false) {
-		if (WORDFENCE_LS_FROM_CORE) {
-			return \wfUtils::getIP($refreshCache);
-		}
-		
 		if (!isset($this->_cachedIP) || $refreshCache) {
 			$this->_cachedIP = $this->_ip(Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE), Controller_Settings::shared()->trusted_proxies());
 		}

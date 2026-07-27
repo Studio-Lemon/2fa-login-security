@@ -1,24 +1,23 @@
-=== Wordfence Login Security ===
-Contributors: wfryan, wfmattr, mmaunder, wfmatt
-Tags: security, login security, 2fa, two factor authentication, captcha, xml-rpc, mfa, 2 factor
+=== 2FA Login Security ===
+Contributors: 2fa-login-security
+Tags: security, login security, 2fa, two factor authentication, xml-rpc, mfa, 2 factor
 Requires at least: 4.7
 Requires PHP: 7.0
 Tested up to: 7.0
 Stable tag: 1.1.16
 
-Secure your website with Wordfence Login Security, providing two-factor authentication, login and registration CAPTCHA, and XML-RPC protection.
+Secure your website with 2FA Login Security, providing two-factor authentication and XML-RPC protection.
 
 == Description ==
 
-### WORDFENCE LOGIN SECURITY
+### 2FA LOGIN SECURITY
 
-Wordfence Login Security contains a subset of the functionality found in the full Wordfence plugin: Two-factor Authentication, XML-RPC Protection, and Login Page CAPTCHA.
+2FA Login Security provides focused account protection features for WordPress sites:
 
-**This plugin is being discontinued on or around July 1, 2026.**
-
-All of its features are already included in the main Wordfence plugin, which is also available to use for free. We recommend installing Wordfence to continue receiving updates, security improvements, and full functionality.
-
-[Install the full Wordfence plugin](https://wordpress.org/plugins/wordfence/)
+* Two-factor authentication (2FA) for WordPress users.
+* Role-based 2FA enforcement and grace period controls.
+* XML-RPC authentication controls.
+* Optional remember-device support.
 
 #### TWO-FACTOR AUTHENTICATION
 
@@ -27,12 +26,6 @@ All of its features are already included in the main Wordfence plugin, which is 
 * Enable 2FA for any WordPress user role.
 * Completely free to use, no limits or restrictions of any kind.
 
-#### LOGIN PAGE CAPTCHA
-
-* Easily enable Google ReCAPTCHA v3 on your login and registration pages.
-* Stops bots from logging in without inconveniencing your site visitors.
-* Robust protection against password guessing and credential stuffing attacks distributed across large IP pools
-
 #### XML-RPC PROTECTION
 
 * XML-RPC is the biggest target for WordPress attacks, but is often overlooked.
@@ -40,25 +33,25 @@ All of its features are already included in the main Wordfence plugin, which is 
 
 == Installation ==
 
-Secure your website using the following steps to install Wordfence:
+Secure your website using the following steps:
 
-1. Install Wordfence Login Security automatically or by uploading the ZIP file. 
-2. Activate the Wordfence Login Security through the 'Plugins' menu in WordPress. Wordfence Login Security is now activated.
+1. Install 2FA Login Security automatically or by uploading the ZIP file.
+2. Activate 2FA Login Security through the Plugins menu in WordPress.
 3. Go to the 'Login Security' menu and activate two-factor authentication and configure other settings.
 
-To install Wordfence Login Security on WordPress Multisite installations:
+To install 2FA Login Security on WordPress Multisite installations:
 
-1. Install Wordfence Login Security via the plugin directory or by uploading the ZIP file.
-2. Network Activate Wordfence Login Security. This step is important because until you network activate it, your sites will see the plugin option on their 'Plugins' menu. Once activated, that option disappears. 
-3. Now that Wordfence Login Security is network activated, it will appear on your Network Admin menu for super administrators and individual sites for users who have permission to activate 2FA. 
+1. Install 2FA Login Security via the plugin directory or by uploading the ZIP file.
+2. Network Activate 2FA Login Security.
+3. Once network activated, it appears in Network Admin for super administrators and on individual sites for users who have permission to activate 2FA.
 
 == Screenshots ==
 
-Secure your website with Wordfence Login Security. 
+Secure your website with 2FA Login Security.
 
 1. Take login security to the next level with two-factor authentication.
-2. Logging in is easy with Wordfence 2FA.
-3. Configuration options include XML-RPC protection and login page CAPTCHA.
+2. Logging in is easy with 2FA.
+3. Configuration options include XML-RPC protection and role-based access controls.
 
 == Changelog ==
 
@@ -66,7 +59,7 @@ Secure your website with Wordfence Login Security.
 * Improvement: Migrated all deprecated JavaScript libraries in use to a Vue-based infrastructure
 * Improvement: Better coverage of `aria-` accessibility attributes
 * Fix: WordPress 7.0 compatibility fixes
-* Note: The standalone Login Security plugin will be discontinued around July 1, 2026. Sites using it should [install the full Wordfence plugin](https://wordpress.org/plugins/wordfence/) to retain this functionality
+* Note: This upstream deprecation notice does not apply to this forked package.
 
 = 1.1.15 - January 15, 2025 =
 * Change: Reworked setting caching to avoid issues with some object caches

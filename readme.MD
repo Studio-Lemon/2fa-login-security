@@ -18,6 +18,9 @@ This file tracks implementation changes made while creating the public fork.
 - Disabled reCAPTCHA script enqueue path in login flow.
 - Removed IP allowlist bypass check from authentication flow.
 - Hard-disabled captcha controller by forcing `Controller_CAPTCHA::enabled()` to return false.
+- Continued: removed standalone dependencies on Wordfence core bridge logic (`WORDFENCE_LS_FROM_CORE`, `wfModuleController`, `wfUtils`, legacy paid-plugin checks).
+- Continued: updated support URLs/onboarding wording and user-facing branding references away from Wordfence plugin messaging.
+- Continued: refreshed `readme.txt` plugin metadata and descriptions to match this fork.
 
 ## Step 3 - Remove WooCommerce integration code paths
 - Removed WooCommerce endpoint and menu integration methods from the primary controller.

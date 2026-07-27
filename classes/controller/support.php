@@ -46,10 +46,10 @@ class Controller_Support
 
 	public static function supportURL($item = self::ITEM_INDEX)
 	{
-		$base = 'https://www.wordfence.com/help/';
+		$base = 'https://wordpress.org/plugins/2fa-login-security/';
 		switch ($item) {
 			case self::ITEM_INDEX:
-				return 'https://www.wordfence.com/help/';
+				return 'https://wordpress.org/plugins/2fa-login-security/';
 
 				//These all fall through to the query format
 
