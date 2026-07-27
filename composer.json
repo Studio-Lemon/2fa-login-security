@@ -1,0 +1,20 @@
+{
+  "name": "studio-lemon/2fa-login-security",
+  "description": "Composer setup for 2FA Login Security tooling",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "require": {},
+  "require-dev": {
+    "rector/rector": "^1.2"
+  },
+  "scripts": {
+    "rector": "vendor/bin/rector process",
+    "rector:dry-run": "vendor/bin/rector process --dry-run"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "phpstan/extension-installer": false
+    }
+  }
+}
