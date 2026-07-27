@@ -1,5 +1,5 @@
 <?php
-if (!defined('TFA_LS_VERSION')) {
+if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 /**
@@ -11,24 +11,37 @@ if (!defined('TFA_LS_VERSION')) {
 	<div class="wfls-block-header wfls-block-header-border-bottom">
 		<div class="wfls-block-header-content">
 			<div class="wfls-block-title">
-				<strong><?php esc_html_e('Recovery Codes', '2fa-login-security'); ?></strong>
+				<strong><?php esc_html_e( 'Recovery Codes', '2fa-login-security' ); ?></strong>
 			</div>
 		</div>
 	</div>
 	<div class="wfls-block-content wfls-padding-add-bottom">
-		<p id="wfls-recovery-code-count"><?php echo esc_html(sprintf(/* translators: count */_n('%d unused recovery code remains. You may generate a new set by clicking below.', '%d unused recovery codes remain. You may generate a new set by clicking below.', $remaining, '2fa-login-security'), $remaining)); ?></p>
-		<p class="wfls-center wfls-add-top"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-recovery" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Generate New Codes', '2fa-login-security'); ?></a></p>
+		<p id="wfls-recovery-code-count"><?php echo esc_html( sprintf( /* translators: count */_n( '%d unused recovery code remains. You may generate a new set by clicking below.', '%d unused recovery codes remain. You may generate a new set by clicking below.', $remaining, '2fa-login-security' ), $remaining ) ); ?></p>
+		<p class="wfls-center wfls-add-top"><a href="#" class="wfls-btn wfls-btn-default" id="wfls-recovery" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Generate New Codes', '2fa-login-security' ); ?></a></p>
 	</div>
 </div>
 <div style="display: none;">
 	<?php
-	echo \TFAuthLS\Model_View::create('common/modal-prompt', array(
-		'id' => 'wfls-template-recovery-prompt',
-		'title' => __('Generate New Recovery Codes', '2fa-login-security'),
-		'message' => __('Are you sure you want to generate new recovery codes? Any remaining unused codes will be disabled.', '2fa-login-security'),
-		'primaryButton' => array('class' => 'wfls-recovery-prompt-cancel', 'label' => __('Cancel', '2fa-login-security'), 'link' => '#'),
-		'secondaryButtons' => array(array('class' => 'wfls-recovery-prompt-confirm', 'label' => __('Generate', '2fa-login-security'), 'link' => '#')),
-	))->render();
+	echo \TFAuthLS\Model_View::create(
+		'common/modal-prompt',
+		array(
+			'id'               => 'wfls-template-recovery-prompt',
+			'title'            => __( 'Generate New Recovery Codes', '2fa-login-security' ),
+			'message'          => __( 'Are you sure you want to generate new recovery codes? Any remaining unused codes will be disabled.', '2fa-login-security' ),
+			'primaryButton'    => array(
+				'class' => 'wfls-recovery-prompt-cancel',
+				'label' => __( 'Cancel', '2fa-login-security' ),
+				'link'  => '#',
+			),
+			'secondaryButtons' => array(
+				array(
+					'class' => 'wfls-recovery-prompt-confirm',
+					'label' => __( 'Generate', '2fa-login-security' ),
+					'link'  => '#',
+				),
+			),
+		)
+	)->render();
 	?>
 </div>
 <script type="application/javascript">
@@ -56,14 +69,14 @@ if (!defined('TFA_LS_VERSION')) {
 								payload,
 								function(response) {
 									if (response.error) {
-										WFLS.standaloneModal(<?php \TFAuthLS\Text\Model_JavaScript::echo_string_literal(__('Error Generating New Codes', '2fa-login-security')); ?>, response.error);
+										WFLS.standaloneModal(<?php \TFAuthLS\Text\Model_JavaScript::echo_string_literal( __( 'Error Generating New Codes', '2fa-login-security' ) ); ?>, response.error);
 									} else if (response.recovery) {
 										$('#wfls-recovery-code-count').text(response.text);
 
-										var message = '<p><?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(sprintf(/* translators: 1. Count; 2. length */__('Use one of these %1$d codes to log in if you lose access to your authenticator device. Codes are %2$d characters long plus optional spaces. Each one may be used only once.', '2fa-login-security'), \TFAuthLS\Controller_Users::RECOVERY_CODE_COUNT, \TFAuthLS\Controller_Users::RECOVERY_CODE_SIZE * 2)); ?></p><ul class="wfls-recovery-codes">';
+										var message = '<p><?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( sprintf( /* translators: 1. Count; 2. length */__( 'Use one of these %1$d codes to log in if you lose access to your authenticator device. Codes are %2$d characters long plus optional spaces. Each one may be used only once.', '2fa-login-security' ), \TFAuthLS\Controller_Users::RECOVERY_CODE_COUNT, \TFAuthLS\Controller_Users::RECOVERY_CODE_SIZE * 2 ) ); ?></p><ul class="wfls-recovery-codes">';
 
-										var recoveryCodeFileContents = '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(sprintf(/* translators: 1. Site address; 2. Username */__('Two-Factor Authentication Recovery Codes - %1$s (%2$s)', '2fa-login-security'), preg_replace('~^https?://~i', '', home_url()), $user->user_login)); ?>' + "\r\n";
-										recoveryCodeFileContents = recoveryCodeFileContents + "\r\n" + '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(sprintf(/* translators: count */__('Each line of %d letters and numbers is a single recovery code, with optional spaces for readability. To use a recovery code, after entering your username and password, enter the code like "1234 5678 90AB CDEF" at the 2FA prompt. If your site has a custom login prompt and does not show a 2FA prompt, you can use the single-step method by entering your password and the code together in the Password field, like "mypassword1234 5678 90AB CDEF". Your recovery codes are:', '2fa-login-security'), \TFAuthLS\Controller_Users::RECOVERY_CODE_SIZE * 2)); ?>' + "\r\n\r\n";
+										var recoveryCodeFileContents = '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( sprintf( /* translators: 1. Site address; 2. Username */__( 'Two-Factor Authentication Recovery Codes - %1$s (%2$s)', '2fa-login-security' ), preg_replace( '~^https?://~i', '', home_url() ), $user->user_login ) ); ?>' + "\r\n";
+										recoveryCodeFileContents = recoveryCodeFileContents + "\r\n" + '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( sprintf( /* translators: count */__( 'Each line of %d letters and numbers is a single recovery code, with optional spaces for readability. To use a recovery code, after entering your username and password, enter the code like "1234 5678 90AB CDEF" at the 2FA prompt. If your site has a custom login prompt and does not show a 2FA prompt, you can use the single-step method by entering your password and the code together in the Password field, like "mypassword1234 5678 90AB CDEF". Your recovery codes are:', '2fa-login-security' ), \TFAuthLS\Controller_Users::RECOVERY_CODE_SIZE * 2 ) ); ?>' + "\r\n\r\n";
 										for (var i = 0; i < response.recovery.length; i++) {
 											message = message + '<li>' + response.recovery[i] + '</li>';
 											recoveryCodeFileContents = recoveryCodeFileContents + response.recovery[i] + "\r\n";
@@ -71,9 +84,9 @@ if (!defined('TFA_LS_VERSION')) {
 
 										message = message + "</ul>";
 
-										message = message + "<p class=\"wfls-center\"><a href=\"#\" class=\"wfls-btn wfls-btn-default wfls-recovery-new-download\" target=\"_blank\" rel=\"noopener noreferrer\"><i class=\"dashicons dashicons-download\"></i> <?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(__('Download', '2fa-login-security')); ?></a></p>";
+										message = message + "<p class=\"wfls-center\"><a href=\"#\" class=\"wfls-btn wfls-btn-default wfls-recovery-new-download\" target=\"_blank\" rel=\"noopener noreferrer\"><i class=\"dashicons dashicons-download\"></i> <?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( __( 'Download', '2fa-login-security' ) ); ?></a></p>";
 
-										WFLS.standaloneModal(<?php \TFAuthLS\Text\Model_JavaScript::echo_string_literal(__('New Recovery Codes', '2fa-login-security')); ?>, {
+										WFLS.standaloneModal(<?php \TFAuthLS\Text\Model_JavaScript::echo_string_literal( __( 'New Recovery Codes', '2fa-login-security' ) ); ?>, {
 											html: message
 										}, {
 											onOpen: function(recoveryCodeModal) {
@@ -82,14 +95,14 @@ if (!defined('TFA_LS_VERSION')) {
 													e.stopPropagation();
 													saveAs(new Blob([recoveryCodeFileContents], {
 														type: "text/plain;charset=" + document.characterSet
-													}), '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(preg_replace('~^https?://~i', '', home_url()) . '_' . $user->user_login . '_recoverycodes.txt'); ?>');
+													}), '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( preg_replace( '~^https?://~i', '', home_url() ) . '_' . $user->user_login . '_recoverycodes.txt' ); ?>');
 												});
 											}
 										});
 									}
 								},
 								function(error) {
-									WFLS.standaloneModal('<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(__('Error Generating New Codes', '2fa-login-security')); ?>', '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js(__('An error was encountered while trying to generate new recovery codes. Please try again.', '2fa-login-security')); ?>');
+									WFLS.standaloneModal('<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( __( 'Error Generating New Codes', '2fa-login-security' ) ); ?>', '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js( __( 'An error was encountered while trying to generate new recovery codes. Please try again.', '2fa-login-security' ) ); ?>');
 								}
 							);
 						});

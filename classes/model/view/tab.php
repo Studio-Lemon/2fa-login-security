@@ -4,7 +4,7 @@ namespace TFAuthLS\View;
 
 /**
  * Represents a tab in the UI.
- * 
+ *
  * @package Wordfence2FA\View
  * @property string $id
  * @property string $a
@@ -12,26 +12,24 @@ namespace TFAuthLS\View;
  * @property string $pageTitle
  * @property bool $active
  */
-class Model_Tab
-{
+class Model_Tab {
+
 	protected $_id;
 	protected $_a;
 	protected $_tabTitle;
 	protected $_pageTitle;
 	protected $_active;
 
-	public function __construct($id, $a, $tabTitle, $pageTitle, $active = false)
-	{
-		$this->_id = $id;
-		$this->_a = $a;
-		$this->_tabTitle = $tabTitle;
+	public function __construct( $id, $a, $tabTitle, $pageTitle, $active = false ) {
+		$this->_id        = $id;
+		$this->_a         = $a;
+		$this->_tabTitle  = $tabTitle;
 		$this->_pageTitle = $pageTitle;
-		$this->_active = $active;
+		$this->_active    = $active;
 	}
 
-	public function __get(string $name)
-	{
-		switch ($name) {
+	public function __get( string $name ) {
+		switch ( $name ) {
 			case 'id':
 				return $this->_id;
 			case 'a':
@@ -44,6 +42,6 @@ class Model_Tab
 				return $this->_active;
 		}
 
-		throw new \OutOfBoundsException('Invalid key: ' . $name);
+		throw new \OutOfBoundsException( 'Invalid key: ' . $name );
 	}
 }

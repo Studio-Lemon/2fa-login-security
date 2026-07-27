@@ -2,23 +2,21 @@
 
 namespace TFAuthLS;
 
-class Utility_MeasuredString
-{
+class Utility_MeasuredString {
+
 
 	public $string;
 	/**
-  * @var int
-  */
- public $length;
+	 * @var int
+	 */
+	public $length;
 
-	public function __construct($string)
-	{
+	public function __construct( $string ) {
 		$this->string = $string;
-		$this->length = strlen($string);
+		$this->length = strlen( $string );
 	}
 
-	public function __toString(): string
-	{
+	public function __toString(): string {
 		return $this->string;
 	}
 }

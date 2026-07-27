@@ -1,20 +1,20 @@
 <?php
-if (!defined('TFA_LS_VERSION')) {
+if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 
-$errorMessage = __('Unable to Revoke Grace Period', '2fa-login-security');
+$errorMessage = __( 'Unable to Revoke Grace Period', '2fa-login-security' );
 ?>
 <div class="wfls-add-top wfls-add-bottom wfls-grace-period-container">
 	<div class="wfls-grace-period-button-container">
 		<button class="wfls-btn wfls-btn-default" id="wfls-revoke-grace-period">
-			<?php esc_html_e('Revoke Grace Period', '2fa-login-security') ?>
+			<?php esc_html_e( 'Revoke Grace Period', '2fa-login-security' ); ?>
 		</button>
 
 	</div>
 </div>
 <div>
-	<p id="wfls-revoke-grace-period-failed" style="display: none"><strong><?php echo esc_html($errorMessage) ?></strong></p>
+	<p id="wfls-revoke-grace-period-failed" style="display: none"><strong><?php echo esc_html( $errorMessage ); ?></strong></p>
 </div>
 <script type="application/javascript">
 	(function($) {
@@ -36,8 +36,8 @@ $errorMessage = __('Unable to Revoke Grace Period', '2fa-login-security');
 			function handleError() {
 				if (typeof WFLS === 'object') {
 					WFLS.standaloneModal(
-						<?php echo json_encode($errorMessage) ?>,
-						<?php echo json_encode(__('An unexpected error occurred while attempting to revoke the grace period.', '2fa-login-security')) ?>
+						<?php echo json_encode( $errorMessage ); ?>,
+						<?php echo json_encode( __( 'An unexpected error occurred while attempting to revoke the grace period.', '2fa-login-security' ) ); ?>
 					);
 				} else {
 					failureMessage.show();
@@ -50,7 +50,7 @@ $errorMessage = __('Unable to Revoke Grace Period', '2fa-login-security');
 				button.prop('disabled', true);
 				failureMessage.hide();
 				revoke2faGracePeriod(
-					<?php echo json_encode($user->ID, true) ?>,
+					<?php echo json_encode( $user->ID, true ); ?>,
 					function(data) {
 						if ('error' in data) {
 							handleError();

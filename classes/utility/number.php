@@ -2,23 +2,21 @@
 
 namespace TFAuthLS;
 
-class Utility_Number
-{
-	public static function isInteger($value, $min = null, $max = null): bool
-	{
+class Utility_Number {
+
+	public static function isInteger( $value, $min = null, $max = null ): bool {
 		$options = array();
-		if ($min !== null) {
-      $options['min_range'] = $min;
-  }
-		if ($max !== null) {
-      $options['max_range'] = $max;
-  }
-		return filter_var($value, FILTER_VALIDATE_INT, array('options' => $options)) !== false;
+		if ( $min !== null ) {
+			$options['min_range'] = $min;
+		}
+		if ( $max !== null ) {
+			$options['max_range'] = $max;
+		}
+		return filter_var( $value, FILTER_VALIDATE_INT, array( 'options' => $options ) ) !== false;
 	}
 
-	public static function isUnixTimestamp($value)
-	{
-		return self::isInteger($value, 0);
+	public static function isUnixTimestamp( $value ) {
+		return self::isInteger( $value, 0 );
 	}
 
 	/**
@@ -27,27 +25,26 @@ class Utility_Number
 	 * @param $value
 	 * @return bool
 	 */
-	public static function truthyToBool($value)
-	{
-		if ($value === true || $value === false) {
+	public static function truthyToBool( $value ) {
+		if ( $value === true || $value === false ) {
 			return $value;
 		}
 
-		if (is_null($value)) {
+		if ( is_null( $value ) ) {
 			return false;
 		}
 
-		if (is_numeric($value)) {
+		if ( is_numeric( $value ) ) {
 			return (bool) $value;
 		}
-  if (preg_match('/^(?:f(?:alse)?|no?|off)$/i', $value)) {
-      return false;
-  }
+		if ( preg_match( '/^(?:f(?:alse)?|no?|off)$/i', $value ) ) {
+			return false;
+		}
 
-		if (preg_match('/^(?:t(?:rue)?|y(?:es)?|on)$/i', $value)) {
+		if ( preg_match( '/^(?:t(?:rue)?|y(?:es)?|on)$/i', $value ) ) {
 			return true;
 		}
 
-		return !empty($value);
+		return ! empty( $value );
 	}
 }

@@ -2,26 +2,25 @@
 
 namespace TFAuthLS;
 
-class Utility_URL
-{
+class Utility_URL {
+
 
 	/**
 	 * Similar to WordPress' `admin_url`, this returns a host-relative URL for the given path. It may be used to avoid
 	 * canonicalization issues with CORS (e.g., the site is configured for the www. variant of the URL but doesn't forward
 	 * the other).
-	 * 
+	 *
 	 * @param string $path
 	 * @return string
 	 */
-	public static function relative_admin_url($path = '')
-	{
-		$url = admin_url($path);
-		$components = parse_url($url);
-		$s = $components['path'];
-		if (isset($components['query']) && ($components['query'] !== '' && $components['query'] !== '0')) {
+	public static function relative_admin_url( $path = '' ) {
+		$url        = admin_url( $path );
+		$components = parse_url( $url );
+		$s          = $components['path'];
+		if ( isset( $components['query'] ) && ( $components['query'] !== '' && $components['query'] !== '0' ) ) {
 			$s .= '?' . $components['query'];
 		}
-		if (isset($components['fragment']) && ($components['fragment'] !== '' && $components['fragment'] !== '0')) {
+		if ( isset( $components['fragment'] ) && ( $components['fragment'] !== '' && $components['fragment'] !== '0' ) ) {
 			$s .= '#' . $components['fragment'];
 		}
 		return $s;
@@ -33,8 +32,7 @@ class Utility_URL
 	 * @param string $path
 	 * @return string
 	 */
-	public static function maybe_network_admin_url($path)
-	{
-		return function_exists('network_admin_url') && is_multisite() ? network_admin_url($path) : admin_url($path);
+	public static function maybe_network_admin_url( $path ) {
+		return function_exists( 'network_admin_url' ) && is_multisite() ? network_admin_url( $path ) : admin_url( $path );
 	}
 }

@@ -15,7 +15,7 @@ Domain Path: /languages
 if (defined('WP_INSTALLING') && WP_INSTALLING) {
 	return;
 }
-if (!defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
 	exit;
 }
 
@@ -23,7 +23,7 @@ define('TFA_LS_VERSION', '1.1.16');
 
 define('TFA_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-if (!defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
+if (! defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
 	define('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15);
 }
 
@@ -36,53 +36,60 @@ foreach ($wp_plugin_paths as $dir => $realdir) {
 	}
 }
 
-if (!defined('TFA_LS_FCPATH')) {
+if (! defined('TFA_LS_FCPATH')) {
 	/** @noinspection PhpConstantReassignmentInspection */
 	define('TFA_LS_FCPATH', __FILE__);
 	/** @noinspection PhpConstantReassignmentInspection */
 	define('TFA_LS_PATH', trailingslashit(dirname(TFA_LS_FCPATH)));
 }
 
-if (!function_exists('TFA_LS_autoload')) {
-	function TFA_LS_autoload($class): bool
-	{
-		$class = str_replace('\\', '/', $class);
-		$class = str_replace('\\\\', '/', $class);
-		$components = explode('/', $class);
-		if (count($components) < 2) {
-			return false;
-		}
+require_once __DIR__ . '/classes/utility/array.php';
+require_once __DIR__ . '/classes/utility/baseconversion.php';
+require_once __DIR__ . '/classes/utility/lock.php';
+require_once __DIR__ . '/classes/utility/nulllock.php';
+require_once __DIR__ . '/classes/utility/databaselock.php';
+require_once __DIR__ . '/classes/utility/measuredstring.php';
+require_once __DIR__ . '/classes/utility/multisite.php';
+require_once __DIR__ . '/classes/utility/multisiteconfigurationextractor.php';
+require_once __DIR__ . '/classes/utility/number.php';
+require_once __DIR__ . '/classes/utility/serialization.php';
+require_once __DIR__ . '/classes/utility/sleep.php';
+require_once __DIR__ . '/classes/utility/url.php';
+require_once __DIR__ . '/classes/model/asset.php';
+require_once __DIR__ . '/classes/model/compat.php';
+require_once __DIR__ . '/classes/model/crypto.php';
+require_once __DIR__ . '/classes/model/ip.php';
+require_once __DIR__ . '/classes/model/notice.php';
+require_once __DIR__ . '/classes/model/request.php';
+require_once __DIR__ . '/classes/model/settings.php';
+require_once __DIR__ . '/classes/model/script.php';
+require_once __DIR__ . '/classes/model/style.php';
+require_once __DIR__ . '/classes/model/tokenbucket.php';
+require_once __DIR__ . '/classes/model/view.php';
+require_once __DIR__ . '/classes/model/2fainitializationdata.php';
+require_once __DIR__ . '/classes/model/crypto/base2n.php';
+require_once __DIR__ . '/classes/model/crypto/jwt.php';
+require_once __DIR__ . '/classes/model/crypto/symmetric.php';
+require_once __DIR__ . '/classes/model/settings/db.php';
+require_once __DIR__ . '/classes/model/settings/wpoptions.php';
+require_once __DIR__ . '/classes/model/text/html.php';
+require_once __DIR__ . '/classes/model/text/javascript.php';
+require_once __DIR__ . '/classes/model/view/tab.php';
+require_once __DIR__ . '/classes/model/view/title.php';
+require_once __DIR__ . '/classes/controller/cron.php';
+require_once __DIR__ . '/classes/controller/db.php';
+require_once __DIR__ . '/classes/controller/notices.php';
+require_once __DIR__ . '/classes/controller/permissions.php';
+require_once __DIR__ . '/classes/controller/settings.php';
+require_once __DIR__ . '/classes/controller/support.php';
+require_once __DIR__ . '/classes/controller/time.php';
+require_once __DIR__ . '/classes/controller/totp.php';
+require_once __DIR__ . '/classes/controller/users.php';
+require_once __DIR__ . '/classes/controller/whitelist.php';
+require_once __DIR__ . '/classes/controller/ajax.php';
+require_once __DIR__ . '/classes/controller/javascript.php';
+require_once __DIR__ . '/classes/controller/wordfencels.php';
 
-		if ($components[0] !== 'TFAuthLS') {
-			return false;
-		}
-
-		$path = '';
-		for ($i = 1; $i < count($components) - 1; $i++) {
-			$path .= '/' . strtolower($components[$i]);
-		}
-
-		if (preg_match('/^(Controller|Model|Utility)_([a-z0-9]+)$/i', $components[count($components) - 1], $matches)) {
-			$path = dirname(__FILE__) . '/classes/' . strtolower($matches[1]) . $path . '/' . strtolower($matches[2]) . '.php';
-			if (!file_exists($path) && strtolower($matches[1]) === 'controller' && strtolower($matches[2]) === 'tfauthls') {
-				// Backward-compatible file mapping while the primary controller still uses legacy filename.
-				$path = dirname(__FILE__) . '/classes/controller/wordfencels.php';
-			}
-			if (file_exists($path)) {
-				require_once($path);
-				return true;
-			}
-		}
-
-		return false;
-	}
-}
-
-if (!defined('TFA_LS_AUTOLOADER_REGISTERED')) {
-	define('TFA_LS_AUTOLOADER_REGISTERED', true);
-	spl_autoload_register('TFA_LS_autoload');
-}
-
-if (!defined('TFA_LS_VERSIONONLY_MODE')) { //Used to get version from file
+if (! defined('TFA_LS_VERSIONONLY_MODE')) { // Used to get version from file
 	\TFAuthLS\Controller_TFAuthLS::shared()->init();
 }

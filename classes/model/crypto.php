@@ -2,48 +2,44 @@
 
 namespace TFAuthLS;
 
-abstract class Model_Crypto
-{
+abstract class Model_Crypto {
+
 	/**
 	 * Refreshes the secrets used by the plugin.
 	 */
-	public static function refresh_secrets(): void
-	{
-		Controller_Settings::shared()->set(Controller_Settings::OPTION_SHARED_HASH_SECRET_KEY, bin2hex(self::random_bytes(32)));
-		Controller_Settings::shared()->set(Controller_Settings::OPTION_SHARED_SYMMETRIC_SECRET_KEY, bin2hex(self::random_bytes(32)));
-		Controller_Settings::shared()->set(Controller_Settings::OPTION_LAST_SECRET_REFRESH, Controller_Time::time(), true);
+	public static function refresh_secrets(): void {
+		Controller_Settings::shared()->set( Controller_Settings::OPTION_SHARED_HASH_SECRET_KEY, bin2hex( self::random_bytes( 32 ) ) );
+		Controller_Settings::shared()->set( Controller_Settings::OPTION_SHARED_SYMMETRIC_SECRET_KEY, bin2hex( self::random_bytes( 32 ) ) );
+		Controller_Settings::shared()->set( Controller_Settings::OPTION_LAST_SECRET_REFRESH, Controller_Time::time(), true );
 	}
 
 	/**
 	 * Returns the secret for hashing.
-	 * 
+	 *
 	 * @return string
 	 */
-	public static function shared_hash_secret()
-	{
-		return Controller_Settings::shared()->get(Controller_Settings::OPTION_SHARED_HASH_SECRET_KEY);
+	public static function shared_hash_secret() {
+		return Controller_Settings::shared()->get( Controller_Settings::OPTION_SHARED_HASH_SECRET_KEY );
 	}
 
 	/**
 	 * Returns the secret for symmetric encryption.
-	 * 
+	 *
 	 * @return string
 	 */
-	public static function shared_symmetric_secret()
-	{
-		return Controller_Settings::shared()->get(Controller_Settings::OPTION_SHARED_SYMMETRIC_SECRET_KEY);
+	public static function shared_symmetric_secret() {
+		return Controller_Settings::shared()->get( Controller_Settings::OPTION_SHARED_SYMMETRIC_SECRET_KEY );
 	}
 
 	/**
 	 * Returns whether or not the installation has the required crypto support for this to work.
-	 * 
+	 *
 	 * @return bool
 	 */
-	public static function has_required_crypto_functions()
-	{
-		if (function_exists('openssl_get_publickey') && function_exists('openssl_get_cipher_methods')) {
+	public static function has_required_crypto_functions() {
+		if ( function_exists( 'openssl_get_publickey' ) && function_exists( 'openssl_get_cipher_methods' ) ) {
 			$ciphers = openssl_get_cipher_methods();
-			return in_array('aes-256-cbc', $ciphers);
+			return in_array( 'aes-256-cbc', $ciphers );
 		}
 		return false;
 	}
@@ -51,41 +47,39 @@ abstract class Model_Crypto
 	/**
 	 * Utility
 	 */
-
-	public static function random_bytes($bytes)
-	{
+	public static function random_bytes( $bytes ) {
 		$bytes = (int) $bytes;
-		if (function_exists('random_bytes')) {
+		if ( function_exists( 'random_bytes' ) ) {
 			try {
-				$rand = random_bytes($bytes);
-				if (self::strlen($rand) === $bytes) {
+				$rand = random_bytes( $bytes );
+				if ( self::strlen( $rand ) === $bytes ) {
 					return $rand;
 				}
-			} catch (\Exception $e) {
+			} catch ( \Exception $e ) {
 				// Fall through
-			} catch (\TypeError $e) {
+			} catch ( \TypeError $e ) {
 				// Fall through
-			} catch (\Error $e) {
+			} catch ( \Error $e ) {
 				// Fall through
 			}
 		}
-		if (function_exists('mcrypt_create_iv')) {
+		if ( function_exists( 'mcrypt_create_iv' ) ) {
 			// phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.mcrypt_create_ivDeprecatedRemoved,PHPCompatibility.Extensions.RemovedExtensions.mcryptDeprecatedRemoved,PHPCompatibility.Constants.RemovedConstants.mcrypt_dev_urandomDeprecatedRemoved
-			$rand = @mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM);
-			if (is_string($rand) && self::strlen($rand) === $bytes) {
+			$rand = @mcrypt_create_iv( $bytes, MCRYPT_DEV_URANDOM );
+			if ( is_string( $rand ) && self::strlen( $rand ) === $bytes ) {
 				return $rand;
 			}
 		}
-		if (function_exists('openssl_random_pseudo_bytes')) {
-			$rand = @openssl_random_pseudo_bytes($bytes, $strong);
-			if (self::strlen($rand) === $bytes) {
+		if ( function_exists( 'openssl_random_pseudo_bytes' ) ) {
+			$rand = @openssl_random_pseudo_bytes( $bytes, $strong );
+			if ( self::strlen( $rand ) === $bytes ) {
 				return $rand;
 			}
 		}
 		// Last resort is insecure
 		$return = '';
-		for ($i = 0; $i < $bytes; $i++) {
-			$return .= chr(mt_rand(0, 255));
+		for ( $i = 0; $i < $bytes; $i++ ) {
+			$return .= chr( mt_rand( 0, 255 ) );
 		}
 		return $return;
 	}
@@ -97,54 +91,48 @@ abstract class Model_Crypto
 	 * @param int $max
 	 * @return int
 	 */
-	public static function random_int($min = 0, $max = 0x7FFFFFFF)
-	{
-		if (function_exists('random_int')) {
+	public static function random_int( $min = 0, $max = 0x7FFFFFFF ) {
+		if ( function_exists( 'random_int' ) ) {
 			try {
-				return random_int($min, $max);
-			} catch (\Exception $e) {
+				return random_int( $min, $max );
+			} catch ( \Exception $e ) {
 				// Fall through
-			} catch (\TypeError $e) {
+			} catch ( \TypeError $e ) {
 				// Fall through
-			} catch (\Error $e) {
+			} catch ( \Error $e ) {
 				// Fall through
 			}
 		}
-		$diff = $max - $min;
-		$bytes = self::random_bytes(4);
-		if ($bytes === false || self::strlen($bytes) != 4) {
-			throw new \RuntimeException("Unable to get 4 bytes");
+		$diff  = $max - $min;
+		$bytes = self::random_bytes( 4 );
+		if ( $bytes === false || self::strlen( $bytes ) != 4 ) {
+			throw new \RuntimeException( 'Unable to get 4 bytes' );
 		}
-		$val = @unpack("Nint", $bytes);
+		$val = @unpack( 'Nint', $bytes );
 		$val = $val['int'] & 0x7FFFFFFF;
-		$fp = (float) $val / 2147483647.0; // convert to [0,1]
-		return (int) (round($fp * $diff) + $min);
+		$fp  = (float) $val / 2147483647.0; // convert to [0,1]
+		return (int) ( round( $fp * $diff ) + $min );
 	}
 
-	public static function uuid()
-	{
+	public static function uuid() {
 		return sprintf(
 			'%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 			// 32 bits for "time_low"
-			self::random_int(0, 0xffff),
-			self::random_int(0, 0xffff),
-
+			self::random_int( 0, 0xffff ),
+			self::random_int( 0, 0xffff ),
 			// 16 bits for "time_mid"
-			self::random_int(0, 0xffff),
-
+			self::random_int( 0, 0xffff ),
 			// 16 bits for "time_hi_and_version",
 			// four most significant bits holds version number 4
-			self::random_int(0, 0x0fff) | 0x4000,
-
+			self::random_int( 0, 0x0fff ) | 0x4000,
 			// 16 bits, 8 bits for "clk_seq_hi_res",
 			// 8 bits for "clk_seq_low",
 			// two most significant bits holds zero and one for variant DCE1.1
-			self::random_int(0, 0x3fff) | 0x8000,
-
+			self::random_int( 0, 0x3fff ) | 0x8000,
 			// 48 bits for "node"
-			self::random_int(0, 0xffff),
-			self::random_int(0, 0xffff),
-			self::random_int(0, 0xffff)
+			self::random_int( 0, 0xffff ),
+			self::random_int( 0, 0xffff ),
+			self::random_int( 0, 0xffff )
 		);
 	}
 
@@ -172,29 +160,28 @@ abstract class Model_Crypto
 	 * @param bool $reset Optional. Whether to reset the encoding back to a previously-set encoding.
 	 *                    Default false.
 	 */
-	protected static function _mbstring_binary_safe_encoding($reset = false)
-	{
-		static $encodings = array();
+	protected static function _mbstring_binary_safe_encoding( $reset = false ) {
+		static $encodings  = array();
 		static $overloaded = null;
 
-		if (is_null($overloaded)) {
+		if ( is_null( $overloaded ) ) {
 			// phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.mbstring_func_overloadDeprecated
-			$overloaded = function_exists('mb_internal_encoding') && (ini_get('mbstring.func_overload') & 2);
+			$overloaded = function_exists( 'mb_internal_encoding' ) && ( ini_get( 'mbstring.func_overload' ) & 2 );
 		}
 
-		if (false === $overloaded) {
+		if ( false === $overloaded ) {
 			return;
 		}
 
-		if (!$reset) {
-			$encoding = mb_internal_encoding();
+		if ( ! $reset ) {
+			$encoding    = mb_internal_encoding();
 			$encodings[] = $encoding;
-			mb_internal_encoding('ISO-8859-1');
+			mb_internal_encoding( 'ISO-8859-1' );
 		}
 
-		if ($reset && $encodings) {
-			$encoding = array_pop($encodings);
-			mb_internal_encoding($encoding);
+		if ( $reset && $encodings ) {
+			$encoding = array_pop( $encodings );
+			mb_internal_encoding( $encoding );
 		}
 	}
 
@@ -203,20 +190,18 @@ abstract class Model_Crypto
 	 *
 	 * @see Model_Crypto::_mbstring_binary_safe_encoding
 	 */
-	protected static function _reset_mbstring_encoding()
-	{
-		self::_mbstring_binary_safe_encoding(true);
+	protected static function _reset_mbstring_encoding() {
+		self::_mbstring_binary_safe_encoding( true );
 	}
 
 	/**
 	 * @param callable $function
-	 * @param array $args
+	 * @param array    $args
 	 * @return mixed
 	 */
-	protected static function _call_mb_string_function($function, $args)
-	{
+	protected static function _call_mb_string_function( $function, $args ) {
 		self::_mbstring_binary_safe_encoding();
-		$return = call_user_func_array($function, $args);
+		$return = call_user_func_array( $function, $args );
 		self::_reset_mbstring_encoding();
 		return $return;
 	}
@@ -227,10 +212,9 @@ abstract class Model_Crypto
 	 * @param $binary
 	 * @return int
 	 */
-	public static function strlen($binary)
-	{
+	public static function strlen( $binary ) {
 		$args = func_get_args();
-		return self::_call_mb_string_function('strlen', $args);
+		return self::_call_mb_string_function( 'strlen', $args );
 	}
 
 	/**
@@ -239,20 +223,18 @@ abstract class Model_Crypto
 	 * @param int $offset
 	 * @return int
 	 */
-	public static function stripos($haystack, $needle, $offset = 0)
-	{
+	public static function stripos( $haystack, $needle, $offset = 0 ) {
 		$args = func_get_args();
-		return self::_call_mb_string_function('stripos', $args);
+		return self::_call_mb_string_function( 'stripos', $args );
 	}
 
 	/**
 	 * @param $string
 	 * @return mixed
 	 */
-	public static function strtolower($string)
-	{
+	public static function strtolower( $string ) {
 		$args = func_get_args();
-		return self::_call_mb_string_function('strtolower', $args);
+		return self::_call_mb_string_function( 'strtolower', $args );
 	}
 
 	/**
@@ -261,16 +243,18 @@ abstract class Model_Crypto
 	 * @param $length
 	 * @return mixed
 	 */
-	public static function substr($string, $start, $length = null)
-	{
-		if ($length === null) {
-			$length = self::strlen($string);
+	public static function substr( $string, $start, $length = null ) {
+		if ( $length === null ) {
+			$length = self::strlen( $string );
 		}
-		return self::_call_mb_string_function('substr', array(
-			$string,
-			$start,
-			$length
-		));
+		return self::_call_mb_string_function(
+			'substr',
+			array(
+				$string,
+				$start,
+				$length,
+			)
+		);
 	}
 
 	/**
@@ -279,51 +263,50 @@ abstract class Model_Crypto
 	 * @param int $offset
 	 * @return mixed
 	 */
-	public static function strpos($haystack, $needle, $offset = 0)
-	{
+	public static function strpos( $haystack, $needle, $offset = 0 ) {
 		$args = func_get_args();
-		return self::_call_mb_string_function('strpos', $args);
+		return self::_call_mb_string_function( 'strpos', $args );
 	}
 
 	/**
 	 * @param string $haystack
 	 * @param string $needle
-	 * @param int $offset
-	 * @param int $length
+	 * @param int    $offset
+	 * @param int    $length
 	 * @return mixed
 	 */
-	public static function substr_count($haystack, $needle, $offset = 0, $length = null)
-	{
-		if ($length === null) {
-			$length = self::strlen($haystack);
+	public static function substr_count( $haystack, $needle, $offset = 0, $length = null ) {
+		if ( $length === null ) {
+			$length = self::strlen( $haystack );
 		}
-		return self::_call_mb_string_function('substr_count', array(
-			$haystack,
-			$needle,
-			$offset,
-			$length
-		));
+		return self::_call_mb_string_function(
+			'substr_count',
+			array(
+				$haystack,
+				$needle,
+				$offset,
+				$length,
+			)
+		);
 	}
 
 	/**
 	 * @param $string
 	 * @return mixed
 	 */
-	public static function strtoupper($string)
-	{
+	public static function strtoupper( $string ) {
 		$args = func_get_args();
-		return self::_call_mb_string_function('strtoupper', $args);
+		return self::_call_mb_string_function( 'strtoupper', $args );
 	}
 
 	/**
 	 * @param string $haystack
 	 * @param string $needle
-	 * @param int $offset
+	 * @param int    $offset
 	 * @return mixed
 	 */
-	public static function strrpos($haystack, $needle, $offset = 0)
-	{
+	public static function strrpos( $haystack, $needle, $offset = 0 ) {
 		$args = func_get_args();
-		return self::_call_mb_string_function('strrpos', $args);
+		return self::_call_mb_string_function( 'strrpos', $args );
 	}
 }

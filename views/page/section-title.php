@@ -1,5 +1,5 @@
 <?php
-if (!defined('TFA_LS_VERSION')) {
+if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 /**
@@ -8,11 +8,11 @@ if (!defined('TFA_LS_VERSION')) {
  */
 ?>
 <div class="wfls-section-title">
-	<?php if (isset($showIcon) && $showIcon): ?>
+	<?php if ( isset( $showIcon ) && $showIcon ) : ?>
 		<div class="wfls-header-icon wfls-hidden-xs"></div>
 	<?php endif; ?>
-	<h2 class="wfls-center-xs" id="section-title-<?php echo esc_attr($title->id); ?>"><?php echo \TFAuthLS\Text\Model_HTML::esc_html($title->title); ?></h2>
-	<?php if ($title->helpURL !== null && $title->helpLink !== null): ?>
-		<span class="wfls-hidden-xs"><a href="<?php echo esc_url($title->helpURL); ?>" target="_blank" rel="noopener noreferrer" class="wfls-help-link"><?php echo \TFAuthLS\Text\Model_HTML::esc_html($title->helpLink); ?> <i class="wfls-fa wfls-fa-external-link" aria-hidden="true"></i></a></span>
+	<h2 class="wfls-center-xs" id="section-title-<?php echo esc_attr( $title->id ); ?>"><?php echo \TFAuthLS\Text\Model_HTML::esc_html( $title->title ); ?></h2>
+	<?php if ( $title->helpURL !== null && $title->helpLink !== null ) : ?>
+		<span class="wfls-hidden-xs"><a href="<?php echo esc_url( $title->helpURL ); ?>" target="_blank" rel="noopener noreferrer" class="wfls-help-link"><?php echo \TFAuthLS\Text\Model_HTML::esc_html( $title->helpLink ); ?> <i class="wfls-fa wfls-fa-external-link" aria-hidden="true"></i></a></span>
 	<?php endif; ?>
 </div>
