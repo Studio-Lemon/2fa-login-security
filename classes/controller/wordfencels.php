@@ -61,9 +61,6 @@ class Controller_WordfenceLS {
 		add_action('wp_login', array($this, '_record_login'), 999, 1);
 		add_action('register_post', array($this, '_register_post'), 25, 3);
 		add_filter('wp_login_errors', array($this, '_wp_login_errors'), 25, 3);
-		if ($this->is_woocommerce_integration_enabled()) {
-			$this->init_woocommerce_actions();
-		}
 		add_action('user_new_form', array($this, '_user_new_form'));
 		add_action('user_register', array($this, '_user_register'));
 		
@@ -84,17 +81,13 @@ class Controller_WordfenceLS {
 		add_action('edit_user_profile', array($this, '_edit_user_profile'), 0);
 
 		add_action('init', array($this, '_wordpress_init'));
-		if ($this->is_shortcode_enabled())
-			add_action('wp_enqueue_scripts', array($this, '_handle_shortcode_prerequisites'));
 		
 		Controller_Permissions::_init_actions();
 	}
 
 	public function _wordpress_init() {
 		if (!WORDFENCE_LS_FROM_CORE)
-			load_plugin_textdomain('wordfence-login-security', false, WORDFENCE_LS_PATH . 'languages');
-		if ($this->is_shortcode_enabled())
-			add_shortcode(self::SHORTCODE_2FA_MANAGEMENT, array($this, '_handle_user_2fa_management_shortcode'));
+			load_plugin_textdomain('2fa-login-security', false, WORDFENCE_LS_PATH . 'languages');
 	}
 
 	private function init_woocommerce_actions() {
@@ -169,39 +162,6 @@ END
 				}
 			}
 
-			if (Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_CAPTCHA_TEST_MODE) && Controller_CAPTCHA::shared()->enabled()) {
-				if (is_multisite()) {
-					add_action('network_admin_notices', array($this, '_recaptcha_test_notice'));
-				}
-				else {
-					add_action('admin_notices', array($this, '_recaptcha_test_notice'));
-				}
-			}
-
-			if ($this->has_woocommerce() && !Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION)) {
-				if (!Controller_Notices::shared()->is_persistent_notice_dismissed(get_current_user_id(), Controller_Notices::PERSISTENT_NOTICE_WOOCOMMERCE_INTEGRATION)) {
-					Controller_Notices::shared()->register_persistent_notice(Controller_Notices::PERSISTENT_NOTICE_WOOCOMMERCE_INTEGRATION);
-					add_action(is_multisite() ? 'network_admin_notices' : 'admin_notices', array($this, '_woocommerce_integration_notice'));
-				}
-			}
-
-
-
-			if (!WORDFENCE_LS_FROM_CORE) {
-				if (!Controller_Notices::shared()->is_persistent_notice_dismissed(get_current_user_id(), Controller_Notices::PERSISTENT_NOTICE_STANDALONE_DISCONTINUING)) {
-					Controller_Notices::shared()->register_persistent_notice(Controller_Notices::PERSISTENT_NOTICE_STANDALONE_DISCONTINUING);
-					add_action('admin_notices', array($this, '_standalone_discontinuing_integration_notice'));
-					if (is_multisite()) {
-						add_action('network_admin_notices', array($this, '_standalone_discontinuing_integration_notice'));
-					}
-				}
-				else if (isset($_GET['page']) && $_GET['page'] == 'WFLS') {
-					add_action('admin_notices', array($this, '_standalone_discontinuing_integration_notice'));
-					if (is_multisite()) {
-						add_action('network_admin_notices', array($this, '_standalone_discontinuing_integration_notice'));
-					}
-				}
-			}
 		}
 	}
 	
@@ -228,17 +188,6 @@ END
 <?php
 	}
 
-	public function _standalone_discontinuing_integration_notice() {
-		?>
-		<div id="<?php echo esc_attr(Controller_Notices::PERSISTENT_NOTICE_STANDALONE_DISCONTINUING) ?>" class="notice notice-warning <?php if (!(isset($_GET['page']) && $_GET['page'] == 'WFLS')): ?>is-dismissible<?php endif; ?> wfls-persistent-notice">
-			<p><strong><?php esc_html_e('Your site is currently using the "Wordfence Login Security” plugin.', 'wordfence-login-security') ?></strong></p>
-			<p><?php esc_html_e('This plugin will be discontinued on or around July 1, 2026, because its features are already included in the main Wordfence plugin.', 'wordfence-login-security') ?></p>
-			<p><?php esc_html_e('To continue receiving updates and security improvements, please install and activate the main Wordfence plugin — also available for free.', 'wordfence-login-security') ?></p>
-			<p><a class="wfls-btn wfls-btn-primary wfls-btn-sm" href="<?php echo esc_url(Utility_URL::maybe_network_admin_url('plugin-install.php?s=wordfence&tab=search&type=term')) ?>"><?php esc_html_e('Install Wordfence', 'wordfence-login-security') ?></a></p>
-		</div>
-		<?php
-	}
-	
 	/**
 	 * Installation/Uninstallation
 	 */
@@ -360,10 +309,7 @@ END
 	 * Login Page
 	 */	
 	public function _login_enqueue_scripts() {
-		$useCAPTCHA = Controller_CAPTCHA::shared()->enabled();
-		if ($useCAPTCHA) {
-			wp_enqueue_script('wordfence-ls-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . urlencode(Controller_Settings::shared()->get(Controller_Settings::OPTION_RECAPTCHA_SITE_KEY)));
-		}
+		$useCAPTCHA = false;
 		
 		if ($useCAPTCHA || Controller_Users::shared()->any_2fa_active()) {
 			$this->validate_email_verification_token(null, $verification);
@@ -634,10 +580,6 @@ END
 	
 	public function _authenticate($user, $username, $password) {
 		if (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST && !Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_XMLRPC_ENABLED)) { //XML-RPC call and we're not enforcing 2FA on it
-			return $user;
-		}
-		
-		if (Controller_Whitelist::shared()->is_whitelisted(Model_Request::current()->ip())) { //Whitelisted, so we're not enforcing 2FA
 			return $user;
 		}
 

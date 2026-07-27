@@ -27,9 +27,7 @@ class Controller_CAPTCHA {
 	 * @return bool
 	 */
 	public function enabled() {
-		$key = $this->site_key();
-		$secret = $this->_secret();
-		return Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_AUTH_CAPTCHA) && !empty($key) && !empty($secret);
+		return false;
 	}
 	
 	/**

@@ -1,42 +1,22 @@
 <?php
 /*
-Plugin Name: Wordfence Login Security
-Description: Wordfence Login Security
-Author: Wordfence
-Author URI: https://www.wordfence.com/
+Plugin Name: 2FA Login Security
+Description: 2FA Login Security for WordPress
+Author: 2FA Login Security Contributors
+Author URI: https://wordpress.org/plugins/2fa-login-security/
 Version: 1.1.16
 Network: true
 Requires at least: 4.7
 Requires PHP: 7.0
-Text Domain: wordfence-login-security
+Text Domain: 2fa-login-security
 Domain Path: /languages
 @copyright Copyright (C) 2019-2023 Defiant Inc.
 */
 if (defined('WP_INSTALLING') && WP_INSTALLING) { return; }
 if (!defined('ABSPATH')) { exit; }
 
-$wfCoreActive = false;
-$plugins = (array) get_option('active_plugins', array()); //Used in lieu of is_plugin_active since that's not loaded until admin_init
-if (is_multisite()) {
-	$sitePlugins = array_keys((array) get_site_option('active_sitewide_plugins', array()));
-	$plugins = array_merge($plugins, $sitePlugins);
-}
 
-$wfVersion = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, 'wordfence_version', false) : get_option('wordfence_version', false));
-if (version_compare($wfVersion, '7.3.1', '>=')) {
-	foreach ($plugins as $p) {
-		if (preg_match('~^wordfence[^/]*/wordfence\.php$~i', $p)) {
-			$wfCoreActive = true;
-			break;
-		}
-	}
-}
-
-if ($wfCoreActive && !(isset($wfCoreLoading) && $wfCoreLoading)) {
-	return; //Wordfence core will load this, prevent the standalone one from also loading if active
-}
-else {
-	define('WORDFENCE_LS_FROM_CORE', ($wfCoreActive && isset($wfCoreLoading) && $wfCoreLoading));
+define('WORDFENCE_LS_FROM_CORE', false);
 	
 	define('WORDFENCE_LS_VERSION', '1.1.16');
 	define('WORDFENCE_LS_BUILD_NUMBER', '1777414061');
@@ -101,4 +81,3 @@ else {
 	if (!defined('WORDFENCE_LS_VERSIONONLY_MODE') && (!defined('WORDFENCE_USE_LEGACY_2FA') || (defined('WORDFENCE_USE_LEGACY_2FA') && !WORDFENCE_USE_LEGACY_2FA))) { //Used to get version from file
 		\WordfenceLS\Controller_WordfenceLS::shared()->init();
 	}
-}
