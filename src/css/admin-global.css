@@ -202,6 +202,12 @@ fieldset[disabled] .wfls-btn-primary.wfls-focus {
   color: #00709e;
   background-color: #fff;
 }
+.wfls-btn-success:focus,
+.wfls-btn-success.focus {
+  color: #fff;
+  background-color: #4bad4b;
+  border-color: #3c893c;
+}
 .wfls-btn-success:active,
 .wfls-btn-success.active,
 .wfls-open > .wfls-btn-success.wfls-dropdown-toggle {
@@ -251,6 +257,12 @@ fieldset[disabled] .wfls-btn-success:focus,
 fieldset[disabled] .wfls-btn-success.wfls-focus {
   background-color: #5cb85c;
   border-color: #52b452;
+}
+.wfls-btn-info:focus,
+.wfls-btn-info.focus {
+  color: #fff;
+  background-color: #41b6d9;
+  border-color: #2598ba;
 }
 .wfls-btn-info:active,
 .wfls-btn-info.active,
@@ -302,6 +314,12 @@ fieldset[disabled] .wfls-btn-info.wfls-focus {
   background-color: #5bc0de;
   border-color: #4ebbdb;
 }
+.wfls-btn-warning:focus,
+.wfls-btn-warning.focus {
+  color: #fff;
+  background-color: #ee9f31;
+  border-color: #d18212;
+}
 .wfls-btn-warning:active,
 .wfls-btn-warning.active,
 .wfls-open > .wfls-btn-warning.wfls-dropdown-toggle {
@@ -351,6 +369,12 @@ fieldset[disabled] .wfls-btn-warning:focus,
 fieldset[disabled] .wfls-btn-warning.wfls-focus {
   background-color: #f0ad4e;
   border-color: #efa63f;
+}
+.wfls-btn-danger:focus,
+.wfls-btn-danger.focus {
+  color: #fff;
+  background-color: #840000;
+  border-color: #690000;
 }
 .wfls-btn-danger:active,
 .wfls-btn-danger.active,
@@ -597,6 +621,39 @@ fieldset[disabled] .wfls-btn-link {
   position: absolute;
   clip: rect(0, 0, 0, 0);
   pointer-events: none;
+}
+.wfls-pagination > .wfls-active > a,
+.wfls-pagination > .wfls-active > a:hover,
+.wfls-pagination > .wfls-active > a:focus,
+.wfls-pagination > .wfls-active > span,
+.wfls-pagination > .wfls-active > span:hover,
+.wfls-pagination > .wfls-active > span:focus {
+  z-index: 3;
+  color: #fff;
+  background-color: #00709e;
+  border-color: #00709e;
+  cursor: default;
+}
+.wfls-pagination > .wfls-disabled > span,
+.wfls-pagination > .wfls-disabled > span:hover,
+.wfls-pagination > .wfls-disabled > span:focus,
+.wfls-pagination > .wfls-disabled > a,
+.wfls-pagination > .wfls-disabled > a:hover,
+.wfls-pagination > .wfls-disabled > a:focus {
+  color: #777;
+  background-color: #fff;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+.wfls-premium-callout .center {
+  text-align: center;
+  margin: 0;
+}
+.wfls-premium-callout .button-primary {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  background-color: #00709e;
 }
 small.wfls-sub-status {
   display: block;

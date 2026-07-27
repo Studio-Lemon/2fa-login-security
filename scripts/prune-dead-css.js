@@ -6,7 +6,7 @@ const { execFileSync } = require('child_process');
 
 const projectRoot = path.resolve(__dirname, '..');
 const defaultFiles = ['src/css/admin.css', 'src/css/admin-global.css'];
-const searchRoots = ['views', 'classes'];
+const searchRoots = ['views', 'classes', 'src/js'];
 
 const args = process.argv.slice(2);
 const writeChanges = args.includes('--write');
