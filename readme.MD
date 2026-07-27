@@ -33,3 +33,10 @@ This file tracks implementation changes made while creating the public fork.
 - Removed shortcode constants and handlers from the primary controller.
 - Removed embedded 2FA management render path used by shortcode and deleted the associated view file.
 - Removed shortcode option handling from settings and removed shortcode support metadata key.
+
+## Step 5 - Remove reCAPTCHA functionality
+- Removed login and registration CAPTCHA enforcement from primary authentication/registration flows.
+- Removed reCAPTCHA settings keys and related validation/cleaning/inflation logic.
+- Removed reCAPTCHA score tracking/caching and users-table CAPTCHA column handling.
+- Removed reCAPTCHA stats AJAX endpoint and removed the dedicated CAPTCHA controller file.
+- Removed chart asset wiring and deleted bundled chart runtime file used for reCAPTCHA statistics.

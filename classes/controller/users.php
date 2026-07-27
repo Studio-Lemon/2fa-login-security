@@ -14,13 +14,9 @@ class Controller_Users {
 	const META_KEY_GRACE_PERIOD_OVERRIDE = 'wfls-grace-period-override';
 	const META_KEY_ALLOW_GRACE_PERIOD = 'wfls-allow-grace-period';
 	const META_KEY_VERIFICATION_TOKENS = 'wfls-verification-tokens';
-	const META_KEY_CAPTCHA_SCORES = 'wfls-captcha-scores';
 	const VERIFICATION_TOKEN_BYTES = 64;
 	const VERIFICATION_TOKEN_LIMIT = 5; //Max number of concurrent tokens
 	const VERIFICATION_TOKEN_TRANSIENT_PREFIX = 'wfls_verify_';
-	const CAPTCHA_SCORE_LIMIT = 2; //Max number of captcha scores cached
-	const CAPTCHA_SCORE_TRANSIENT_PREFIX = 'wfls_captcha_';
-	const CAPTCHA_SCORE_CACHE_DURATION = 60; //seconds
 	const LARGE_USER_BASE_THRESHOLD = 1000;
 	const TRUNCATED_ROLE_KEY = 1;
 	
@@ -320,29 +316,6 @@ class Controller_Users {
 	}
 	
 	/**
-	 * Records the reCAPTCHA score for later display.
-	 * 
-	 * This is not atomic, which means this can miscount on hits that overlap, but the overhead of being atomic is not 
-	 * worth it for our use.
-	 * 
-	 * @param \WP_User $user|null
-	 * @param float $score
-	 */
-	public function record_captcha_score($user, $score) {
-		if (!Controller_CAPTCHA::shared()->enabled()) { return; }
-		
-		if ($user) { update_user_meta($user->ID, 'wfls-last-captcha-score', $score); }
-		$stats = Controller_Settings::shared()->get_array(Controller_Settings::OPTION_CAPTCHA_STATS, array());
-		if (!array_key_exists('counts', $stats)) { $stats['counts'] = array_fill(0, 10, 0); }
-		if (!array_key_exists('avg', $stats)) { $stats['avg'] = 0; }
-		$int_score = min(max((int) ($score * 10), 0), 10);
-		$count = array_sum($stats['counts']);
-		$stats['counts'][$int_score]++;
-		$stats['avg'] = ($stats['avg'] * $count + $int_score) / ($count + 1);
-		Controller_Settings::shared()->set(Controller_Settings::OPTION_CAPTCHA_STATS, $stats);
-	}
-	
-	/**
 	 * Returns the active and inactive user counts.
 	 * 
 	 * @return array
@@ -534,9 +507,6 @@ SQL
 		
 		if (Controller_Settings::shared()->are_login_history_columns_enabled() && Controller_Permissions::shared()->can_manage_settings(wp_get_current_user())) {
 			$columns['wfls_last_login'] = esc_html__('Last Login', 'wordfence-login-security');
-			if (Controller_CAPTCHA::shared()->enabled()) {
-				$columns['wfls_last_captcha'] = esc_html__('Last CAPTCHA', 'wordfence-login-security');
-			}
 		}
 		return $columns;
 	}
@@ -569,13 +539,6 @@ SQL
 					$value = Controller_Time::format_local_time(get_option('date_format') . ' ' . get_option('time_format'), $last);
 				}
 				break;
-			case 'wfls_last_captcha':
-				$user = new \WP_User($user_id);
-				$value = '-';
-				if (($last = get_user_meta($user_id, 'wfls-last-captcha-score', true))) {
-					$value = number_format($last, 1);
-				}
-				break;
 		}
 		
 		return $value;
@@ -584,7 +547,6 @@ SQL
 	public function _manage_users_sortable_columns($sortable_columns) {
 		return array_merge($sortable_columns, array(
 			'wfls_last_login' => 'wfls-lastlogin',
-			'wfls_last_captcha' => 'wfls-lastcaptcha',
 		));
 	}
 	
@@ -612,10 +574,6 @@ SQL
 					$args['meta_key'] = 'wfls-last-login';
 					$args['orderby'] = 'meta_value';
 				}
-				else if ($args['orderby'] == 'wfls-lastcaptcha') {
-					$args['meta_key'] = 'wfls-last-captcha-score';
-					$args['orderby'] = 'meta_value';
-				}
 			}
 			else {
 				$has_one = false;
@@ -626,30 +584,12 @@ SQL
 					$has_one = true;
 				}
 				
-				if (array_key_exists('wfls-lastcaptcha', $args['orderby'])) {
-					if (!$has_one) { //We have to discard one if both are set to sort by because $meta_key can only be a single value rather than an array
-						$args['meta_key'] = 'wfls-last-captcha-score';
-						$args['orderby']['meta_value'] = $args['orderby']['wfls-lastcaptcha'];
-					}
-					unset($args['orderby']['wfls-lastcaptcha']);
-					$has_one = true;
-				}
-				
 				if (in_array('wfls-lastlogin', $args['orderby'])) {
 					if (!$has_one) { //We have to discard one if both are set to sort by because $meta_key can only be a single value rather than an array
 						$args['meta_key'] = 'wfls-last-login';
 						$args['orderby'][] = 'meta_value';
 					}
 					unset($args['orderby'][array_search('wfls-lastlogin', $args['orderby'])]);
-					$has_one = true;
-				}
-				
-				if (in_array('wfls-lastcaptcha', $args['orderby'])) {
-					if (!$has_one) { //We have to discard one if both are set to sort by because $meta_key can only be a single value rather than an array
-						$args['meta_key'] = 'wfls-last-captcha-score';
-						$args['orderby'][] = 'meta_value';
-					}
-					unset($args['orderby'][array_search('wfls-lastcaptcha', $args['orderby'])]);
 					$has_one = true;
 				}
 			}
@@ -959,135 +899,6 @@ SQL;
 		return $userId !== null && ($user === null || $userId === $user->ID);
 	}
 	
-	/**
-	 * Returns the key used to store a captcha score transient.
-	 * 
-	 * @param string $hash
-	 * @return string
-	 */
-	private function get_captcha_score_transient_key($hash) {
-		return self::CAPTCHA_SCORE_TRANSIENT_PREFIX . $hash;
-	}
-	
-	/**
-	 * Attempts to look up a stored captcha score for the given hash and user. If found, returns the score. If not, 
-	 * returns null.
-	 * 
-	 * @param string $hash
-	 * @param \WP_User $user
-	 * @return float|false
-	 */
-	private function load_captcha_score($hash, $user) {
-		$key = $this->get_captcha_score_transient_key($hash);
-		$data = get_transient($key);
-		if ($data === false) {
-			return false;
-		}
-		
-		if (!$user->exists() || $data['user'] !== $user->ID) {
-			return false;
-		}
-		
-		return floatval($data['score']);
-	}
-	
-	/**
-	 * Deletes the stored captcha score if present for the given hash.
-	 * 
-	 * @param string $hash
-	 */
-	private function clear_captcha_score($token, $user) {
-		$hash = $this->hash_captcha_token($token);
-		$key = $this->get_captcha_score_transient_key($hash);
-		delete_transient($key);
-		
-		$storedHashes = get_user_meta($user->ID, self::META_KEY_CAPTCHA_SCORES, true);
-		$validHashes = array();
-		if (is_array($storedHashes)) {
-			foreach ($storedHashes as $hash) {
-				$storedScore = $this->load_captcha_score($hash, $user);
-				if ($storedScore !== false) {
-					$validHashes[] = $hash;
-				}
-			}
-		}
-		$validHashes = array_slice($validHashes, 0, self::CAPTCHA_SCORE_LIMIT);
-		update_user_meta($user->ID, self::META_KEY_CAPTCHA_SCORES, $validHashes);
-	}
-	
-	/**
-	 * Hashes the captcha token for storage.
-	 * 
-	 * @param string $token
-	 * @return string
-	 */
-	private function hash_captcha_token($token) {
-		return wp_hash($token);
-	}
-	
-	/**
-	 * Returns the cached score for the given captcha score and user if available. This action removes it from the cache
-	 * since the intent is for it only to be used for the initial login request to validate credentials + the follow-up
-	 * request either finalizing the login (no 2FA set) or with the 2FA token.
-	 * 
-	 * $expired will be set to `true` if the reason for returning `false` is because the $token is recently expired. It
-	 * will be false when the $token is either uncached or has been expired long enough to be removed from the internal
-	 * list.
-	 * 
-	 * @param string $token
-	 * @param \WP_User $user
-	 * @param bool $expired
-	 * @return float|false
-	 */
-	public function cached_captcha_score($token, $user, &$expired = false) {
-		$hash = $this->hash_captcha_token($token);
-		$score = $this->load_captcha_score($hash, $user);
-		if ($score === false) {
-			$storedHashes = get_user_meta($user->ID, self::META_KEY_CAPTCHA_SCORES, true);
-			if (is_array($storedHashes)) {
-				$expired = in_array($hash, $storedHashes);
-			}
-		}
-		
-		$this->clear_captcha_score($token, $user);
-		return $score;
-	}
-	
-	/**
-	 * Caches the $token/$score pair for $user, automatically pruning its cached list to the maximum allowable count
-	 * 
-	 * @param string $token
-	 * @param float|false $score
-	 * @param \WP_User $user
-	 */
-	public function cache_captcha_score($token, $score, $user) {
-		if ($score === false) {
-			return;
-		}
-		
-		$storedHashes = get_user_meta($user->ID, self::META_KEY_CAPTCHA_SCORES, true);
-		$validHashes = array();
-		if (is_array($storedHashes)) {
-			foreach ($storedHashes as $hash) {
-				$storedScore = $this->load_captcha_score($hash, $user);
-				if ($storedScore !== false) {
-					$validHashes[] = $hash;
-				}
-			}
-		}
-		
-		$hash = $this->hash_verification_token($token);
-		array_unshift($validHashes, $hash);
-		while (count($validHashes) > self::CAPTCHA_SCORE_LIMIT) {
-			$excessHash = array_pop($validHashes);
-			delete_transient($this->get_captcha_score_transient_key($excessHash));
-		}
-		
-		$key = $this->get_captcha_score_transient_key($hash);
-		set_transient($key, array('user' => $user->ID, 'score' => $score), self::CAPTCHA_SCORE_CACHE_DURATION);
-		update_user_meta($user->ID, self::META_KEY_CAPTCHA_SCORES, $validHashes);
-	}
-
 	public function get_user_count() {
 		global $wpdb;
 		if (function_exists('get_user_count'))

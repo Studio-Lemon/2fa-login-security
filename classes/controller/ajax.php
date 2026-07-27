@@ -76,11 +76,6 @@ class Controller_AJAX {
 				'permissions' => array(),
 				'required_parameters' => array('nonce', 'id'),
 			),
-			'reset_recaptcha_stats' => array(
-				'handler' => array($this, '_ajax_reset_recaptcha_stats_callback'),
-				'permissions' => array(Controller_Permissions::CAP_MANAGE_SETTINGS => function() { return __('You do not have permission to reset reCAPTCHA statistics.', 'wordfence-login-security'); }),
-				'required_parameters' => array('nonce'),
-			),
 			'reset_2fa_grace_period' => array (
 				'handler' => array($this, '_ajax_reset_2fa_grace_period_callback'),
 				'permissions' => array(Controller_Permissions::CAP_MANAGE_SETTINGS => function() { return __('You do not have permission to reset the 2FA grace period.', 'wordfence-login-security'); }),
@@ -519,12 +514,6 @@ class Controller_AJAX {
 		Controller_Notices::shared()->remove_notice($_POST['id'], false, wp_get_current_user());
 	}
 	
-	public function _ajax_reset_recaptcha_stats_callback() {
-		Controller_Settings::shared()->set(Controller_Settings::OPTION_CAPTCHA_STATS, array('counts' => array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 'avg' => 0));
-		$response = array('success' => true);
-		self::send_json($response);
-	}
-
 	public function _ajax_reset_2fa_grace_period_callback() {
 		$userId = (int) $_POST['user_id'];
 		$gracePeriodOverride = array_key_exists('grace_period_override', $_POST) ? (int) $_POST['grace_period_override'] : null;

@@ -19,11 +19,6 @@ class Controller_Settings {
 	const OPTION_REMEMBER_DEVICE_ENABLED = 'remember-device';
 	const OPTION_REMEMBER_DEVICE_DURATION = 'remember-device-duration';
 	const OPTION_ALLOW_XML_RPC = 'allow-xml-rpc';
-	const OPTION_ENABLE_AUTH_CAPTCHA = 'enable-auth-captcha';
-	const OPTION_CAPTCHA_TEST_MODE = 'recaptcha-test-mode';
-	const OPTION_RECAPTCHA_SITE_KEY = 'recaptcha-site-key';
-	const OPTION_RECAPTCHA_SECRET = 'recaptcha-secret';
-	const OPTION_RECAPTCHA_THRESHOLD = 'recaptcha-threshold';
 	const OPTION_DELETE_ON_DEACTIVATION = 'delete-deactivation';
 	const OPTION_PREFIX_REQUIRED_2FA_ROLE = 'required-2fa-role';
 	const OPTION_ENABLE_LOGIN_HISTORY_COLUMNS = 'enable-login-history-columns';
@@ -39,7 +34,6 @@ class Controller_Settings {
 	const OPTION_SHARED_HASH_SECRET_KEY = 'shared-hash-secret';
 	const OPTION_SHARED_SYMMETRIC_SECRET_KEY = 'shared-symmetric-secret';
 	const OPTION_DISMISSED_FRESH_INSTALL_MODAL = 'dismissed-fresh-install-modal';
-	const OPTION_CAPTCHA_STATS = 'captcha-stats';
 	const OPTION_SCHEMA_VERSION = 'schema-version';
 	const OPTION_USER_COUNT_QUERY_STATE = 'user-count-query-state';
 	const OPTION_DISABLE_TEMPORARY_TABLES = 'disable-temporary-tables';
@@ -91,12 +85,6 @@ class Controller_Settings {
 			self::OPTION_REMEMBER_DEVICE_ENABLED => false,
 			self::OPTION_REMEMBER_DEVICE_DURATION => 30 * 86400,
 			self::OPTION_ALLOW_XML_RPC => true,
-			self::OPTION_ENABLE_AUTH_CAPTCHA => false,
-			self::OPTION_CAPTCHA_TEST_MODE => false,
-			self::OPTION_RECAPTCHA_SITE_KEY => '',
-			self::OPTION_RECAPTCHA_SECRET => '',
-			self::OPTION_CAPTCHA_STATS => '{"counts": [0,0,0,0,0,0,0,0,0,0,0], "avg": 0}',
-			self::OPTION_RECAPTCHA_THRESHOLD => 0.5,
 			self::OPTION_LAST_SECRET_REFRESH => 0,
 			self::OPTION_DELETE_ON_DEACTIVATION => false,
 			self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS => true,
@@ -192,8 +180,6 @@ class Controller_Settings {
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED:
 			case self::OPTION_REMEMBER_DEVICE_ENABLED:
 			case self::OPTION_ALLOW_XML_RPC:
-			case self::OPTION_ENABLE_AUTH_CAPTCHA:
-			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
@@ -210,7 +196,6 @@ class Controller_Settings {
 				
 			//Array
 			case self::OPTION_GLOBAL_NOTICES:
-			case self::OPTION_CAPTCHA_STATS:
 				return is_array($value);
 				
 			//Special
@@ -237,28 +222,6 @@ class Controller_Settings {
 				return true;
 			case self::OPTION_REMEMBER_DEVICE_DURATION:
 				return is_numeric($value) && $value > 0;
-			case self::OPTION_RECAPTCHA_THRESHOLD:
-				return is_numeric($value) && $value > 0 && $value <= 1;
-			case self::OPTION_RECAPTCHA_SITE_KEY:
-				if (empty($value)) {
-					return true;
-				}
-				
-				$response = wp_remote_get('https://www.google.com/recaptcha/api.js?render=' . urlencode($value));
-				
-				if (!is_wp_error($response)) {
-					$status = wp_remote_retrieve_response_code($response);
-					if ($status == 200) {
-						return true;
-					}
-					
-					$data = wp_remote_retrieve_body($response);
-					if (strpos($data, 'grecaptcha') === false) {
-						return __('Unable to validate the reCAPTCHA site key. Please check the key and try again.', 'wordfence-login-security');
-					}
-					return true;
-				}
-				return sprintf(/* translators: validation error */ __('An error was encountered while validating the reCAPTCHA site key: %s', 'wordfence-login-security'), $response->get_error_message());
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
 				if (!is_numeric($value) || $value < 0 || $value > self::MAX_REQUIRE_2FA_USER_GRACE_PERIOD) {
 					return sprintf(/* translators: 1. Minimum number of days. 2. Maximum number of days. */ __('The grace period day limit must be between %1$d and %2$d.', 'wordfence-login-security'), 0, self::MAX_REQUIRE_2FA_USER_GRACE_PERIOD);
@@ -299,8 +262,6 @@ class Controller_Settings {
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED:
 			case self::OPTION_REMEMBER_DEVICE_ENABLED:
 			case self::OPTION_ALLOW_XML_RPC:
-			case self::OPTION_ENABLE_AUTH_CAPTCHA:
-			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
@@ -316,13 +277,8 @@ class Controller_Settings {
 			case self::OPTION_SCHEMA_VERSION:
 				return (int) $value;
 				
-			//Float
-			case self::OPTION_RECAPTCHA_THRESHOLD:
-				return (float) $value;
-			
 			//Array
 			case self::OPTION_GLOBAL_NOTICES:
-			case self::OPTION_CAPTCHA_STATS:
 				return json_encode($value);
 			
 			//Special
@@ -338,9 +294,7 @@ class Controller_Settings {
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD:
 				$dt = $this->_parse_local_time($value);
 				return $dt->format('U');
-			case self::OPTION_RECAPTCHA_SITE_KEY:
-			case self::OPTION_RECAPTCHA_SECRET:
-				return trim($value);
+
 		}
 		return $value;
 	}
@@ -360,8 +314,6 @@ class Controller_Settings {
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED:
 			case self::OPTION_REMEMBER_DEVICE_ENABLED:
 			case self::OPTION_ALLOW_XML_RPC:
-			case self::OPTION_ENABLE_AUTH_CAPTCHA:
-			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
@@ -377,13 +329,8 @@ class Controller_Settings {
 			case self::OPTION_SCHEMA_VERSION:
 				return (int) $value;
 			
-			//Float
-			case self::OPTION_RECAPTCHA_THRESHOLD:
-				return (float) $value;
-			
 			//Array
 			case self::OPTION_GLOBAL_NOTICES:
-			case self::OPTION_CAPTCHA_STATS:
 				return json_decode($value, true);
 			
 			//Special
@@ -557,54 +504,6 @@ class Controller_Settings {
 					 * @param bool $after The new value.
 					 */
 					do_action('wordfence_ls_xml_rpc_enabled_toggled', $before, $after);
-				}
-				break;
-			case self::OPTION_ENABLE_AUTH_CAPTCHA:
-				$before = $this->get($key);
-				$after = $value;
-				
-				if ($before != $after) {
-					/**
-					 * Fires when the login captcha is enabled/disabled.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param bool $before The previous value.
-					 * @param bool $after The new value.
-					 */
-					do_action('wordfence_ls_captcha_enabled_toggled', $before, $after);
-				}
-				break;
-			case self::OPTION_RECAPTCHA_THRESHOLD:
-				$before = $this->get($key);
-				$after = $value;
-				
-				if ($before != $after) {
-					/**
-					 * Fires when the reCAPTCHA threshold changes.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param float $before The previous value.
-					 * @param float $after The new value.
-					 */
-					do_action('wordfence_ls_captcha_threshold_changed', $before, $after);
-				}
-				break;
-			case self::OPTION_CAPTCHA_TEST_MODE:
-				$before = $this->get($key);
-				$after = $value;
-				
-				if ($before != $after) {
-					/**
-					 * Fires when captcha test mode is enabled/disabled.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param bool $before The previous value.
-					 * @param bool $after The new value.
-					 */
-					do_action('wordfence_ls_captcha_test_mode_toggled', $before, $after);
 				}
 				break;
 		}

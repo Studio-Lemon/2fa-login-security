@@ -3,8 +3,6 @@
 namespace WordfenceLS;
 
 use WordfenceLS\Controller_Javascript;
-use WordfenceLS\Crypto\Model_JWT;
-use WordfenceLS\Crypto\Model_Symmetric;
 use WordfenceLS\Text\Model_HTML;
 use WordfenceLS\Utility_URL;
 use WordfenceLS\View\Model_Tab;
@@ -158,10 +156,6 @@ END
 		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf(/* translators: Configuration URL */ __('XML-RPC authentication is disabled. Jetpack is currently active and requires XML-RPC authentication to work correctly. <a href="%s">Manage Settings</a>', 'wordfence-login-security'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), array('a'=>array('href'=>array()))) . '</p></div>';
 	}
 	
-	public function _recaptcha_test_notice() {
-		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf(/* translators: Configuration URL */ __('reCAPTCHA test mode is enabled. While enabled, login and registration requests will be checked for their score but will not be blocked if the score is below the minimum score. <a href="%s">Manage Settings</a>', 'wordfence-login-security'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), array('a'=>array('href'=>array()))) . '</p></div>';
-	}
-
 	/**
 	 * Installation/Uninstallation
 	 */
@@ -270,7 +264,6 @@ END
 			wp_localize_script('wordfence-ls-login', 'WFLSVars', array(
 				'ajaxurl' => Utility_URL::relative_admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('wp-ajax'),
-				'recaptchasitekey' => Controller_Settings::shared()->get(Controller_Settings::OPTION_RECAPTCHA_SITE_KEY),
 				'useCAPTCHA' => $useCAPTCHA,
 				'allowremember' => Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_REMEMBER_DEVICE_ENABLED),
 				'verification' => $verification,
@@ -305,15 +298,6 @@ END
 		$assets[] = Model_Script::create('wordfence-ls-admin', Model_Asset::js('admin.js'), array('jquery'), WORDFENCE_LS_VERSION)
 			->withTranslation('You have unsaved changes to your options. If you leave this page, those changes will be lost.', __('You have unsaved changes to your options. If you leave this page, those changes will be lost.', 'wordfence-login-security'))
 			->setTranslationObjectName('WFLS_ADMIN_TRANSLATIONS');
-		$registered = array(
-			Model_Script::create('chart-js', Model_Asset::js('chart.umd.js'), array('jquery'), '4.2.1')->setRegistered(),
-		);
-		if (!WORDFENCE_LS_FROM_CORE && !$this->management_assets_registered) {
-			foreach ($registered as $asset)
-				$asset->register();
-			$this->management_assets_registered = true;
-		}
-		$assets = array_merge($assets, $registered);
 		$assets[] = Model_Style::create('wordfence-ls-admin', Model_Asset::css('admin.css'), array(), WORDFENCE_LS_VERSION);
 		$assets[] = Model_Style::create('wordfence-ls-ionicons', Model_Asset::css('ionicons.css'), array(), WORDFENCE_LS_VERSION);
 		if ($embedded) {
@@ -546,93 +530,6 @@ END
 			}
 		}
 		
-		/*
-		 * CAPTCHA Check
-		 * 
-		 * It will be enforced so long as:
-		 * 
-		 * 1. It's enabled and keys are set.
-		 * 2. This is not an XML-RPC request. An XML-RPC request is de facto an automated request, so a CAPTCHA makes
-		 *    no sense.
-		 * 3. A filter does not override it. This is to allow plugins with REST endpoints that handle authentication
-		 *    themselves to opt out of the requirement.
-		 * 4. The user is not providing a combined credentials + 2FA authentication login request.
-		 * 5. The request is a standard login attempt.
-		 */
-		if (!$combinedTwoFactor && !$isCombinedCheck && !empty($username)) { //Login attempt, not just a wp-login.php page load
-
-			$requireCAPTCHA = Controller_CAPTCHA::shared()->is_captcha_required();
-			$performVerification = false;
-			
-			$token = Controller_CAPTCHA::shared()->get_token();
-			if ($requireCAPTCHA && empty($token) && !Controller_CAPTCHA::shared()->test_mode()) { //No CAPTCHA token means forced additional verification (if neither 2FA nor test mode are active)
-				$performVerification = true;
-			}
-			
-			if (is_object($user) && $user instanceof \WP_User && $this->validate_email_verification_token($user)) { //Skip the CAPTCHA check if the email address was verified
-				$requireCAPTCHA = false;
-				$performVerification = false;
-				
-				//Reset token rate limit
-				$identifier = sprintf('wfls-captcha-%d', $user->ID);
-				$tokenBucket = new Model_TokenBucket('rate:' . $identifier, 3, 1 / (WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES * Model_TokenBucket::MINUTE)); //Maximum of three requests, refilling at a rate of one per token expiration period
-				$tokenBucket->reset();
-			}
-			
-			$score = false;
-			if ($requireCAPTCHA && !$performVerification) {
-				$expired = false;
-				if (is_object($user) && $user instanceof \WP_User) {
-					$score = Controller_Users::shared()->cached_captcha_score($token, $user, $expired);
-				}
-				
-				if ($score === false) {
-					if ($expired) {
-						return new \WP_Error('wfls_captcha_expired', wp_kses(__('<strong>CAPTCHA EXPIRED</strong>: The CAPTCHA verification for this login attempt has expired. Please try again.', 'wordfence-login-security'), array('strong'=>array())));
-					}
-					
-					$score = Controller_CAPTCHA::shared()->score($token);
-					
-					if ($score !== false && is_object($user) && $user instanceof \WP_User) {
-						Controller_Users::shared()->cache_captcha_score($token, $score, $user);
-						Controller_Users::shared()->record_captcha_score($user, $score);
-					}
-				}
-				
-				if ($score === false && !Controller_CAPTCHA::shared()->test_mode()) { //An invalid token will require additional verification (if test mode is not active)
-					$performVerification = true;
-				}
-			}
-			
-			if ($requireCAPTCHA) {
-				if ($performVerification || !Controller_CAPTCHA::shared()->is_human($score)) {
-					if (is_object($user) && $user instanceof \WP_User) {
-						$identifier = sprintf('wfls-captcha-%d', $user->ID);
-						$tokenBucket = new Model_TokenBucket('rate:' . $identifier, 3, 1 / (WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES * Model_TokenBucket::MINUTE)); //Maximum of three requests, refilling at a rate of one per token expiration period
-						if ($tokenBucket->consume(1)) {
-							$loginUrl = wp_login_url();
-							$verificationUrl = add_query_arg(
-								array(
-									'wfls-email-verification' => rawurlencode(Controller_Users::shared()->generate_verification_token($user))
-								),
-								$loginUrl
-							);
-							$view = new Model_View('email/login-verification', array(
-								'siteName' => get_bloginfo('name', 'raw'),
-								'verificationURL' => $verificationUrl,
-								'ip' => Model_Request::current()->ip(),
-								'canEnable2FA' => Controller_Users::shared()->can_activate_2fa($user),
-							));
-							wp_mail($user->user_email, __('Login Verification Required', 'wordfence-login-security'), $view->render(), "Content-Type: text/html");
-						}
-					}
-
-					Utility_Sleep::sleep(Model_Crypto::random_int(0, 2000) / 1000);
-					return new \WP_Error('wfls_captcha_verify', wp_kses(__('<strong>VERIFICATION REQUIRED</strong>: Additional verification is required for login. If there is a valid account for the provided login credentials, please check the email address associated with it for a verification link to continue logging in.', 'wordfence-login-security'), array('strong' => array())));
-				}
-			}
-		}
-
 		if (!$combinedTwoFactor) {
 			if ($isLogin && $user instanceof \WP_User) {
 				if (Controller_Users::shared()->has_2fa_active($user)) {
@@ -675,7 +572,6 @@ END
 		if (Controller_Users::shared()->has_2fa_active($user) && isset($_POST['wfls-remember-device']) && $_POST['wfls-remember-device']) {
 			Controller_Users::shared()->remember_2fa($user);
 		}
-		delete_user_meta($user_id, 'wfls-captcha-nonce');
 	}
 	
 	public function _record_login($user_login/*, $user -- we'd like to use the second parameter instead, but too many plugins call this hook and only provide one of the two required parameters*/) {
@@ -686,12 +582,7 @@ END
 	}
 	
 	public function _register_post($sanitized_user_login, $user_email, $errors) {
-		if (!empty($sanitized_user_login)) {
-			$captchaResult = $this->process_registration_captcha_with_hooks();
-			if ($captchaResult !== true) {
-				$errors->add($captchaResult['category'], $captchaResult['message']);
-			}
-		}
+		// CAPTCHA checks have been removed from registration flow.
 	}
 
 	private function validate_email_verification_token($user = null, &$token = null) {
@@ -863,82 +754,6 @@ END
 			'sections' => $sections,
 		));
 		echo $view->render();
-	}
-
-	private function process_registration_captcha() {
-		if (Controller_Whitelist::shared()->is_whitelisted(Model_Request::current()->ip())) { //Whitelisted, so we're not enforcing 2FA
-			return true;
-		}
-
-		$captchaController = Controller_CAPTCHA::shared();
-		$requireCaptcha = $captchaController->is_captcha_required();
-		$token = $captchaController->get_token();
-
-		if ($requireCaptcha) {
-			if ($token === null && !$captchaController->test_mode()) {
-				return array(
-					'message' => wp_kses(__('<strong>REGISTRATION ATTEMPT BLOCKED</strong>: This site requires a security token created when the page loads for all registration attempts. Please ensure JavaScript is enabled and try again.', 'wordfence-login-security'), array('strong'=>array())),
-					'category' => 'wfls_captcha_required'
-				);
-			}
-			$score = $captchaController->score($token);
-			if ($score === false && !$captchaController->test_mode()) {
-				return array(
-					'message' => wp_kses(__('<strong>REGISTRATION ATTEMPT BLOCKED</strong>: The security token for the login attempt was invalid or expired. Please reload the page and try again.', 'wordfence-login-security'), array('strong'=>array())),
-					'category' => 'wfls_captcha_required'
-				);
-			}
-			else if (is_numeric($score)) {
-				Controller_Users::shared()->record_captcha_score(null, $score);
-			}
-
-			if (!$captchaController->is_human($score)) {
-				$encryptedIP = Model_Symmetric::encrypt(Model_Request::current()->ip());
-				$encryptedScore = Model_Symmetric::encrypt($score);
-				$result = array(
-					'category' => 'wfls_registration_blocked'
-				);
-				if ($encryptedIP && $encryptedScore && filter_var(get_site_option('admin_email'), FILTER_VALIDATE_EMAIL)) {
-					$jwt = new Model_JWT(array('ip' => $encryptedIP, 'score' => $encryptedScore), Controller_Time::time() + 600);
-					$result['message'] = wp_kses(sprintf(/* translators: Security token */ __('<strong>REGISTRATION BLOCKED</strong>: The registration request was blocked because it was flagged as spam. Please try again or <a href="#" class="wfls-registration-captcha-contact" data-token="%s">contact the site owner</a> for help.', 'wordfence-login-security'), esc_attr((string)$jwt)), array('strong'=>array(), 'a'=>array('href'=>array(), 'class'=>array(), 'data-token'=>array())));
-				}
-				else {
-					$result['message'] = wp_kses(__('<strong>REGISTRATION BLOCKED</strong>: The registration request was blocked because it was flagged as spam. Please try again or contact the site owner for help.', 'wordfence-login-security'), array('strong'=>array()));
-				}
-				return $result;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * @param int $endpointType the type of endpoint being processed
-	 *	The default value of 1 corresponds to a regular login
-	 *	@see wordfence::wfsnEndpointType()
-	 */
-	private function process_registration_captcha_with_hooks($endpointType = 1) {
-		$result = $this->process_registration_captcha();
-		if ($result !== true) {
-			if ($result['category'] === 'wfls_registration_blocked') {
-				/**
-				 * Fires just prior to blocking user registration due to a failed CAPTCHA. After firing this action hook
-				 * the registration attempt is blocked.
-				 *
-				 * @param int $source The source code of the block.
-				 */
-				do_action('wfls_registration_blocked', $endpointType);
-
-				/**
-				 * Filters the message to show if registration is blocked due to a captcha rejection.
-				 *
-				 * @since 1.0.0
-				 *
-				 * @param string $message The message to display, HTML allowed.
-				 */
-				$result['message'] = apply_filters('wfls_registration_blocked_message', $result['message']);
-			}
-		}
-		return $result;
 	}
 
 	public function _user_new_form() {
