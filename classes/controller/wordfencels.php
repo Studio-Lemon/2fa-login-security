@@ -13,7 +13,6 @@ use WordfenceLS\View\Model_Title;
 class Controller_WordfenceLS {
 	const VERSION_KEY = 'wordfence_ls_version';
 	const USERS_PER_PAGE = 25;
-	const SHORTCODE_2FA_MANAGEMENT = 'wordfence_2fa_management';
 
 	private $management_assets_registered = false;
 	private $management_assets_enqueued = false;
@@ -240,10 +239,6 @@ END
 		return false;
 	}
 
-	private function is_shortcode_enabled() {
-		return Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_SHORTCODE);
-	}
-	
 	/**
 	 * Login Page
 	 */	
@@ -957,59 +952,6 @@ END
 			return;
 		if (isset($_POST['wfls-grace-period-toggle']))
 			Controller_Users::shared()->allow_grace_period($newUserId); 
-	}
-
-	private function can_user_activate_2fa_self($user = null) {
-		if ($user === null)
-			$user = wp_get_current_user();
-		return user_can($user, Controller_Permissions::CAP_ACTIVATE_2FA_SELF);
-	}
-
-	private function render_embedded_user_2fa_management_interface($stacked = null) {
-		$user = wp_get_current_user();
-		$stacked = $stacked === null ? Controller_Settings::shared()->should_stack_ui_columns() : $stacked;
-		if ($this->can_user_activate_2fa_self($user)) {
-			$assets = $this->management_assets_enqueued ? array() : $this->get_2fa_management_assets(true);
-			$scriptData = $this->management_assets_enqueued ? array() : $this->get_2fa_management_script_data();
-			return Model_View::create(
-				'page/manage-embedded',
-				array(
-					'user' => $user,
-					'stacked' => $stacked,
-					'assets' => $assets,
-					'scriptData' => $scriptData
-				)
-			)->render();
-		}
-		else {
-			return Model_View::create('page/permission-denied')->render();
-		}
-	}
-
-	private function does_current_page_include_shortcode($shortcode) {
-		global $post;
-		return $post instanceof \WP_Post && has_shortcode($post->post_content, $shortcode);
-	}
-
-	public function _handle_user_2fa_management_shortcode($attributes, $content = null, $shortcode = null) {
-		$shortcode = $shortcode === null ? self::SHORTCODE_2FA_MANAGEMENT : $shortcode;
-		$attributes = shortcode_atts(
-			array(
-				'stacked' => Controller_Settings::shared()->should_stack_ui_columns() ? 'true' : 'false'
-			),
-			$attributes,
-			$shortcode
-		);
-		$stacked = filter_var($attributes['stacked'], FILTER_VALIDATE_BOOLEAN);
-		return $this->render_embedded_user_2fa_management_interface($stacked);
-	}
-
-	public function _handle_shortcode_prerequisites() {
-		if ($this->does_current_page_include_shortcode(self::SHORTCODE_2FA_MANAGEMENT)) {
-			if (!is_user_logged_in())
-				auth_redirect();
-			$this->enqueue_2fa_management_assets(true);
-		}
 	}
 
 }

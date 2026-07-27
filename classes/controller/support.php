@@ -19,7 +19,6 @@ class Controller_Support {
 	const ITEM_MODULE_LOGIN_SECURITY_2FA_APPS = 'module-login-security-2fa-apps';
 	const ITEM_MODULE_LOGIN_SECURITY_CAPTCHA = 'module-login-security-captcha';
 	const ITEM_MODULE_LOGIN_SECURITY_ROLES = 'module-login-security-roles';
-	const ITEM_MODULE_LOGIN_SECURITY_OPTION_SHORTCODE = 'module-login-security-option-shortcode';
 	const ITEM_MODULE_LOGIN_SECURITY_OPTION_STACK_UI_COLUMNS = 'module-login-security-option-stack-ui-columns';
 	const ITEM_MODULE_LOGIN_SECURITY_2FA_NOTIFICATIONS = 'module-login-security-2fa-notifications';
 	
@@ -61,7 +60,6 @@ class Controller_Support {
 			case self::ITEM_MODULE_LOGIN_SECURITY_2FA:
 			case self::ITEM_MODULE_LOGIN_SECURITY_CAPTCHA:
 			case self::ITEM_MODULE_LOGIN_SECURITY_ROLES:
-			case self::ITEM_MODULE_LOGIN_SECURITY_OPTION_SHORTCODE:
 			case self::ITEM_MODULE_LOGIN_SECURITY_OPTION_STACK_UI_COLUMNS:
 			case self::ITEM_MODULE_LOGIN_SECURITY_2FA_NOTIFICATIONS:
 				return $base . '?query=' . $item;

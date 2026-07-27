@@ -28,3 +28,8 @@ This file tracks implementation changes made while creating the public fork.
 - Removed WooCommerce-specific login and registration handling branches from authentication flow.
 - Removed WooCommerce persistent admin-notice identifier and related settings-save rewrite hook trigger.
 - Stopped passing WooCommerce availability into the settings view state.
+
+## Step 4 - Remove shortcode functionality
+- Removed shortcode constants and handlers from the primary controller.
+- Removed embedded 2FA management render path used by shortcode and deleted the associated view file.
+- Removed shortcode option handling from settings and removed shortcode support metadata key.

@@ -26,7 +26,6 @@ class Controller_Settings {
 	const OPTION_RECAPTCHA_THRESHOLD = 'recaptcha-threshold';
 	const OPTION_DELETE_ON_DEACTIVATION = 'delete-deactivation';
 	const OPTION_PREFIX_REQUIRED_2FA_ROLE = 'required-2fa-role';
-	const OPTION_ENABLE_SHORTCODE = 'enable-shortcode';
 	const OPTION_ENABLE_LOGIN_HISTORY_COLUMNS = 'enable-login-history-columns';
 	const OPTION_STACK_UI_COLUMNS = 'stack-ui-columns';
 	
@@ -100,7 +99,6 @@ class Controller_Settings {
 			self::OPTION_RECAPTCHA_THRESHOLD => 0.5,
 			self::OPTION_LAST_SECRET_REFRESH => 0,
 			self::OPTION_DELETE_ON_DEACTIVATION => false,
-			self::OPTION_ENABLE_SHORTCODE => false,
 			self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS => true,
 			self::OPTION_STACK_UI_COLUMNS => true,
 			self::OPTION_SCHEMA_VERSION => false,
@@ -198,7 +196,6 @@ class Controller_Settings {
 			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
-			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
 			case self::OPTION_STACK_UI_COLUMNS:
 			case self::OPTION_USER_COUNT_QUERY_STATE:
@@ -306,7 +303,6 @@ class Controller_Settings {
 			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
-			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
 			case self::OPTION_STACK_UI_COLUMNS:
 			case self::OPTION_USER_COUNT_QUERY_STATE:
@@ -368,7 +364,6 @@ class Controller_Settings {
 			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
-			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
 			case self::OPTION_STACK_UI_COLUMNS:
 			case self::OPTION_USER_COUNT_QUERY_STATE:
