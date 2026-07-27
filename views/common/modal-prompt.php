@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'TFA_LS_VERSION' ) ) {
+if (! defined('TFA_LS_VERSION')) {
 	exit;
 }
 /**
@@ -12,20 +12,19 @@ if ( ! defined( 'TFA_LS_VERSION' ) ) {
  * @var array $secondaryButtons The parameters for any secondary buttons. It is an array of arrays in the format array('id' => <element id>, 'label' => <button text>, 'link' => <href value>). The ordering of entries is the right-to-left order the buttons will be displayed. Optional.
  */
 
-$titleHTML   = \TFAuthLS\Text\Model_HTML::esc_html( $title );
-$messageHTML = \TFAuthLS\Text\Model_HTML::esc_html( $message );
-$embedded    = isset( $embedded ) ? $embedded : false;
+$titleHTML   = \TFAuthLS\Text\Model_HTML::esc_html($title);
+$messageHTML = \TFAuthLS\Text\Model_HTML::esc_html($message);
 
-if ( ! isset( $secondaryButtons ) ) {
+if (! isset($secondaryButtons)) {
 	$secondaryButtons = array();
 }
-$secondaryButtons = array_reverse( $secondaryButtons );
+$secondaryButtons = array_reverse($secondaryButtons);
 ?>
 <div
-<?php
-if ( ! empty( $id ) ) :
+	<?php
+	if (! empty($id)) :
 	?>
-	id="<?php echo esc_attr( $id ); ?>" <?php endif; ?> class="wfls-modal">
+	id="<?php echo esc_attr($id); ?>" <?php endif; ?> class="wfls-modal">
 	<div class="wfls-modal-header">
 		<div class="wfls-modal-header-content">
 			<div class="wfls-modal-title">
@@ -41,28 +40,28 @@ if ( ! empty( $id ) ) :
 	</div>
 	<div class="wfls-modal-footer">
 		<ul class="wfls-flex-horizontal wfls-flex-align-right wfls-full-width">
-			<?php foreach ( $secondaryButtons as $button ) : ?>
-				<li class="wfls-padding-add-left-small"><a href="<?php echo esc_url( $button['link'] ); ?>" class="wfls-btn <?php echo isset( $button['type'] ) ? $button['type'] : 'wfls-btn-default'; ?> wfls-btn-callout-subtle
+			<?php foreach ($secondaryButtons as $button) : ?>
+				<li class="wfls-padding-add-left-small"><a href="<?php echo esc_url($button['link']); ?>" class="wfls-btn <?php echo isset($button['type']) ? $button['type'] : 'wfls-btn-default'; ?> wfls-btn-callout-subtle
 				<?php
-				if ( ! empty( $button['class'] ) ) :
-					?>
-					<?php echo esc_attr( $button['class'] ); ?><?php endif; ?>" 
-					<?php
-					if ( ! empty( $button['id'] ) ) :
+				if (! empty($button['class'])) :
+				?>
+					<?php echo esc_attr($button['class']); ?><?php endif; ?>"
+						<?php
+						if (! empty($button['id'])) :
 						?>
-					id="<?php echo esc_attr( $button['id'] ); ?>" <?php endif; ?>><?php echo isset( $button['labelHTML'] ) ? $button['labelHTML'] : esc_html( $button['label'] ); ?></a></li>
+						id="<?php echo esc_attr($button['id']); ?>" <?php endif; ?>><?php echo isset($button['labelHTML']) ? $button['labelHTML'] : esc_html($button['label']); ?></a></li>
 			<?php endforeach; ?>
-			<?php if ( isset( $primaryButton ) && is_array( $primaryButton ) ) : ?>
-				<li class="wfls-padding-add-left-small"><a href="<?php echo esc_url( $primaryButton['link'] ); ?>" class="wfls-btn <?php echo isset( $primaryButton['type'] ) ? $primaryButton['type'] : 'wfls-btn-primary'; ?> wfls-btn-callout-subtle
+			<?php if (isset($primaryButton) && is_array($primaryButton)) : ?>
+				<li class="wfls-padding-add-left-small"><a href="<?php echo esc_url($primaryButton['link']); ?>" class="wfls-btn <?php echo isset($primaryButton['type']) ? $primaryButton['type'] : 'wfls-btn-primary'; ?> wfls-btn-callout-subtle
 				<?php
-				if ( ! empty( $primaryButton['class'] ) ) :
-					?>
-					<?php echo esc_attr( $primaryButton['class'] ); ?><?php endif; ?>" 
-					<?php
-					if ( ! empty( $primaryButton['id'] ) ) :
+				if (! empty($primaryButton['class'])) :
+				?>
+					<?php echo esc_attr($primaryButton['class']); ?><?php endif; ?>"
+						<?php
+						if (! empty($primaryButton['id'])) :
 						?>
-					id="<?php echo esc_attr( $primaryButton['id'] ); ?>" <?php endif; ?>><?php echo isset( $primaryButton['labelHTML'] ) ? $primaryButton['labelHTML'] : esc_html( $primaryButton['label'] ); ?></a></li>
+						id="<?php echo esc_attr($primaryButton['id']); ?>" <?php endif; ?>><?php echo isset($primaryButton['labelHTML']) ? $primaryButton['labelHTML'] : esc_html($primaryButton['label']); ?></a></li>
 			<?php endif ?>
 		</ul>
 	</div>
-	</div>
+</div>

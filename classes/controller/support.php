@@ -5,10 +5,10 @@ namespace TFAuthLS;
 class Controller_Support
 {
 
-	const ITEM_INDEX = 'index';
-	const ITEM_CHANGELOG = 'changelog';
-	const ITEM_MODULE_LOGIN_SECURITY                         = 'module-login-security';
-	const ITEM_MODULE_LOGIN_SECURITY_2FA                     = 'module-login-security-2fa';
+	const ITEM_INDEX                     = 'index';
+	const ITEM_MODULE_LOGIN_SECURITY     = 'how-to';
+	const ITEM_MODULE_LOGIN_SECURITY_2FA = 'how-to-enable-two-factor-authentication';
+
 
 	public static function supportURLs(): array
 	{
@@ -39,12 +39,9 @@ class Controller_Support
 				return $base;
 
 				// These all fall through to the query format
-
-
-
 			case self::ITEM_MODULE_LOGIN_SECURITY:
 			case self::ITEM_MODULE_LOGIN_SECURITY_2FA:
-				return $base . '?query=' . $item;
+				return $base . '#' . $item;
 		}
 
 		return '';

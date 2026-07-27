@@ -294,6 +294,7 @@ class Controller_TFAuthLS
 			->setTranslationObjectName('WFLS_ADMIN_TRANSLATIONS');
 		$assets[] = Model_Style::create('wordfence-ls-admin', Model_Asset::css('admin.css'), array(), TFA_LS_VERSION);
 
+
 		$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), TFA_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('TFAuthLSI18nStrings');
 
 
@@ -307,7 +308,9 @@ class Controller_TFAuthLS
 		}
 		wp_enqueue_script('jquery-ui-dialog');
 		wp_enqueue_style('wp-jquery-ui-dialog');
-
+		foreach ($this->get_2fa_management_assets() as $asset) {
+			$asset->enqueue();
+		}
 		foreach ($this->get_2fa_management_script_data() as $key => $data) {
 			wp_localize_script('wordfence-ls-admin', $key, $data);
 		}
