@@ -76,7 +76,6 @@ require_once __DIR__ . '/classes/model/text/html.php';
 require_once __DIR__ . '/classes/model/text/javascript.php';
 require_once __DIR__ . '/classes/model/view/tab.php';
 require_once __DIR__ . '/classes/model/view/title.php';
-require_once __DIR__ . '/classes/controller/cron.php';
 require_once __DIR__ . '/classes/controller/db.php';
 require_once __DIR__ . '/classes/controller/notices.php';
 require_once __DIR__ . '/classes/controller/permissions.php';
