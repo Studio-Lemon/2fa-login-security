@@ -267,8 +267,8 @@
 							var overlay = $('<div id="wfls-prompt-overlay"></div>');
 							var wrapper = $('<div id="wfls-prompt-wrapper"></div>');
 							var label = $('<label for="wfls-token">');
-							label.text(__('Wordfence 2FA Code') + ' ');
-							label.append($('<a href="javascript:void(0)" class="wfls-2fa-code-help wfls-tooltip-trigger"><i class="dashicons dashicons-editor-help"></i></a>').attr('title', __('The Wordfence 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.')));
+							label.text(__('2FA Code') + ' ');
+							label.append($('<a href="javascript:void(0)" class="wfls-2fa-code-help wfls-tooltip-trigger"><i class="dashicons dashicons-editor-help"></i></a>').attr('title', __('Your 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.')));
 							label = $('<p>').append(label);
 							var field = $('<p><input type="text" name="wfls-token" id="wfls-token" aria-describedby="wfls-token-error" class="input" value="" size="6" autocomplete="one-time-code"/></p>');
 							var remember = $('<p class="wfls-remember-device-wrapper"><label for="wfls-remember-device"><input name="wfls-remember-device" type="checkbox" id="wfls-remember-device" value="1" /> </label></p>');
