@@ -96,45 +96,6 @@
 		return inputs;
 	}
 
-	var wfls_init_captcha = function (actionCallback, log) {
-		if (typeof log === 'undefined')
-			log = getRelevantInputs();
-		if (typeof grecaptcha === 'object') {
-			grecaptcha.ready(function () {
-				grecaptcha.execute(WFLSVars.recaptchasitekey, { action: 'login' }).then(function (token) {
-					var tokenField = $('#wfls-captcha-token');
-					if (tokenField.length) {
-						tokenField.val(token);
-					}
-					else {
-						if (log.length) {
-							tokenField = $('<input type="hidden" name="wfls-captcha-token" id="wfls-captcha-token" />');
-							tokenField.val(token);
-							log.parent().append(tokenField);
-						}
-					}
-
-					typeof actionCallback === 'function' && actionCallback(true);
-				});
-			});
-		}
-		else {
-			var tokenField = $('#wfls-captcha-token');
-			if (tokenField.length) {
-				tokenField.val('grecaptcha-missing');
-			}
-			else {
-				if (log.length) {
-					tokenField = $('<input type="hidden" name="wfls-captcha-token" id="wfls-captcha-token" />');
-					tokenField.val('grecaptcha-missing');
-					log.parent().append(tokenField);
-				}
-			}
-
-			typeof actionCallback === 'function' && actionCallback(true);
-		}
-	};
-
 	function showLoginMessage(messageHtml, type) {
 		var heading = $('#login > h1');
 		if (heading.length > 0) {
@@ -207,68 +168,6 @@
 				)
 		);
 	}
-
-
-	var wfls_init_captcha_contact = function () {
-		$('.wfls-registration-captcha-contact').on('click', function (e) {
-			e.preventDefault();
-			e.stopPropagation();
-
-			if (registrationLocator.locate()) {
-				$('#wfls-prompt-overlay').remove();
-				var overlay = $('<div id="wfls-prompt-overlay"></div>');
-				var wrapper = $('<div id="wfls-prompt-wrapper"></div>');
-				var field = $('<p><label for="wfls-message"></label><br/><textarea name="wfls-message" id="wfls-message" class="wfls-textarea"></textarea></p>');
-				field.find('label[for=wfls-message]').text(__('Message to Support'));
-				var nonce = $('<input type="hidden" name="wfls-message-nonce" id="wfls-message-nonce"/>');
-				var button = $('<p class="submit"><input type="submit" name="wfls-support-submit" id="wfls-support-submit" class="button button-primary button-large"/></p>');
-				button.find('input[type=submit]').val(__('Send'));
-				wrapper.append(field).append(nonce).append(button);
-				overlay.append(wrapper);
-				registrationLocator.getForm().css('position', 'relative').append(overlay);
-
-				$('#wfls-message-nonce').val($(this).data('token'));
-
-				$('#wfls-support-submit').on('click', function (e) {
-					e.preventDefault();
-					e.stopPropagation();
-
-					$('#login_error, p.message').remove();
-
-					var data = registrationLocator.getForm().serialize();
-					data += '&action=TFA_LS_register_support';
-
-					$.ajax({
-						type: 'POST',
-						url: WFLSVars.ajaxurl,
-						dataType: 'json',
-						data: data,
-						success: function (json) {
-							if (json.hasOwnProperty('error')) {
-								showLoginMessage(json.error, 'error');
-								var dom = $('<div id="login_error">' + json.error + '</div>');
-								$('#login > h1').after(dom);
-							}
-							else if (json.hasOwnProperty('message')) { //Success
-								showLoginMessage(json.message, 'message');
-								var dom = $('<p class="message">' + json.message + '</p>');
-								$('#login > h1').after(dom);
-								$('#wfls-support-submit, #wfls-message').attr('disabled', true);
-							}
-						},
-						error: function (err) {
-							showLoginMessage(__('An error was encountered while trying to send the message. Please try again.'), 'error');
-							var dom = $('<div id="login_error"></div>');
-							dom.html(__('<strong>ERROR</strong>: An error was encountered while trying to send the message. Please try again.'));
-							$('#login > h1').after(dom);
-						}
-					});
-				});
-
-				field.find("#wfls-message").focus();
-			}
-		});
-	};
 
 	function FormBlocker(form, buttonSelector, clickOnSubmit) {
 
@@ -356,30 +255,12 @@
 				if (json.hasOwnProperty('error')) {
 					showLoginMessage(json.error, 'error');
 					$('#wfls-token').val('');
-
-					if (parseInt(WFLSVars.useCAPTCHA)) {
-						wfls_init_captcha();
-					}
 				}
 				else if (json.hasOwnProperty('message')) {
 					showLoginMessage(json.message, 'message');
 					$('#wfls-token').val('');
-
-					if (parseInt(WFLSVars.useCAPTCHA)) {
-						wfls_init_captcha();
-					}
 				}
 				else if (json.hasOwnProperty('login')) {
-					if (json.hasOwnProperty('captcha')) {
-						var captchaField = $('#wfls-captcha-jwt');
-						if (!captchaField.length) {
-							captchaField = $('<input type="hidden" name="wfls-captcha-jwt" id="wfls-captcha-jwt" value=""/>');
-							form.append(captchaField);
-						}
-
-						$('#wfls-captcha-jwt').val(json.captcha);
-					}
-
 					blocker.release();
 					if (json.hasOwnProperty('two_factor_required') && json.two_factor_required) {
 						if ($('#wfls-prompt-overlay').length === 0) {
@@ -444,26 +325,7 @@
 		if (loginLocator.locate()) {
 			var loginBlocker = new FormBlocker(loginLocator.getForm(), '#wp-submit,[type=submit][name=login]', true);
 			loginBlocker.initialize(function () {
-				if (parseInt(WFLSVars.useCAPTCHA)) {
-					wfls_init_captcha(function () { wfls_query_ajax(loginBlocker); });
-				}
-				else {
-					wfls_query_ajax(loginBlocker);
-				}
-			});
-		}
-
-		//Registration
-		if (registrationLocator.locate() && parseInt(WFLSVars.useCAPTCHA)) {
-			var registrationBlocker = new FormBlocker(registrationLocator.getForm(), '[type=submit]');
-			registrationBlocker.initialize(function () {
-				wfls_init_captcha(
-					function () {
-						registrationBlocker.release();
-						registrationBlocker.clickSubmit();
-					},
-					registrationLocator.getInput()
-				);
+				wfls_query_ajax(loginBlocker);
 			});
 		}
 
@@ -478,10 +340,6 @@
 				verificationField.val(WFLSVars.verification);
 				log.parent().append(verificationField);
 			}
-		}
-
-		if (parseInt(WFLSVars.useCAPTCHA)) {
-			wfls_init_captcha_contact();
 		}
 	});
 })(jQuery);

@@ -2422,21 +2422,6 @@ select[multiple].wfls-input-lg {
   }
 }
 @media (min-width: 768px) {
-  #input-recaptchaSiteKey,
-  #input-recaptchaSecret {
-    min-width: 400px;
-  }
-}
-hr.wfls-half {
-  border: 0 !important;
-  border-bottom: 1px solid rgb(228.95, 228.95, 228.95) !important;
-  width: 50%;
-  margin: 1.25rem auto;
-}
-.wrap.wordfence-ls {
-  direction: ltr;
-}
-@media (min-width: 768px) {
   .wrap.wordfence-ls {
     max-width: 750px;
   }
@@ -2454,6 +2439,16 @@ hr.wfls-half {
 .wrap.wordfence-ls > .wfls-container-fluid {
   padding-left: 0;
   padding-right: 0;
+}
+
+hr.wfls-half {
+  border: 0 !important;
+  border-bottom: 1px solid rgb(228.95, 228.95, 228.95) !important;
+  width: 50%;
+  margin: 1.25rem auto;
+}
+.wrap.wordfence-ls {
+  direction: ltr;
 }
 
 .wfls-inline-help {
@@ -7103,17 +7098,6 @@ table.wfls-table th[class*="col-"] {
 }
 #wfls-reset-grace-period-failed {
   text-align: center;
-}
-.wfls-recaptcha-score-history .wfls-recaptcha-chart-container {
-  position: relative;
-  display: inline-block;
-  width: 350px;
-  max-width: 100%;
-}
-@media screen and (max-width: 480px) {
-  .wfls-recaptcha-score-history .wfls-recaptcha-chart-container {
-    width: 70vw;
-  }
 }
 .wfls-fade-enter-active,
 .wfls-fade-leave-active {
