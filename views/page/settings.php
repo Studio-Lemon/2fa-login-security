@@ -70,14 +70,6 @@ $currentRoleState = function ($roleName, $roleObject = null) use ($settings) {
 						<td><input type="number" min="1" name="wfls_settings[remember-device-duration-days]" value="<?php echo esc_attr(max(1, (int) floor($settings->get_int(\TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_DURATION, 30 * 86400) / 86400))); ?>"></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e('XML-RPC 2FA', '2fa-login-security'); ?></th>
-						<td><label><input type="checkbox" name="wfls_settings[xmlrpc-enabled]" value="1" <?php checked($settings->get_bool(\TFAuthLS\Controller_Settings::OPTION_XMLRPC_ENABLED)); ?>> <?php esc_html_e('Require 2FA for XML-RPC authentication', '2fa-login-security'); ?></label></td>
-					</tr>
-					<tr>
-						<th scope="row"><?php esc_html_e('Allow XML-RPC Authentication', '2fa-login-security'); ?></th>
-						<td><label><input type="checkbox" name="wfls_settings[allow-xml-rpc]" value="1" <?php checked($settings->get_bool(\TFAuthLS\Controller_Settings::OPTION_ALLOW_XML_RPC, true)); ?>> <?php esc_html_e('Allow XML-RPC authentication endpoint', '2fa-login-security'); ?></label></td>
-					</tr>
-					<tr>
 						<th scope="row"><?php esc_html_e('2FA Grace Period (days)', '2fa-login-security'); ?></th>
 						<td><input type="number" min="0" max="99" name="wfls_settings[2fa-user-grace-period]" value="<?php echo esc_attr($settings->get_user_2fa_grace_period()); ?>"></td>
 					</tr>

@@ -6,7 +6,7 @@ Requires PHP: 8.1
 Tested up to: 7.0
 Stable tag: 1.1.16
 
-Secure your website with 2FA Login Security, providing two-factor authentication and XML-RPC protection.
+Secure your website with 2FA Login Security, providing focused two-factor authentication for WordPress logins.
 
 == Description ==
 
@@ -16,7 +16,6 @@ Secure your website with 2FA Login Security, providing two-factor authentication
 
 * Two-factor authentication (2FA) for WordPress users.
 * Role-based 2FA enforcement and grace period controls.
-* XML-RPC authentication controls.
 * Optional remember-device support.
 
 #### TWO-FACTOR AUTHENTICATION
@@ -28,8 +27,21 @@ Secure your website with 2FA Login Security, providing two-factor authentication
 
 #### XML-RPC PROTECTION
 
-* XML-RPC is the biggest target for WordPress attacks, but is often overlooked.
-* Protect XML-RPC with 2FA or disable it altogether if it’s not needed.
+* XML-RPC settings were removed from this fork on purpose.
+* Recommended approach: disable XML-RPC at the theme or server level unless a legacy integration explicitly requires it.
+* Reason: XML-RPC remains a common brute-force and abuse target, and disabling it entirely is usually the safest default.
+
+Theme example (add to your active theme's functions.php):
+
+	add_filter('xmlrpc_enabled', '__return_false');
+
+Optional extra hardening for pingback methods:
+
+	add_filter('xmlrpc_methods', function ($methods) {
+		unset($methods['pingback.ping']);
+		unset($methods['pingback.extensions.getPingbacks']);
+		return $methods;
+	});
 
 == Installation ==
 
@@ -51,7 +63,7 @@ Secure your website with 2FA Login Security.
 
 1. Take login security to the next level with two-factor authentication.
 2. Logging in is easy with 2FA.
-3. Configuration options include XML-RPC protection and role-based access controls.
+3. Configuration options include role-based access controls and 2FA behavior settings.
 
 == Changelog ==
 

@@ -48,9 +48,6 @@ class Controller_TFAuthLS
 			$this->_install();
 		}
 
-		if (! Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_XML_RPC)) {
-			add_filter('xmlrpc_enabled', array($this, '_block_xml_rpc'));
-		}
 
 		add_action('admin_init', array($this, '_admin_init'));
 		add_action('login_enqueue_scripts', array($this, '_login_enqueue_scripts'));
@@ -84,7 +81,7 @@ class Controller_TFAuthLS
 
 	public function _admin_init(): void
 	{
-		if (Controller_Permissions::shared()->can_manage_settings() && ((is_plugin_active('jetpack/jetpack.php') || (is_multisite() && is_plugin_active_for_network('jetpack/jetpack.php'))) && ! Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ALLOW_XML_RPC))) {
+		if (Controller_Permissions::shared()->can_manage_settings() && ((is_plugin_active('jetpack/jetpack.php') || (is_multisite() && is_plugin_active_for_network('jetpack/jetpack.php'))))) {
 			if (is_multisite()) {
 				add_action('network_admin_notices', array($this, '_jetpack_xml_rpc_notice'));
 			} else {
@@ -175,16 +172,7 @@ class Controller_TFAuthLS
 		flush_rewrite_rules();
 	}
 
-	public function _block_xml_rpc(): bool
-	{
-		/**
-		 * Fires just prior to blocking an XML-RPC request. After firing this action hook the XML-RPC request is blocked.
-		 *
-		 * @param int $source The source code of the block.
-		 */
-		do_action('wfls_xml_rpc_blocked', 2);
-		return false;
-	}
+
 
 	/**
 	 * Login Page
@@ -357,9 +345,7 @@ class Controller_TFAuthLS
 		$changes   = array();
 
 		$boolOptions = array(
-			Controller_Settings::OPTION_XMLRPC_ENABLED,
 			Controller_Settings::OPTION_REMEMBER_DEVICE_ENABLED,
-			Controller_Settings::OPTION_ALLOW_XML_RPC,
 			Controller_Settings::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS,
 			Controller_Settings::OPTION_USE_NTP,
 			Controller_Settings::OPTION_DELETE_ON_DEACTIVATION,
@@ -499,7 +485,7 @@ class Controller_TFAuthLS
 	 */
 	public function _authenticate($user, $username, $password)
 	{
-		if (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST && ! Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_XMLRPC_ENABLED)) { // XML-RPC call and we're not enforcing 2FA on it
+		if (defined('XMLRPC_REQUEST')) { // XML-RPC call and we're not enforcing 2FA on it
 			return $user;
 		}
 
@@ -658,7 +644,14 @@ class Controller_TFAuthLS
 			}
 		}
 
-		add_menu_page(__('Login Security', '2fa-login-security'), __('Login Security', '2fa-login-security'), Controller_Permissions::CAP_ACTIVATE_2FA_SELF, 'WFLS', array($this, '_menu'), Model_Asset::img('menu.svg'));
+		add_menu_page(
+			__('Login Security', '2fa-login-security'),
+			__('Login Security', '2fa-login-security'),
+			Controller_Permissions::CAP_ACTIVATE_2FA_SELF,
+			'WFLS',
+			array($this, '_menu'),
+			'dashicons-lock'
+		);
 	}
 
 	public function _menu(): void

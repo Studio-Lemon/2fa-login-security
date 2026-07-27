@@ -10,7 +10,6 @@ class Controller_Settings
 {
 
 	// Configurable
-	const OPTION_XMLRPC_ENABLED                   = 'xmlrpc-enabled';
 	const OPTION_IP_SOURCE                        = 'ip-source';
 	const OPTION_IP_TRUSTED_PROXIES               = 'ip-trusted-proxies';
 	const OPTION_REQUIRE_2FA_ADMIN                = 'require-2fa.administrator';
@@ -19,7 +18,6 @@ class Controller_Settings
 	const OPTION_REQUIRE_2FA_USER_GRACE_PERIOD    = '2fa-user-grace-period';
 	const OPTION_REMEMBER_DEVICE_ENABLED          = 'remember-device';
 	const OPTION_REMEMBER_DEVICE_DURATION         = 'remember-device-duration';
-	const OPTION_ALLOW_XML_RPC                    = 'allow-xml-rpc';
 	const OPTION_DELETE_ON_DEACTIVATION           = 'delete-deactivation';
 	const OPTION_PREFIX_REQUIRED_2FA_ROLE         = 'required-2fa-role';
 	const OPTION_ENABLE_LOGIN_HISTORY_COLUMNS     = 'enable-login-history-columns';
@@ -77,7 +75,6 @@ class Controller_Settings
 	protected function _defaults(): array
 	{
 		return array(
-			self::OPTION_XMLRPC_ENABLED                   => true,
 			self::OPTION_IP_SOURCE                        => Model_Request::IP_SOURCE_AUTOMATIC,
 			self::OPTION_IP_TRUSTED_PROXIES               => '',
 			self::OPTION_REQUIRE_2FA_ADMIN                => false,
@@ -86,7 +83,6 @@ class Controller_Settings
 			self::OPTION_GLOBAL_NOTICES                   => '[]',
 			self::OPTION_REMEMBER_DEVICE_ENABLED          => false,
 			self::OPTION_REMEMBER_DEVICE_DURATION         => 30 * 86400,
-			self::OPTION_ALLOW_XML_RPC                    => true,
 			self::OPTION_LAST_SECRET_REFRESH              => 0,
 			self::OPTION_DELETE_ON_DEACTIVATION           => false,
 			self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS     => true,
@@ -193,11 +189,9 @@ class Controller_Settings
 	{
 		switch ($key) {
 			// Boolean
-			case self::OPTION_XMLRPC_ENABLED:
 			case self::OPTION_REQUIRE_2FA_ADMIN:
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED:
 			case self::OPTION_REMEMBER_DEVICE_ENABLED:
-			case self::OPTION_ALLOW_XML_RPC:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
@@ -282,11 +276,9 @@ class Controller_Settings
 	{
 		switch ($key) {
 			// Boolean
-			case self::OPTION_XMLRPC_ENABLED:
 			case self::OPTION_REQUIRE_2FA_ADMIN:
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED:
 			case self::OPTION_REMEMBER_DEVICE_ENABLED:
-			case self::OPTION_ALLOW_XML_RPC:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
@@ -339,11 +331,9 @@ class Controller_Settings
 	{
 		switch ($key) {
 			// Boolean
-			case self::OPTION_XMLRPC_ENABLED:
 			case self::OPTION_REQUIRE_2FA_ADMIN:
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD_ENABLED:
 			case self::OPTION_REMEMBER_DEVICE_ENABLED:
-			case self::OPTION_ALLOW_XML_RPC:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
@@ -454,22 +444,6 @@ class Controller_Settings
 
 		// Settings that will dispatch actions
 		switch ($key) {
-			case self::OPTION_XMLRPC_ENABLED:
-				$before = $this->get($key);
-				$after  = $value;
-
-				if ($before != $after) {
-					/**
-					 * Fires when the XML-RPC 2FA requirement changes.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param bool $before The previous value.
-					 * @param bool $after The new value.
-					 */
-					do_action('TFA_LS_xml_rpc_2fa_toggled', $before, $after);
-				}
-				break;
 			case self::OPTION_IP_SOURCE:
 				$before = $this->get($key);
 				$after  = $value;
@@ -516,22 +490,6 @@ class Controller_Settings
 					 * @param int $after The new value.
 					 */
 					do_action('TFA_LS_changed_grace_period', $before, $after);
-				}
-				break;
-			case self::OPTION_ALLOW_XML_RPC:
-				$before = $this->get($key);
-				$after  = $value;
-
-				if ($before != $after) {
-					/**
-					 * Fires when the XML-RPC is enabled/disabled.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param bool $before The previous value.
-					 * @param bool $after The new value.
-					 */
-					do_action('TFA_LS_xml_rpc_enabled_toggled', $before, $after);
 				}
 				break;
 		}

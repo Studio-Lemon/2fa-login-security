@@ -11,7 +11,7 @@ The current codebase is centered on:
 - TOTP-based two-factor authentication for WordPress users.
 - Role-based 2FA activation and grace-period enforcement.
 - Remember-device support.
-- XML-RPC authentication controls.
+- XML-RPC hardening by recommendation (disable XML-RPC at theme or server level).
 - Multisite-aware settings and scheduling behavior.
 
 The fork is moving away from earlier upstream integrations and bundled extras. In particular, this repository is being cleaned up to remove Wordfence-core coupling, WooCommerce integration, shortcode-specific flows, reCAPTCHA behavior, and other legacy paths that are not part of the core 2FA functionality.
@@ -48,10 +48,20 @@ The fork is moving away from earlier upstream integrations and bundled extras. I
 - Includes one-time recovery codes.
 - Supports remembering a trusted device for a limited period.
 
-### XML-RPC controls
+### XML-RPC hardening recommendation
 
-- Can require valid 2FA credentials for XML-RPC authentication.
-- Can disable XML-RPC authentication entirely if your site does not need it.
+The previous XML-RPC options were removed from this fork.
+
+Reason: XML-RPC is a frequent brute-force and abuse target, and the safer default for most modern WordPress sites is to disable XML-RPC completely unless a specific integration requires it. Instead of carrying extra plugin toggles for a legacy endpoint, this plugin now focuses on core 2FA behavior and recommends turning XML-RPC off at the theme or infrastructure layer.
+
+Example (theme-level): add this to your active theme's `functions.php`:
+
+```php
+<?php
+add_filter('xmlrpc_enabled', '__return_false');
+```
+
+If your site relies on XML-RPC for a specific workflow, keep it enabled only as needed and restrict access at the edge (WAF, reverse proxy, or allowlist rules).
 
 ### Admin and user management
 
