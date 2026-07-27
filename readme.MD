@@ -46,3 +46,9 @@ This file tracks implementation changes made while creating the public fork.
 - Removed allowlist settings key and settings-side preprocessing/event handling.
 - Removed allowlist status display from the manage page and removed related Wordfence core option index wiring.
 - Kept shared IP range parsing helpers for trusted proxy handling where still needed.
+
+## Step 7 - Remove Font Awesome dependency
+- Removed Font Awesome stylesheet enqueue from the management asset list.
+- Replaced conditional Wordfence/core Font Awesome icon class usage in views with plugin-local icon classes.
+- Added lightweight CSS glyph fallbacks for the icon classes used by the plugin UI.
+- Removed bundled Font Awesome CSS and webfont assets.

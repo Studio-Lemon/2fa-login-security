@@ -135,7 +135,7 @@ class Controller_Javascript {
 				'cron_failure_count' => $failureCount,
 				'max_failures' => Controller_Time::FAILURE_LIMIT,
 			),
-			'should_use_core_font_awesome' => Controller_WordfenceLS::shared()->should_use_core_font_awesome_styles(),
+			'should_use_core_font_awesome' => false,
 			'server' => array(
 				'has_woocommerce' => false,
 			),
