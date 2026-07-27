@@ -874,13 +874,7 @@ input[type="button"].wfls-btn-block {
   font-weight: 700;
   font-style: italic;
 }
-.wfls-notice {
-  margin: 12px 0;
-  padding: 8px;
-  background-color: #ffffe0;
-  border: 1px solid #ffd975;
-  border-width: 1px 1px 1px 10px;
-}
+
 .wfls-notice-text {
   color: #6d798c;
 }
