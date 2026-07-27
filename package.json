@@ -6,7 +6,9 @@
   "scripts": {
     "watch": "webpack --mode development --watch",
     "dev": "webpack --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "translate:make-pot": "wp i18n make-pot . languages/2fa-login-security.pot --slug=2fa-login-security --exclude=node_modules,vendor,wp-content,tests",
+    "translate:make-php": "wp i18n make-php languages/"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^13.0.1",
