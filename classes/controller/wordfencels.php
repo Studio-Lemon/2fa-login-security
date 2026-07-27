@@ -92,7 +92,6 @@ class Controller_WordfenceLS {
 			\wfModuleController::shared()->addOptionIndex('wfls-option-allow-remember', __('Login Security: Allow remembering device for 30 days', 'wordfence-login-security'));
 			\wfModuleController::shared()->addOptionIndex('wfls-option-require-2fa-xml-rpc', __('Login Security: Require 2FA for XML-RPC call authentication', 'wordfence-login-security'));
 			\wfModuleController::shared()->addOptionIndex('wfls-option-disable-xml-rpc', __('Login Security: Disable XML-RPC authentication', 'wordfence-login-security'));
-			\wfModuleController::shared()->addOptionIndex('wfls-option-whitelist-2fa', __('Login Security: Allowlisted IP addresses that bypass 2FA and reCAPTCHA', 'wordfence-login-security'));
 			\wfModuleController::shared()->addOptionIndex('wfls-option-enable-captcha', __('Login Security: Enable reCAPTCHA on the login and user registration pages', 'wordfence-login-security'));
 			
 			$title = __('Login Security Options', 'wordfence-login-security');
@@ -123,7 +122,6 @@ class Controller_WordfenceLS {
 						<input type="hidden" id="wfls-option-allow-remember">
 						<input type="hidden" id="wfls-option-require-2fa-xml-rpc">
 						<input type="hidden" id="wfls-option-disable-xml-rpc">
-						<input type="hidden" id="wfls-option-whitelist-2fa">
 						<input type="hidden" id="wfls-option-enable-captcha">
 					</li>
 				</ul>

@@ -40,3 +40,9 @@ This file tracks implementation changes made while creating the public fork.
 - Removed reCAPTCHA score tracking/caching and users-table CAPTCHA column handling.
 - Removed reCAPTCHA stats AJAX endpoint and removed the dedicated CAPTCHA controller file.
 - Removed chart asset wiring and deleted bundled chart runtime file used for reCAPTCHA statistics.
+
+## Step 6 - Remove IP allowlist bypass functionality
+- Removed allowlist bypass checks from the authentication flow.
+- Removed allowlist settings key and settings-side preprocessing/event handling.
+- Removed allowlist status display from the manage page and removed related Wordfence core option index wiring.
+- Kept shared IP range parsing helpers for trusted proxy handling where still needed.

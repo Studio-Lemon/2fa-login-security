@@ -192,7 +192,7 @@ class Controller_AJAX {
 		define('WORDFENCE_LS_AUTHENTICATION_CHECK', true); //Prevents our auth filter from recursing
 		$user = wp_authenticate($username, $password);
 		if (is_object($user) && ($user instanceof \WP_User)) {
-			if (!Controller_Users::shared()->has_2fa_active($user) || Controller_Whitelist::shared()->is_whitelisted(Model_Request::current()->ip()) || Controller_Users::shared()->has_remembered_2fa($user) || defined('WORDFENCE_LS_COMBINED_IS_VALID')) { //Not enabled for this user, is whitelisted, has a valid remembered cookie, or has already provided a 2FA code via the password field pass the credentials on to the normal login flow
+			if (!Controller_Users::shared()->has_2fa_active($user) || Controller_Users::shared()->has_remembered_2fa($user) || defined('WORDFENCE_LS_COMBINED_IS_VALID')) { //Not enabled for this user, has a valid remembered cookie, or has already provided a 2FA code via the password field pass the credentials on to the normal login flow
 				self::send_json(array('login' => 1));
 			}
 			self::send_json(array('login' => 1, 'two_factor_required' => true));

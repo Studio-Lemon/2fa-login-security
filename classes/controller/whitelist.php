@@ -19,19 +19,6 @@ class Controller_Whitelist {
 	}
 	
 	public function is_whitelisted($ip) {
-		$ipHash = hash('sha256', Model_IP::inet_pton($ip));
-		if (isset($this->_cachedStatus[$ipHash])) {
-			return $this->_cachedStatus[$ipHash];
-		}
-		
-		$whitelist = Controller_Settings::shared()->whitelisted_ips();
-		foreach ($whitelist as $entry) {
-			if ($this->ip_in_range($ip, $entry)) {
-				$this->_cachedStatus[$ipHash] = true;
-				return true;
-			}
-		}
-		$this->_cachedStatus[$ipHash] = false;
 		return false;
 	}
 	

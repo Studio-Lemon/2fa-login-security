@@ -9,7 +9,6 @@ use WordfenceLS\Utility_Number;
 class Controller_Settings {
 	//Configurable
 	const OPTION_XMLRPC_ENABLED = 'xmlrpc-enabled';
-	const OPTION_2FA_WHITELISTED = 'whitelisted';
 	const OPTION_IP_SOURCE = 'ip-source';
 	const OPTION_IP_TRUSTED_PROXIES = 'ip-trusted-proxies';
 	const OPTION_REQUIRE_2FA_ADMIN = 'require-2fa.administrator';
@@ -75,7 +74,6 @@ class Controller_Settings {
 	protected function _defaults() {
 		return array(
 			self::OPTION_XMLRPC_ENABLED => true,
-			self::OPTION_2FA_WHITELISTED => '',
 			self::OPTION_IP_SOURCE => Model_Request::IP_SOURCE_AUTOMATIC,
 			self::OPTION_IP_TRUSTED_PROXIES => '',
 			self::OPTION_REQUIRE_2FA_ADMIN => false,
@@ -200,7 +198,6 @@ class Controller_Settings {
 				
 			//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
-			case self::OPTION_2FA_WHITELISTED:
 				$value = !is_string($value) ? '' : $value;
 				$parsed = array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $value)));
 				foreach ($parsed as $entry) {
@@ -283,7 +280,6 @@ class Controller_Settings {
 			
 			//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
-			case self::OPTION_2FA_WHITELISTED:
 				$value = !is_string($value) ? '' : $value;
 				$parsed = array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $value)));
 				$cleaned = array();
@@ -335,7 +331,6 @@ class Controller_Settings {
 			
 			//Special
 			case self::OPTION_IP_TRUSTED_PROXIES:
-			case self::OPTION_2FA_WHITELISTED:
 				$value = !is_string($value) ? '' : $value;
 				return implode("\n", array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $value))));
 		}
@@ -426,22 +421,6 @@ class Controller_Settings {
 					do_action('wordfence_ls_xml_rpc_2fa_toggled', $before, $after);
 				}
 				break;
-			case self::OPTION_2FA_WHITELISTED:
-				$before = $this->whitelisted_ips();
-				$after = explode("\n", $value); //Already cleaned here so just re-split
-					
-				if ($before != $after) {
-					/**
-					 * Fires when the whitelist changes.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param string[] $before The previous value.
-					 * @param string[] $after The new value.
-					 */
-					do_action('wordfence_ls_updated_allowed_ips', $before, $after);
-				}
-				break;
 			case self::OPTION_IP_SOURCE:
 				$before = $this->get($key);
 				$after = $value;
@@ -524,15 +503,6 @@ class Controller_Settings {
 	/**
 	 * Convenience
 	 */
-	
-	/**
-	 * Returns a cleaned array containing the whitelist entries.
-	 * 
-	 * @return array
-	 */
-	public function whitelisted_ips() {
-		return array_filter(array_map(function($s) { return trim($s); }, preg_split('/[\r\n]/', $this->get(self::OPTION_2FA_WHITELISTED, ''))));
-	}
 	
 	/**
 	 * Returns a cleaned array containing the trusted proxy entries.

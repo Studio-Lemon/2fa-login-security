@@ -33,8 +33,6 @@ class Controller_Javascript {
 			'2FA management shortcode' => __('2FA management shortcode', 'wordfence-login-security'),
 			'A reCAPTCHA score equal to or higher than this value will be considered human. Anything lower will be treated as a bot and require additional verification for login and registration.' => __('A reCAPTCHA score equal to or higher than this value will be considered human. Anything lower will be treated as a bot and require additional verification for login and registration.', 'wordfence-login-security'),
 			'Allow remembering device for 30 days' => __('Allow remembering device for 30 days', 'wordfence-login-security'),
-			'Allowlisted IP addresses that bypass 2FA and reCAPTCHA' => __('Allowlisted IP addresses that bypass 2FA and reCAPTCHA', 'wordfence-login-security'),
-			'Allowlisted IPs must be placed on separate lines. You can specify ranges using the following formats: 127.0.0.1/24, 127.0.0.[1-100], or 127.0.0.1-127.0.1.100.' => __('Allowlisted IPs must be placed on separate lines. You can specify ranges using the following formats: 127.0.0.1/24, 127.0.0.[1-100], or 127.0.0.1-127.0.1.100.', 'wordfence-login-security'),
 			'An error occurred' => __('An error occurred', 'wordfence-login-security'),
 			'An error was encountered while trying to disable NTP. Please try again.' => __('An error was encountered while trying to disable NTP. Please try again.', 'wordfence-login-security'),
 			'An error was encountered while trying to reset the NTP state. Please try again.' => __('An error was encountered while trying to reset the NTP state. Please try again.', 'wordfence-login-security'),
