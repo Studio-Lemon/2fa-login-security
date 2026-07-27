@@ -139,7 +139,7 @@ class Controller_Javascript {
 			),
 			'should_use_core_font_awesome' => Controller_WordfenceLS::shared()->should_use_core_font_awesome_styles(),
 			'server' => array(
-				'has_woocommerce' => class_exists('woocommerce'),
+				'has_woocommerce' => false,
 			),
 		);
 		

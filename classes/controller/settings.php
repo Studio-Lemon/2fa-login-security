@@ -26,8 +26,6 @@ class Controller_Settings {
 	const OPTION_RECAPTCHA_THRESHOLD = 'recaptcha-threshold';
 	const OPTION_DELETE_ON_DEACTIVATION = 'delete-deactivation';
 	const OPTION_PREFIX_REQUIRED_2FA_ROLE = 'required-2fa-role';
-	const OPTION_ENABLE_WOOCOMMERCE_INTEGRATION = 'enable-woocommerce-integration';
-	const OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION = 'enable-woocommerce-account-integration';
 	const OPTION_ENABLE_SHORTCODE = 'enable-shortcode';
 	const OPTION_ENABLE_LOGIN_HISTORY_COLUMNS = 'enable-login-history-columns';
 	const OPTION_STACK_UI_COLUMNS = 'stack-ui-columns';
@@ -102,8 +100,6 @@ class Controller_Settings {
 			self::OPTION_RECAPTCHA_THRESHOLD => 0.5,
 			self::OPTION_LAST_SECRET_REFRESH => 0,
 			self::OPTION_DELETE_ON_DEACTIVATION => false,
-			self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION => false,
-			self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION => false,
 			self::OPTION_ENABLE_SHORTCODE => false,
 			self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS => true,
 			self::OPTION_STACK_UI_COLUMNS => true,
@@ -202,8 +198,6 @@ class Controller_Settings {
 			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
-			case self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION:
-			case self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION:
 			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
 			case self::OPTION_STACK_UI_COLUMNS:
@@ -312,8 +306,6 @@ class Controller_Settings {
 			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
-			case self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION:
-			case self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION:
 			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
 			case self::OPTION_STACK_UI_COLUMNS:
@@ -376,8 +368,6 @@ class Controller_Settings {
 			case self::OPTION_CAPTCHA_TEST_MODE:
 			case self::OPTION_DISMISSED_FRESH_INSTALL_MODAL:
 			case self::OPTION_DELETE_ON_DEACTIVATION:
-			case self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION:
-			case self::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION:
 			case self::OPTION_ENABLE_SHORTCODE:
 			case self::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS:
 			case self::OPTION_STACK_UI_COLUMNS:
@@ -604,22 +594,6 @@ class Controller_Settings {
 					 * @param float $after The new value.
 					 */
 					do_action('wordfence_ls_captcha_threshold_changed', $before, $after);
-				}
-				break;
-			case self::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION:
-				$before = $this->get($key);
-				$after = $value;
-				
-				if ($before != $after) {
-					/**
-					 * Fires when WooCommerce integration is enabled/disabled.
-					 *
-					 * @since 1.1.13
-					 *
-					 * @param bool $before The previous value.
-					 * @param bool $after The new value.
-					 */
-					do_action('wordfence_ls_woocommerce_enabled_toggled', $before, $after);
 				}
 				break;
 			case self::OPTION_CAPTCHA_TEST_MODE:

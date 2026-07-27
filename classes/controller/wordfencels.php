@@ -14,7 +14,6 @@ class Controller_WordfenceLS {
 	const VERSION_KEY = 'wordfence_ls_version';
 	const USERS_PER_PAGE = 25;
 	const SHORTCODE_2FA_MANAGEMENT = 'wordfence_2fa_management';
-	const WOOCOMMERCE_ENDPOINT = 'wordfence-2fa';
 
 	private $management_assets_registered = false;
 	private $management_assets_enqueued = false;
@@ -88,19 +87,6 @@ class Controller_WordfenceLS {
 	public function _wordpress_init() {
 		if (!WORDFENCE_LS_FROM_CORE)
 			load_plugin_textdomain('2fa-login-security', false, WORDFENCE_LS_PATH . 'languages');
-	}
-
-	private function init_woocommerce_actions() {
-		add_action('woocommerce_before_customer_login_form', array($this, '_woocommerce_login_enqueue_scripts'));
-		add_action('woocommerce_before_checkout_form', array($this, '_woocommerce_checkout_login_enqueue_scripts'));
-		add_action('wp_loaded', array($this, '_handle_woocommerce_registration'), 10, 0); //Woocommerce uses priority 20
-
-		if ($this->is_woocommerce_account_integration_enabled()) {
-			add_filter('woocommerce_account_menu_items', array($this, '_woocommerce_account_menu_items'));
-			add_filter('woocommerce_account_wordfence-2fa_endpoint', array($this, '_woocommerce_account_menu_content'));
-			add_filter('woocommerce_get_query_vars', array($this, '_woocommerce_get_query_vars'));
-			add_action('wp_enqueue_scripts', array($this, '_woocommerce_account_enqueue_assets'));
-		}
 	}
 	
 	public function _admin_init() {
@@ -177,17 +163,6 @@ END
 		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf(/* translators: Configuration URL */ __('reCAPTCHA test mode is enabled. While enabled, login and registration requests will be checked for their score but will not be blocked if the score is below the minimum score. <a href="%s">Manage Settings</a>', 'wordfence-login-security'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), array('a'=>array('href'=>array()))) . '</p></div>';
 	}
 
-	public function _woocommerce_integration_notice() {
-?>
-		<div id="<?php echo esc_attr(Controller_Notices::PERSISTENT_NOTICE_WOOCOMMERCE_INTEGRATION) ?>" class="notice notice-warning is-dismissible wfls-persistent-notice">
-			<p>
-				<?php esc_html_e('WooCommerce appears to be installed, but the Wordfence Login Security WooCommerce integration is not currently enabled. Without this feature, WooCommerce forms will not support all functionality provided by Wordfence Login Security, including CAPTCHA for the login page and user registration.', 'wordfence-login-security'); ?>
-				<a href="<?php echo esc_attr(esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))) ?>"><?php esc_html_e('Manage Settings', 'wordfence-login-security') ?></a>
-			</p>
-		</div>
-<?php
-	}
-
 	/**
 	 * Installation/Uninstallation
 	 */
@@ -251,15 +226,7 @@ END
 		update_option('rewrite_rules', '');
 	}
 
-	/**
-	 * In most cases, this will be done internally by WooCommerce since we are using the woocommerce_get_query_vars filter, but when toggling the option on our settings page we must still do this manually
-	 */
-	private function register_rewrite_endpoints() {
-		add_rewrite_endpoint(self::WOOCOMMERCE_ENDPOINT, $this->is_woocommerce_account_integration_enabled() ? EP_PAGES : EP_NONE);
-	}
-
 	public function refresh_rewrite_rules() {
-		$this->register_rewrite_endpoints();
 		flush_rewrite_rules();
 	}
 	
@@ -273,36 +240,8 @@ END
 		return false;
 	}
 
-	private function has_woocommerce() {
-		return class_exists('woocommerce');
-	}
-
-	private function is_woocommerce_integration_enabled() {
-		return Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION);
-	}
-
-	private function is_woocommerce_account_integration_enabled() {
-		return $this->is_woocommerce_integration_enabled() && Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION);
-	}
-
 	private function is_shortcode_enabled() {
 		return Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_SHORTCODE);
-	}
-
-	public function _woocommerce_login_enqueue_scripts() {
-		wp_enqueue_style('dashicons');
-		$this->_login_enqueue_scripts();
-	}
-
-	public function _woocommerce_checkout_login_enqueue_scripts() {
-		/**
-		 * This is the same check used in WooCommerce to determine whether or not to display the checkout login form
-		 * @see templates/checkout/form-login.php in WooCommerce
-		 */
-		if ( is_user_logged_in() || 'no' === get_option( 'woocommerce_enable_checkout_login_reminder' ) ) {
-			return;
-		}
-		$this->_woocommerce_login_enqueue_scripts();
 	}
 	
 	/**
@@ -564,20 +503,6 @@ END
 	 * Authentication
 	 */
 
-	private function _is_woocommerce_login() {
-		if (!$this->has_woocommerce())
-			return false;
-		$nonceValue = '';
-		foreach (array('woocommerce-login-nonce', '_wpnonce') as $key) {
-			if (array_key_exists($key, $_REQUEST)) {
-				$nonceValue = $_REQUEST[$key];
-				break;
-			}
-		}
-
-		return ( isset( $_POST['login'], $_POST['username'], $_POST['password'] ) && is_string($nonceValue) && wp_verify_nonce( $nonceValue, 'woocommerce-login' ) );
-	}
-	
 	public function _authenticate($user, $username, $password) {
 		if (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST && !Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_XMLRPC_ENABLED)) { //XML-RPC call and we're not enforcing 2FA on it
 			return $user;
@@ -637,9 +562,9 @@ END
 		 * 3. A filter does not override it. This is to allow plugins with REST endpoints that handle authentication
 		 *    themselves to opt out of the requirement.
 		 * 4. The user is not providing a combined credentials + 2FA authentication login request.
-		 * 5. The request is not a WooCommerce login while WC integration is disabled
+		 * 5. The request is a standard login attempt.
 		 */
-		if (!$combinedTwoFactor && !$isCombinedCheck && !empty($username) && (!$this->_is_woocommerce_login() || Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION))) { //Login attempt, not just a wp-login.php page load
+		if (!$combinedTwoFactor && !$isCombinedCheck && !empty($username)) { //Login attempt, not just a wp-login.php page load
 
 			$requireCAPTCHA = Controller_CAPTCHA::shared()->is_captcha_required();
 			$performVerification = false;
@@ -690,12 +615,7 @@ END
 						$identifier = sprintf('wfls-captcha-%d', $user->ID);
 						$tokenBucket = new Model_TokenBucket('rate:' . $identifier, 3, 1 / (WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES * Model_TokenBucket::MINUTE)); //Maximum of three requests, refilling at a rate of one per token expiration period
 						if ($tokenBucket->consume(1)) {
-							if ($this->has_woocommerce() && array_key_exists('woocommerce-login-nonce', $_POST)) {
-								$loginUrl = get_permalink(get_option('woocommerce_myaccount_page_id'));
-							}
-							else {
-								$loginUrl = wp_login_url();
-							}
+							$loginUrl = wp_login_url();
 							$verificationUrl = add_query_arg(
 								array(
 									'wfls-email-verification' => rawurlencode(Controller_Users::shared()->generate_verification_token($user))
@@ -938,7 +858,7 @@ END
 					'tab' => new Model_Tab('settings', 'settings', __('Settings', 'wordfence-login-security'), __('Settings', 'wordfence-login-security')),
 					'title' => new Model_Title('settings', __('Login Security Settings', 'wordfence-login-security'), Controller_Support::supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY), new Model_HTML(wp_kses(__('Learn more<span class="wfls-hidden-xs"> about Login Security</span>', 'wordfence-login-security'), array('span'=>array('class'=>array()))))),
 					'content' => new Model_View('page/settings', array(
-						'hasWoocommerce' => $this->has_woocommerce()
+						'hasWoocommerce' => false
 					)),
 				);
 			}
@@ -1026,22 +946,6 @@ END
 		return $result;
 	}
 
-	private function disable_woocommerce_registration($message) {
-		if ($this->has_woocommerce()) {
-			remove_action('wp_loaded', array('WC_Form_Handler', 'process_registration'), 20);
-			wc_add_notice($message, 'error');
-		}
-	}
-
-	public function _handle_woocommerce_registration() {
-		if ($this->has_woocommerce() && isset($_POST['register'], $_POST['email']) && (isset($_POST['_wpnonce']) || isset($_POST['woocommerce-register-nonce']))) {
-			$captchaResult = $this->process_registration_captcha_with_hooks();
-			if ($captchaResult !== true) {
-				$this->disable_woocommerce_registration($captchaResult['message']);
-			}
-		}
-	}
-
 	public function _user_new_form() {
 		if (Controller_Settings::shared()->get_user_2fa_grace_period())
 			echo Model_View::create('user/grace-period-toggle', array())->render();
@@ -1053,22 +957,6 @@ END
 			return;
 		if (isset($_POST['wfls-grace-period-toggle']))
 			Controller_Users::shared()->allow_grace_period($newUserId); 
-	}
-
-	public function _woocommerce_account_menu_items($items) {
-		if ($this->can_user_activate_2fa_self()) {
-			$endpointId = self::WOOCOMMERCE_ENDPOINT;
-			$label = __('Wordfence 2FA', 'wordfence-login-security');
-			if (!Utility_Array::insertAfter($items, 'edit-account', $endpointId, $label)) {
-				$items[$endpointId] = $label;
-			}
-		}
-		return $items;
-	}
-
-	public function _woocommerce_get_query_vars($query_vars) {
-		$query_vars[self::WOOCOMMERCE_ENDPOINT] = self::WOOCOMMERCE_ENDPOINT;
-		return $query_vars;
 	}
 
 	private function can_user_activate_2fa_self($user = null) {
@@ -1098,22 +986,9 @@ END
 		}
 	}
 
-	public function _woocommerce_account_menu_content() {
-		echo $this->render_embedded_user_2fa_management_interface();
-	}
-
 	private function does_current_page_include_shortcode($shortcode) {
 		global $post;
 		return $post instanceof \WP_Post && has_shortcode($post->post_content, $shortcode);
-	}
-
-	public function _woocommerce_account_enqueue_assets() {
-		if (!$this->has_woocommerce())
-			return;
-		if ($this->does_current_page_include_shortcode('woocommerce_my_account')) {
-			wp_enqueue_style('wordfence-ls-woocommerce-account-styles', Model_Asset::css('woocommerce-account.css'), array(), WORDFENCE_LS_VERSION);
-			$this->enqueue_2fa_management_assets(true);
-		}
 	}
 
 	public function _handle_user_2fa_management_shortcode($attributes, $content = null, $shortcode = null) {

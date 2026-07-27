@@ -410,9 +410,6 @@ class Controller_AJAX {
 				}
 				
 				Controller_Settings::shared()->set_multiple($changes);
-
-				if (array_key_exists(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_ACCOUNT_INTEGRATION, $changes) || array_key_exists(Controller_Settings::OPTION_ENABLE_WOOCOMMERCE_INTEGRATION, $changes))
-					Controller_WordfenceLS::shared()->refresh_rewrite_rules();
 				
 				$response = array('success' => true);
 				return self::send_json($response);

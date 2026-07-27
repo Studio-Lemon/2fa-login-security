@@ -22,3 +22,9 @@ This file tracks implementation changes made while creating the public fork.
 - Disabled reCAPTCHA script enqueue path in login flow.
 - Removed IP allowlist bypass check from authentication flow.
 - Hard-disabled captcha controller by forcing `Controller_CAPTCHA::enabled()` to return false.
+
+## Step 3 - Remove WooCommerce integration code paths
+- Removed WooCommerce endpoint and menu integration methods from the primary controller.
+- Removed WooCommerce-specific login and registration handling branches from authentication flow.
+- Removed WooCommerce persistent admin-notice identifier and related settings-save rewrite hook trigger.
+- Stopped passing WooCommerce availability into the settings view state.

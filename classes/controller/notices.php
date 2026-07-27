@@ -7,7 +7,6 @@ use WordfenceLS\Text\Model_HTML;
 class Controller_Notices {
 	const USER_META_KEY = 'wfls_notices';
 	const PERSISTENT_NOTICE_DISMISS_PREFIX = 'wfls-dismiss-';
-	const PERSISTENT_NOTICE_WOOCOMMERCE_INTEGRATION = 'wfls-woocommerce-integration-notice';
 	const PERSISTENT_NOTICE_STANDALONE_DISCONTINUING = 'wfls-standalone-will-be-discontinued';
 	
 	/**
@@ -173,7 +172,6 @@ class Controller_Notices {
 
 	public function get_persistent_notice_ids() {
 		return array(
-			self::PERSISTENT_NOTICE_WOOCOMMERCE_INTEGRATION,
 			self::PERSISTENT_NOTICE_STANDALONE_DISCONTINUING,
 		);
 	}
