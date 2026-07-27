@@ -452,7 +452,7 @@ class Controller_TFAuthLS
 											$viewerIsUser ?
 												/* translators: Date */ esc_html__('Two-factor authentication must be activated for your account prior to %s to avoid losing access.', '2fa-login-security')
 												: /* translators: Date */ esc_html__('Two-factor authentication must be activated for this account prior to %s.', '2fa-login-security'),
-											Controller_Time::format_local_time('F j, Y g:i A', $requiredAt)
+											Controller_Time::format_site_datetime($requiredAt)
 										)
 										?>
 									</strong></p>
@@ -576,7 +576,7 @@ class Controller_TFAuthLS
 				return new \WP_Error('wfls_twofactor_blocked', wp_kses(__('<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your account. Please contact the site administrator.', '2fa-login-security'), array('strong' => array())));
 			}
 			if ($in2faGracePeriod) {
-				Controller_Notices::shared()->add_notice(Model_Notice::SEVERITY_CRITICAL, new Model_HTML(wp_kses(sprintf( /* translators: 1. Date; 2. Configuration URL */__('You do not currently have two-factor authentication active on your account, which will be required beginning %1$s. <a href="%2$s">Configure 2FA</a>', '2fa-login-security'), Controller_Time::format_local_time('F j, Y g:i A', $time2faRequired), esc_url((is_multisite() && is_super_admin($user->ID)) ? network_admin_url('admin.php?page=WFLS') : admin_url('admin.php?page=WFLS'))), array('a' => array('href' => array())))), 'wfls-will-be-required', $user);
+				Controller_Notices::shared()->add_notice(Model_Notice::SEVERITY_CRITICAL, new Model_HTML(wp_kses(sprintf( /* translators: 1. Date; 2. Configuration URL */__('You do not currently have two-factor authentication active on your account, which will be required beginning %1$s. <a href="%2$s">Configure 2FA</a>', '2fa-login-security'), Controller_Time::format_site_datetime($time2faRequired), esc_url((is_multisite() && is_super_admin($user->ID)) ? network_admin_url('admin.php?page=WFLS') : admin_url('admin.php?page=WFLS'))), array('a' => array('href' => array())))), 'wfls-will-be-required', $user);
 			}
 		}
 
