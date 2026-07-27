@@ -7,6 +7,8 @@
     "watch": "webpack --mode development --watch",
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
+    "css:prune": "node scripts/prune-dead-css.js --write",
+    "css:prune:dry": "node scripts/prune-dead-css.js",
     "translate:make-pot": "wp i18n make-pot . languages/2fa-login-security.pot --slug=2fa-login-security --exclude=node_modules,vendor,wp-content,tests",
     "translate:make-php": "wp i18n make-php languages/"
   },
