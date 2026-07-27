@@ -39,9 +39,9 @@ class Controller_DB
 	}
 
 	/**
-  * Returns the table with the site (single site installations) or network (multisite) prefix added.
-  */
- public static function network_table(string $table): string
+	 * Returns the table with the site (single site installations) or network (multisite) prefix added.
+	 */
+	public static function network_table(string $table): string
 	{
 		return self::network_prefix() . $table;
 	}
@@ -170,8 +170,8 @@ SQL;
 	{
 		global $wpdb;
 		if ($wpdb->query($query) === false) {
-      throw new RuntimeException("Failed to execute query: {$query}");
-  }
+			throw new RuntimeException("Failed to execute query: {$query}");
+		}
 	}
 
 	public function get_wpdb()

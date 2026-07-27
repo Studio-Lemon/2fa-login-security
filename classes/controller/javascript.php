@@ -13,13 +13,13 @@ use TFAuthLS\Controller_Time;
 class Controller_Javascript
 {
 	/**
-  * Returns a mapping of translation strings for the Javascript frontend to use, populated via the WordPress
-  * translation system.
-  *
-  * It would be nice to be less redundant here, but the support for that is in WP 5.0 and unavailable in our
-  * current oldest supported version.
-  */
- public static function i18nStrings(): array
+	 * Returns a mapping of translation strings for the Javascript frontend to use, populated via the WordPress
+	 * translation system.
+	 *
+	 * It would be nice to be less redundant here, but the support for that is in WP 5.0 and unavailable in our
+	 * current oldest supported version.
+	 */
+	public static function i18nStrings(): array
 	{
 		return array(
 			'(definitely a human)' => __('(definitely a human)', '2fa-login-security'),
@@ -101,9 +101,9 @@ class Controller_Javascript
 	}
 
 	/**
-  * Returns an array of constants/initial state values for use on the Javascript frontend to avoid hardcoding values.
-  */
- public static function jsConstants(): array
+	 * Returns an array of constants/initial state values for use on the Javascript frontend to avoid hardcoding values.
+	 */
+	public static function jsConstants(): array
 	{
 		$response = array();
 
@@ -181,10 +181,10 @@ class Controller_Javascript
 	}
 
 	/**
-  * Prefixes all keys in the given options with "wfls-" to avoid name collisions with the main plugin.
-  * @return mixed[]
-  */
- private static function _prefixOptions($options): array
+	 * Prefixes all keys in the given options with "wfls-" to avoid name collisions with the main plugin.
+	 * @return mixed[]
+	 */
+	private static function _prefixOptions($options): array
 	{
 		$result = array();
 		foreach ($options as $key => $value) {
