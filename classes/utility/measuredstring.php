@@ -1,19 +1,21 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-class Utility_MeasuredString {
+class Utility_MeasuredString
+{
 
 	public $string;
 	public $length;
 
-	public function __construct($string) {
+	public function __construct($string)
+	{
 		$this->string = $string;
 		$this->length = strlen($string);
 	}
 
-	public function __toString() {
+	public function __toString()
+	{
 		return $this->string;
 	}
-
 }

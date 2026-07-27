@@ -1,5 +1,7 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('TFA_LS_VERSION')) {
+	exit;
+}
 /**
  * @var ?array $counts The counts to display or null to hide user counts.
  */
@@ -16,63 +18,63 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 		</div>
 	</div>
 	<?php if (is_array($counts)) : ?>
-	<div class="wfls-block-content wfls-padding-no-left wfls-padding-no-right">
-		<table class="wfls-table wfls-table-striped wfls-table-header-separators wfls-table-expanded wfls-no-bottom">
-			<thead>
-			<tr>
-				<th><?php esc_html_e('Role', '2fa-login-security'); ?></th>
-				<th class="wfls-center"><?php esc_html_e('Total Users', '2fa-login-security'); ?></th>
-				<th class="wfls-center"><?php esc_html_e('2FA Active', '2fa-login-security'); ?></th>
-				<th class="wfls-center"><?php esc_html_e('2FA Inactive', '2fa-login-security'); ?></th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php
-			$roles = new WP_Roles();
-			$roleNames = $roles->get_names();
-			$roleNames['super-admin'] = __('Super Administrator', '2fa-login-security');
-			$roleNames[\WordfenceLS\Controller_Users::TRUNCATED_ROLE_KEY] = __('Custom Capabilities / Multiple Roles', '2fa-login-security');
-			foreach ($counts['avail_roles'] as $roleTag => $count):
-				$activeCount = (isset($counts['active_avail_roles'][$roleTag]) ? $counts['active_avail_roles'][$roleTag] : 0);
-				$inactiveCount = $count - $activeCount;
-				if ($activeCount === 0 && $inactiveCount === 0)
-					continue;
-				$roleName = $roleNames[$roleTag];
-				$requiredAt = \WordfenceLS\Controller_Settings::shared()->get_required_2fa_role_activation_time($roleTag);
-				$inactive = $inactiveCount > 0 && $requiredAt !== false;
-				$viewUsersBaseUrl = 'admin.php?' . http_build_query(array('page' => 'WFLS', 'role'=> $roleTag));
-			?>
-				<tr>
-					<td><?php echo \WordfenceLS\Text\Model_HTML::esc_html(translate_user_role($roleName)); ?></td>
-					<td class="wfls-center"><?php echo number_format($count); ?></td>
-					<td class="wfls-center"><?php echo number_format($activeCount); ?></td>
-					<td class="wfls-center">
-						<?php if ($inactive): ?><a href="<?php echo esc_attr(is_multisite() ? network_admin_url($viewUsersBaseUrl) : admin_url($viewUsersBaseUrl)); ?>"><?php endif ?>
-						<?php echo number_format($inactiveCount); ?>
-						<?php if ($inactive): ?> (<?php esc_html_e('View users', '2fa-login-security') ?>)</a><?php endif ?>
-					</td>
-				</tr>
-			<?php endforeach; ?>
-			</tbody>
-			<tfoot>
-			<tr>
-				<th><?php esc_html_e('Total', '2fa-login-security'); ?></th>
-				<th class="wfls-center"><?php echo number_format($counts['total_users']); ?></th>
-				<th class="wfls-center"><?php echo number_format($counts['active_total_users']); ?></th>
-				<th class="wfls-center"><?php echo number_format($counts['total_users'] - $counts['active_total_users']); ?></th>
-			</tr>
-			<?php if (is_multisite()): ?>
-			<tr>
-				<td colspan="4" class="wfls-text-small"><?php esc_html_e('* User counts currently only reflect the main site on multisite installations.', '2fa-login-security'); ?></td>
-			</tr>
-			<?php endif; ?>
-			</tfoot>
-		</table>
-	</div>
+		<div class="wfls-block-content wfls-padding-no-left wfls-padding-no-right">
+			<table class="wfls-table wfls-table-striped wfls-table-header-separators wfls-table-expanded wfls-no-bottom">
+				<thead>
+					<tr>
+						<th><?php esc_html_e('Role', '2fa-login-security'); ?></th>
+						<th class="wfls-center"><?php esc_html_e('Total Users', '2fa-login-security'); ?></th>
+						<th class="wfls-center"><?php esc_html_e('2FA Active', '2fa-login-security'); ?></th>
+						<th class="wfls-center"><?php esc_html_e('2FA Inactive', '2fa-login-security'); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					$roles = new WP_Roles();
+					$roleNames = $roles->get_names();
+					$roleNames['super-admin'] = __('Super Administrator', '2fa-login-security');
+					$roleNames[\TFAuthLS\Controller_Users::TRUNCATED_ROLE_KEY] = __('Custom Capabilities / Multiple Roles', '2fa-login-security');
+					foreach ($counts['avail_roles'] as $roleTag => $count):
+						$activeCount = (isset($counts['active_avail_roles'][$roleTag]) ? $counts['active_avail_roles'][$roleTag] : 0);
+						$inactiveCount = $count - $activeCount;
+						if ($activeCount === 0 && $inactiveCount === 0)
+							continue;
+						$roleName = $roleNames[$roleTag];
+						$requiredAt = \TFAuthLS\Controller_Settings::shared()->get_required_2fa_role_activation_time($roleTag);
+						$inactive = $inactiveCount > 0 && $requiredAt !== false;
+						$viewUsersBaseUrl = 'admin.php?' . http_build_query(array('page' => 'WFLS', 'role' => $roleTag));
+					?>
+						<tr>
+							<td><?php echo \TFAuthLS\Text\Model_HTML::esc_html(translate_user_role($roleName)); ?></td>
+							<td class="wfls-center"><?php echo number_format($count); ?></td>
+							<td class="wfls-center"><?php echo number_format($activeCount); ?></td>
+							<td class="wfls-center">
+								<?php if ($inactive): ?><a href="<?php echo esc_attr(is_multisite() ? network_admin_url($viewUsersBaseUrl) : admin_url($viewUsersBaseUrl)); ?>"><?php endif ?>
+									<?php echo number_format($inactiveCount); ?>
+									<?php if ($inactive): ?> (<?php esc_html_e('View users', '2fa-login-security') ?>)</a><?php endif ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th><?php esc_html_e('Total', '2fa-login-security'); ?></th>
+						<th class="wfls-center"><?php echo number_format($counts['total_users']); ?></th>
+						<th class="wfls-center"><?php echo number_format($counts['active_total_users']); ?></th>
+						<th class="wfls-center"><?php echo number_format($counts['total_users'] - $counts['active_total_users']); ?></th>
+					</tr>
+					<?php if (is_multisite()): ?>
+						<tr>
+							<td colspan="4" class="wfls-text-small"><?php esc_html_e('* User counts currently only reflect the main site on multisite installations.', '2fa-login-security'); ?></td>
+						</tr>
+					<?php endif; ?>
+				</tfoot>
+			</table>
+		</div>
 	<?php else: ?>
-	<div class="wfls-block-content wfls-padding-add-bottom">
-		<p><?php $counts === null ? esc_html_e('User counts are hidden by default on sites with large numbers of users in order to improve performance.', '2fa-login-security') : esc_html_e('User counts are currently disabled as the most recent attempt to count users failed to complete successfully.', '2fa-login-security') ?></p>
-		<a href="<?php echo esc_attr(add_query_arg('wfls-show-user-counts', 'true') . '#top#settings') ?>" class="wfls-btn wfls-btn-sm wfls-btn-primary"<?php if (\WordfenceLS\Controller_Users::shared()->should_force_user_counts()): ?> onclick="window.location.reload()"<?php endif ?>><?php $counts === null ? esc_html_e('Show User Counts', '2fa-login-security') : esc_html_e('Try Again', '2fa-login-security') ?></a>
-	</div>
+		<div class="wfls-block-content wfls-padding-add-bottom">
+			<p><?php $counts === null ? esc_html_e('User counts are hidden by default on sites with large numbers of users in order to improve performance.', '2fa-login-security') : esc_html_e('User counts are currently disabled as the most recent attempt to count users failed to complete successfully.', '2fa-login-security') ?></p>
+			<a href="<?php echo esc_attr(add_query_arg('wfls-show-user-counts', 'true') . '#top#settings') ?>" class="wfls-btn wfls-btn-sm wfls-btn-primary" <?php if (\TFAuthLS\Controller_Users::shared()->should_force_user_counts()): ?> onclick="window.location.reload()" <?php endif ?>><?php $counts === null ? esc_html_e('Show User Counts', '2fa-login-security') : esc_html_e('Try Again', '2fa-login-security') ?></a>
+		</div>
 	<?php endif ?>
 </div>

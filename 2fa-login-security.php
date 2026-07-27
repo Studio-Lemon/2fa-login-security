@@ -19,33 +19,32 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('WORDFENCE_LS_VERSION', '1.1.16');
-define('WORDFENCE_LS_BUILD_NUMBER', '1777414061');
+define('TFA_LS_VERSION', '1.1.16');
 
-define('WORDFENCE_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
+define('TFA_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-if (!defined('WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
-	define('WORDFENCE_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15);
+if (!defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
+	define('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15);
 }
 
 global $wp_plugin_paths;
 foreach ($wp_plugin_paths as $dir => $realdir) {
 	if (strpos(__FILE__, $realdir) === 0) {
-		define('WORDFENCE_LS_FCPATH', $dir . '/' . basename(__FILE__));
-		define('WORDFENCE_LS_PATH', trailingslashit($dir));
+		define('TFA_LS_FCPATH', $dir . '/' . basename(__FILE__));
+		define('TFA_LS_PATH', trailingslashit($dir));
 		break;
 	}
 }
 
-if (!defined('WORDFENCE_LS_FCPATH')) {
+if (!defined('TFA_LS_FCPATH')) {
 	/** @noinspection PhpConstantReassignmentInspection */
-	define('WORDFENCE_LS_FCPATH', __FILE__);
+	define('TFA_LS_FCPATH', __FILE__);
 	/** @noinspection PhpConstantReassignmentInspection */
-	define('WORDFENCE_LS_PATH', trailingslashit(dirname(WORDFENCE_LS_FCPATH)));
+	define('TFA_LS_PATH', trailingslashit(dirname(TFA_LS_FCPATH)));
 }
 
-if (!function_exists('wordfence_ls_autoload')) {
-	function wordfence_ls_autoload($class)
+if (!function_exists('TFA_LS_autoload')) {
+	function TFA_LS_autoload($class)
 	{
 		$class = str_replace('\\', '/', $class);
 		$class = str_replace('\\\\', '/', $class);
@@ -54,7 +53,7 @@ if (!function_exists('wordfence_ls_autoload')) {
 			return false;
 		}
 
-		if ($components[0] != 'WordfenceLS') {
+		if ($components[0] != 'TFAuthLS') {
 			return false;
 		}
 
@@ -65,6 +64,10 @@ if (!function_exists('wordfence_ls_autoload')) {
 
 		if (preg_match('/^(Controller|Model|Utility)_([a-z0-9]+)$/i', $components[count($components) - 1], $matches)) {
 			$path = dirname(__FILE__) . '/classes/' . strtolower($matches[1]) . $path . '/' . strtolower($matches[2]) . '.php';
+			if (!file_exists($path) && strtolower($matches[1]) === 'controller' && strtolower($matches[2]) === 'tfauthls') {
+				// Backward-compatible file mapping while the primary controller still uses legacy filename.
+				$path = dirname(__FILE__) . '/classes/controller/wordfencels.php';
+			}
 			if (file_exists($path)) {
 				require_once($path);
 				return true;
@@ -75,11 +78,11 @@ if (!function_exists('wordfence_ls_autoload')) {
 	}
 }
 
-if (!defined('WORDFENCE_LS_AUTOLOADER_REGISTERED')) {
-	define('WORDFENCE_LS_AUTOLOADER_REGISTERED', true);
-	spl_autoload_register('wordfence_ls_autoload');
+if (!defined('TFA_LS_AUTOLOADER_REGISTERED')) {
+	define('TFA_LS_AUTOLOADER_REGISTERED', true);
+	spl_autoload_register('TFA_LS_autoload');
 }
 
-if (!defined('WORDFENCE_LS_VERSIONONLY_MODE')) { //Used to get version from file
-	\WordfenceLS\Controller_WordfenceLS::shared()->init();
+if (!defined('TFA_LS_VERSIONONLY_MODE')) { //Used to get version from file
+	\TFAuthLS\Controller_TFAuthLS::shared()->init();
 }

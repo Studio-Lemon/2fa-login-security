@@ -1,51 +1,56 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
 use RuntimeException;
 
-class Controller_DB {
+class Controller_DB
+{
 	const TABLE_2FA_SECRETS = 'wfls_2fa_secrets';
 	const TABLE_SETTINGS = 'wfls_settings';
 	const TABLE_ROLE_COUNTS = 'wfls_role_counts';
 	const TABLE_ROLE_COUNTS_TEMPORARY = 'wfls_role_counts_temporary';
 
 	const SCHEMA_VERSION = 2;
-	
+
 	/**
 	 * Returns the singleton Controller_DB.
 	 *
 	 * @return Controller_DB
 	 */
-	public static function shared() {
+	public static function shared()
+	{
 		static $_shared = null;
 		if ($_shared === null) {
 			$_shared = new Controller_DB();
 		}
 		return $_shared;
 	}
-	
+
 	/**
 	 * Returns the table prefix for the main site on multisites and the site itself on single site installations.
 	 *
 	 * @return string
 	 */
-	public static function network_prefix() {
+	public static function network_prefix()
+	{
 		global $wpdb;
 		return $wpdb->base_prefix;
 	}
-	
+
 	/**
 	 * Returns the table with the site (single site installations) or network (multisite) prefix added.
 	 *
 	 * @param string $table
 	 * @return string
 	 */
-	public static function network_table($table) {
+	public static function network_table($table)
+	{
 		return self::network_prefix() . $table;
 	}
-	
-	public function __get($key) {
+
+	public function __get($key)
+	{
 		switch ($key) {
 			case 'secrets':
 				return self::network_table(self::TABLE_2FA_SECRETS);
@@ -56,19 +61,21 @@ class Controller_DB {
 			case 'role_counts_temporary':
 				return self::network_table(self::TABLE_ROLE_COUNTS_TEMPORARY);
 		}
-		
+
 		throw new \OutOfBoundsException('Unknown key: ' . $key);
 	}
-	
-	public function install() {
+
+	public function install()
+	{
 		$this->_create_schema();
-		
+
 		global $wpdb;
 		$table = $this->secrets;
 		$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `vtime` = LEAST(`vtime`, %d)", Controller_Time::time()));
 	}
-	
-	public function uninstall() {
+
+	public function uninstall()
+	{
 		$tables = array(self::TABLE_2FA_SECRETS, self::TABLE_SETTINGS, self::TABLE_ROLE_COUNTS);
 		foreach ($tables as $table) {
 			global $wpdb;
@@ -76,7 +83,8 @@ class Controller_DB {
 		}
 	}
 
-	private function create_table($name, $definition, $temporary = false) {
+	private function create_table($name, $definition, $temporary = false)
+	{
 		global $wpdb;
 		if (is_array($definition)) {
 			foreach ($definition as $attempt) {
@@ -84,13 +92,13 @@ class Controller_DB {
 					return true;
 			}
 			return false;
-		}
-		else {
+		} else {
 			return $wpdb->query('CREATE ' . ($temporary ? 'TEMPORARY ' : '') . 'TABLE IF NOT EXISTS `' . self::network_table($name) . '` ' . $definition);
 		}
 	}
 
-	private function create_temporary_table($name, $definition) {
+	private function create_temporary_table($name, $definition)
+	{
 		if (Controller_Settings::shared()->get_bool(Controller_Settings::OPTION_DISABLE_TEMPORARY_TABLES))
 			return false;
 		if ($this->create_table($name, $definition, true))
@@ -99,7 +107,8 @@ class Controller_DB {
 		return false;
 	}
 
-	private function get_role_counts_table_definition($engine = null) {
+	private function get_role_counts_table_definition($engine = null)
+	{
 		$engineClause = $engine === null ? '' : "ENGINE={$engine}";
 		return <<<SQL
 				(
@@ -111,15 +120,17 @@ class Controller_DB {
 SQL;
 	}
 
-	private function get_role_counts_table_definition_options() {
+	private function get_role_counts_table_definition_options()
+	{
 		return array(
 			$this->get_role_counts_table_definition('MEMORY'),
 			$this->get_role_counts_table_definition('MyISAM'),
 			$this->get_role_counts_table_definition()
 		);
 	}
-	
-	protected function _create_schema() {
+
+	protected function _create_schema()
+	{
 		$tables = array(
 			self::TABLE_2FA_SECRETS => '(
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -140,7 +151,7 @@ SQL;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;',
 			self::TABLE_ROLE_COUNTS => $this->get_role_counts_table_definition_options()
 		);
-		
+
 		foreach ($tables as $table => $def) {
 			$this->create_table($table, $def);
 		}
@@ -148,26 +159,29 @@ SQL;
 		Controller_Settings::shared()->set(Controller_Settings::OPTION_SCHEMA_VERSION, self::SCHEMA_VERSION);
 	}
 
-	public function require_schema_version($version) {
+	public function require_schema_version($version)
+	{
 		$current = Controller_Settings::shared()->get_int(Controller_Settings::OPTION_SCHEMA_VERSION);
 		if ($current < $version) {
 			$this->install();
 		}
 	}
 
-	public function query($query) {
+	public function query($query)
+	{
 		global $wpdb;
 		if ($wpdb->query($query) === false)
 			throw new RuntimeException("Failed to execute query: {$query}");
 	}
 
-	public function get_wpdb() {
+	public function get_wpdb()
+	{
 		global $wpdb;
 		return $wpdb;
 	}
 
-	public function create_temporary_role_counts_table() {
+	public function create_temporary_role_counts_table()
+	{
 		return $this->create_temporary_table(self::TABLE_ROLE_COUNTS_TEMPORARY, $this->get_role_counts_table_definition_options());
 	}
-
 }

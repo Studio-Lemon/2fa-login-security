@@ -1,8 +1,8 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-use WordfenceLS\Text\Model_HTML;
+use TFAuthLS\Text\Model_HTML;
 
 class Controller_Notices
 {

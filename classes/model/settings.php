@@ -1,11 +1,12 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-abstract class Model_Settings {
+abstract class Model_Settings
+{
 	const AUTOLOAD_YES = 'yes';
 	const AUTOLOAD_NO = 'no';
-	
+
 	/**
 	 * Sets $value to $key.
 	 * 

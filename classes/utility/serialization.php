@@ -1,12 +1,14 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
 use RuntimeException;
 
-class Utility_Serialization {
+class Utility_Serialization
+{
 
-	public static function unserialize($data, $options = array(), $validator = null) {
+	public static function unserialize($data, $options = array(), $validator = null)
+	{
 		static $serializedFalse;
 		if ($serializedFalse === null)
 			$serializedFalse = serialize(false);
@@ -16,8 +18,7 @@ class Utility_Serialization {
 			throw new RuntimeException('Input data is not serialized');
 		if (version_compare(PHP_VERSION, '5.6', '<=')) {
 			$unserialized = @unserialize($data);
-		}
-		else {
+		} else {
 			$unserialized = @unserialize($data, $options);
 		}
 		if ($unserialized === false)
@@ -26,5 +27,4 @@ class Utility_Serialization {
 			throw new RuntimeException('Validation of unserialized data failed');
 		return $unserialized;
 	}
-
 }

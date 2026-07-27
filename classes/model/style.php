@@ -1,23 +1,26 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-class Model_Style extends Model_Asset {
+class Model_Style extends Model_Asset
+{
 
-	public function enqueue() {
+	public function enqueue()
+	{
 		if ($this->registered) {
 			wp_enqueue_style($this->handle);
-		}
-		else {
+		} else {
 			wp_enqueue_style($this->handle, $this->source, $this->dependencies, $this->version);
 		}
 	}
 
-	public function isEnqueued() {
+	public function isEnqueued()
+	{
 		return wp_style_is($this->handle);
 	}
 
-	public function renderInline() {
+	public function renderInline()
+	{
 		if (empty($this->source))
 			return;
 		$url = esc_attr($this->getSourceUrl());
@@ -29,9 +32,9 @@ class Model_Style extends Model_Asset {
 <?php
 	}
 
-	public function register() {
+	public function register()
+	{
 		wp_register_style($this->handle, $this->source, $this->dependencies, $this->version);
 		return parent::register();
 	}
-
 }

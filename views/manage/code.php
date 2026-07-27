@@ -1,7 +1,9 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('TFA_LS_VERSION')) {
+	exit;
+}
 /**
- * @var \WordfenceLS\Model_2faInitializationData $initializationData The initialization data for setting up 2FA for a specific user. Required.
+ * @var \TFAuthLS\Model_2faInitializationData $initializationData The initialization data for setting up 2FA for a specific user. Required.
  */
 ?>
 <div class="wfls-block wfls-always-active wfls-flex-item-full-width">
@@ -22,10 +24,15 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 	(function($) {
 		$(function() {
 			var narrowPreviously = null;
+
 			function renderQrCode() {
 				var narrow = WFLS.screenSize(500);
 				if (narrow !== narrowPreviously) {
-					$('#wfls-qr-code').empty().qrcode({text: '<?php echo \WordfenceLS\Text\Model_JavaScript::esc_js($initializationData->get_otp_url()); ?>', width: (narrow ? 175 : 256), height: (narrow ? 175 : 256)});
+					$('#wfls-qr-code').empty().qrcode({
+						text: '<?php echo \TFAuthLS\Text\Model_JavaScript::esc_js($initializationData->get_otp_url()); ?>',
+						width: (narrow ? 175 : 256),
+						height: (narrow ? 175 : 256)
+					});
 					$('#wfls-qr-code-text').css('font-family', narrow ? '' : 'monospace');
 				}
 				narrowPreviously = narrow;
@@ -34,4 +41,4 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 			renderQrCode();
 		});
 	})(jQuery);
-</script> 
+</script>

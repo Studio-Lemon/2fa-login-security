@@ -1,10 +1,12 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-class Utility_Array {
+class Utility_Array
+{
 
-	public static function findOffset($array, $key) {
+	public static function findOffset($array, $key)
+	{
 		$offset = 0;
 		foreach ($array as $index => $value) {
 			if ($index === $key)
@@ -14,18 +16,19 @@ class Utility_Array {
 		return null;
 	}
 
-	public static function insertAfter(&$array, $targetKey, $key, $value) {
+	public static function insertAfter(&$array, $targetKey, $key, $value)
+	{
 		$offset = self::findOffset($array, $targetKey);
 		if ($offset === null)
 			return false;
 		$array = array_merge(
 			array_slice($array, 0, $offset + 1),
-			array( $key => $value ),
+			array($key => $value),
 			array_slice($array, $offset + 1)
 		);
 		return true;
 	}
-	
+
 	/**
 	 * Returns the items from $array whose keys are in $keys.
 	 *
@@ -35,12 +38,13 @@ class Utility_Array {
 	 * @param mixed|null $default Value to return when $single is true and nothing is found.
 	 * @return array|mixed
 	 */
-	public static function arrayChoose($array, $keys, $single = false, $default = null) {
+	public static function arrayChoose($array, $keys, $single = false, $default = null)
+	{
 		if (!is_array($keys)) {
 			$keys = array($keys);
 		}
-		
-		$matches = array_filter($array, function($k) use ($keys) {
+
+		$matches = array_filter($array, function ($k) use ($keys) {
 			return in_array($k, $keys);
 		}, ARRAY_FILTER_USE_KEY);
 		if ($single) {
@@ -48,12 +52,12 @@ class Utility_Array {
 			if ($key !== null && isset($matches[$key])) {
 				return $matches[$key];
 			}
-			
+
 			return $default;
 		}
 		return $matches;
 	}
-	
+
 	/**
 	 * Convenience function for `arrayChoose` in its single return value mode for better code readability.
 	 *
@@ -62,24 +66,27 @@ class Utility_Array {
 	 * @param mixed|null $default
 	 * @return mixed
 	 */
-	public static function arrayGet($array, $key, $default = null) {
+	public static function arrayGet($array, $key, $default = null)
+	{
 		return self::arrayChoose($array, $key, true, $default);
 	}
-	
-	public static function arrayFirst($array) {
+
+	public static function arrayFirst($array)
+	{
 		if (empty($array)) {
 			return null;
 		}
-		
+
 		$values = array_values($array);
 		return $values[0];
 	}
-	
-	public static function arrayLast($array) {
+
+	public static function arrayLast($array)
+	{
 		if (empty($array)) {
 			return null;
 		}
-		
+
 		$values = array_values($array);
 		return $values[count($values) - 1];
 	}

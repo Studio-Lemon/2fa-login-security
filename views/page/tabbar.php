@@ -1,5 +1,5 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) {
+if (!defined('TFA_LS_VERSION')) {
 	exit;
 }
 /**

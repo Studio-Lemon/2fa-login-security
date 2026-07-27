@@ -1,19 +1,19 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) {
+if (!defined('TFA_LS_VERSION')) {
 	exit;
 }
 /**
  * Presents a modal prompt.
  *
  * @var string $id (optional) The CSS ID to apply to the modal.
- * @var string|\WordfenceLS\Text\Model_HTML $title The title for the prompt. Required.
- * @var string|\WordfenceLS\Text\Model_HTML $message The message for the prompt. Required.
+ * @var string|\TFAuthLS\Text\Model_HTML $title The title for the prompt. Required.
+ * @var string|\TFAuthLS\Text\Model_HTML $message The message for the prompt. Required.
  * @var array $primaryButton The parameters for the primary button. The array is in the format array('id' => <element id>, 'label' => <button text>, 'link' => <href value>). Optional.
  * @var array $secondaryButtons The parameters for any secondary buttons. It is an array of arrays in the format array('id' => <element id>, 'label' => <button text>, 'link' => <href value>). The ordering of entries is the right-to-left order the buttons will be displayed. Optional.
  */
 
-$titleHTML = \WordfenceLS\Text\Model_HTML::esc_html($title);
-$messageHTML = \WordfenceLS\Text\Model_HTML::esc_html($message);
+$titleHTML = \TFAuthLS\Text\Model_HTML::esc_html($title);
+$messageHTML = \TFAuthLS\Text\Model_HTML::esc_html($message);
 $embedded = isset($embedded) ? $embedded : false;
 
 if (!isset($secondaryButtons)) {

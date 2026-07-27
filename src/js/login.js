@@ -1,12 +1,12 @@
-(function($) {
+(function ($) {
 	function __(string) {
 		return WFLS_LOGIN_TRANSLATIONS[string] || string;
 	}
-	!function(Z){"use strict";Z.Zebra_Tooltips=function(t,l){var u,T,b,v,n={animation_speed:250,animation_offset:20,close_on_click:!0,content:!(this.version="2.1.0"),hide_delay:100,keep_visible:!0,max_width:250,opacity:".95",position:"center",prerender:!1,show_delay:100,vertical_alignment:"above",vertical_offset:0,onBeforeHide:null,onHide:null,onBeforeShow:null,onShow:null},r=this,_=function(e){var t,o,i,a,l,n,r,_,s,p,d,h,c,f,w=e.data("Zebra_Tooltip"),m=Z(window);return w.tooltip||(t=Z("<div>",{"class":"Zebra_Tooltip",css:{opacity:0,display:"block"}}),o=Z("<div>",{"class":"Zebra_Tooltip_Message",css:{maxWidth:w.max_width}}).html(w.content).appendTo(t),i=Z("<div>",{"class":"Zebra_Tooltip_Arrow"}).appendTo(t),a=Z("<div>").addClass("Zebra_Tooltip_Arrow_Border").appendTo(i),Z("<div>").appendTo(i),w.keep_visible&&(t.on("mouseleave"+(w.close_on_click?" click":""),function(){y(e)}),t.on("mouseenter",function(){g(e)})),t.appendTo("body"),w.sticky&&o.addClass("Zebra_Tooltip_Has_Close"),l=t.outerWidth(),n=t.outerHeight(),r=a.outerWidth(),_=a.outerHeight(),s=o.outerWidth(),p=o.outerHeight(),w={tooltip:t,tooltip_width:l,tooltip_height:n+_/2,message:o,arrow_container:i,arrow_width:r,arrow_height:_,arrow:a},t.css({width:w.tooltip_width,height:w.tooltip_height}),w.tooltip_width=w.tooltip_width+(o.outerWidth()-s),w.tooltip_height=w.tooltip_height+(o.outerHeight()-p),t.css({width:w.tooltip_width,height:w.tooltip_height,display:"none"}),w=Z.extend(e.data("Zebra_Tooltip"),w),e.data("Zebra_Tooltip",w)),w.sticky&&!w.close&&(Z("<a>",{"class":"Zebra_Tooltip_Close",href:"javascript:void(0)"}).html("&times;").on("click",function(t){t.preventDefault();var o=e.data("Zebra_Tooltip");o.sticky=!1,e.data("Zebra_Tooltip",o),y(e)}).appendTo(w.message),w.close=!0,w=Z.extend(e.data("Zebra_Tooltip"),w),e.data("Zebra_Tooltip",w)),u=m.width(),T=m.height(),d=e.offset(),Z.extend(w,{element_left:d.left,element_top:d.top,element_width:e.outerWidth(),element_height:e.outerHeight()}),v=m.scrollTop(),b=m.scrollLeft(),h="left"===w.position?w.element_left-w.tooltip_width+w.arrow_width:"right"===w.position?w.element_left+w.element_width-w.arrow_width:w.element_left+(w.element_width-w.tooltip_width)/2,c=w.element_top-w.tooltip_height,f="left"===w.position?w.tooltip_width-w.arrow_width-w.arrow_width/2:"right"===w.position?w.arrow_width/2:(w.tooltip_width-w.arrow_width)/2,h+w.tooltip_width>u+b&&(f-=u+b-(h+w.tooltip_width)-6,h=u+b-w.tooltip_width-6,f+w.arrow_width>w.tooltip_width-6&&(f=w.tooltip_width-6-w.arrow_width),h+f+w.arrow_width/2<w.element_left&&(f=-1e4)),h<b&&(f-=b-h,h=b+2,f<0&&(f=w.arrow_width/2),h+f+w.arrow_width/2>w.element_left+w.element_width&&(f=-1e4)),w.message.css("margin-top",""),w.arrow_container.removeClass("Zebra_Tooltip_Arrow_Top").addClass("Zebra_Tooltip_Arrow_Bottom"),c<v||"below"===w.vertical_alignment&&w.element_top+w.element_height+w.vertical_offset+w.tooltip_height+w.animation_offset<T+v?(c=w.element_top+w.element_height-w.vertical_offset,w.animation_offset=Math.abs(w.animation_offset),w.message.css("margin-top",w.arrow_height/2),w.arrow_container.removeClass("Zebra_Tooltip_Arrow_Bottom").addClass("Zebra_Tooltip_Arrow_Top")):(w.animation_offset=-Math.abs(w.animation_offset),c+=w.vertical_offset),w.arrow_container.css("left",f),w.tooltip.css({left:h,top:c}),Z.extend(w,{tooltip_left:h,tooltip_top:c,arrow_left:f}),w=Z.extend(e.data("Zebra_Tooltip"),w),e.data("Zebra_Tooltip",w),w},g=function(t){var o=t.data("Zebra_Tooltip");clearTimeout(o.show_timeout),o.muted||(clearTimeout(o.hide_timeout),o.show_timeout=setTimeout(function(){(o=_(t)).onBeforeShow&&"function"==typeof o.onBeforeShow&&!1===o.onBeforeShow(t,o.tooltip)||("block"!==o.tooltip.css("display")&&o.tooltip.css({top:o.tooltip_top+o.animation_offset}),o.tooltip.css("display","block"),o.tooltip.stop(),o.tooltip.animate({top:o.tooltip_top,opacity:o.opacity},o.animation_speed,function(){o.onShow&&"function"==typeof o.onShow&&o.onShow(t,o.tooltip)}))},o.show_delay))},y=function(t){var o=t.data("Zebra_Tooltip");clearTimeout(o.hide_timeout),o.sticky||(clearTimeout(o.show_timeout),o.hide_timeout=setTimeout(function(){if(o.tooltip){if(o.onBeforeHide&&"function"==typeof o.onBeforeHide&&!1===o.onBeforeHide(t,o.tooltip))return;o.close=!1,o.destroy&&(o.muted=!0),t.data("Zebra_Tooltip",o),Z("a.Zebra_Tooltip_Close",o.tooltip).remove(),o.tooltip.stop(),o.tooltip.animate({opacity:0,top:o.tooltip_top+o.animation_offset},o.animation_speed,function(){Z(this).css("display","none"),o.onHide&&"function"==typeof o.onHide&&o.onHide(t,o.tooltip)})}},o.hide_delay))};r.hide=function(t,e){t.each(function(){var t=Z(this),o=t.data("Zebra_Tooltip");o&&(o.sticky=!1,e&&(o.destroy=!0),t.data("Zebra_Tooltip",o),y(t))})},r.show=function(t,e){t.each(function(){var t=Z(this),o=t.data("Zebra_Tooltip");o&&(o.sticky=!0,o.muted=!1,e&&(o.destroy=!0),t.data("Zebra_Tooltip",o),g(t))})},t.each(function(){var t,o=Z(this),e=o.attr("title"),i=o.data(),a={};for(t in i)0===t.indexOf("ztt_")&&(t=t.replace(/^ztt\_/,""),void 0!==n[t]&&(a[t]=i["ztt_"+t]));a=Z.extend(n,r.settings,l,a),e&&(a.content=o.attr("title")),void 0!==a.content&&""!==a.content.trim()&&(o.on({mouseenter:function(){e&&Z(this).attr("title",""),g(o)},mouseleave:function(){y(o),e&&Z(this).attr("title",e)}}),o.data("Zebra_Tooltip",Z.extend({tooltip:null,show_timeout:null,hide_timeout:null,sticky:!1,destroy:!1,muted:!1},a)),a.prerender&&_(o))})}}($);
+	!function (Z) { "use strict"; Z.Zebra_Tooltips = function (t, l) { var u, T, b, v, n = { animation_speed: 250, animation_offset: 20, close_on_click: !0, content: !(this.version = "2.1.0"), hide_delay: 100, keep_visible: !0, max_width: 250, opacity: ".95", position: "center", prerender: !1, show_delay: 100, vertical_alignment: "above", vertical_offset: 0, onBeforeHide: null, onHide: null, onBeforeShow: null, onShow: null }, r = this, _ = function (e) { var t, o, i, a, l, n, r, _, s, p, d, h, c, f, w = e.data("Zebra_Tooltip"), m = Z(window); return w.tooltip || (t = Z("<div>", { "class": "Zebra_Tooltip", css: { opacity: 0, display: "block" } }), o = Z("<div>", { "class": "Zebra_Tooltip_Message", css: { maxWidth: w.max_width } }).html(w.content).appendTo(t), i = Z("<div>", { "class": "Zebra_Tooltip_Arrow" }).appendTo(t), a = Z("<div>").addClass("Zebra_Tooltip_Arrow_Border").appendTo(i), Z("<div>").appendTo(i), w.keep_visible && (t.on("mouseleave" + (w.close_on_click ? " click" : ""), function () { y(e) }), t.on("mouseenter", function () { g(e) })), t.appendTo("body"), w.sticky && o.addClass("Zebra_Tooltip_Has_Close"), l = t.outerWidth(), n = t.outerHeight(), r = a.outerWidth(), _ = a.outerHeight(), s = o.outerWidth(), p = o.outerHeight(), w = { tooltip: t, tooltip_width: l, tooltip_height: n + _ / 2, message: o, arrow_container: i, arrow_width: r, arrow_height: _, arrow: a }, t.css({ width: w.tooltip_width, height: w.tooltip_height }), w.tooltip_width = w.tooltip_width + (o.outerWidth() - s), w.tooltip_height = w.tooltip_height + (o.outerHeight() - p), t.css({ width: w.tooltip_width, height: w.tooltip_height, display: "none" }), w = Z.extend(e.data("Zebra_Tooltip"), w), e.data("Zebra_Tooltip", w)), w.sticky && !w.close && (Z("<a>", { "class": "Zebra_Tooltip_Close", href: "javascript:void(0)" }).html("&times;").on("click", function (t) { t.preventDefault(); var o = e.data("Zebra_Tooltip"); o.sticky = !1, e.data("Zebra_Tooltip", o), y(e) }).appendTo(w.message), w.close = !0, w = Z.extend(e.data("Zebra_Tooltip"), w), e.data("Zebra_Tooltip", w)), u = m.width(), T = m.height(), d = e.offset(), Z.extend(w, { element_left: d.left, element_top: d.top, element_width: e.outerWidth(), element_height: e.outerHeight() }), v = m.scrollTop(), b = m.scrollLeft(), h = "left" === w.position ? w.element_left - w.tooltip_width + w.arrow_width : "right" === w.position ? w.element_left + w.element_width - w.arrow_width : w.element_left + (w.element_width - w.tooltip_width) / 2, c = w.element_top - w.tooltip_height, f = "left" === w.position ? w.tooltip_width - w.arrow_width - w.arrow_width / 2 : "right" === w.position ? w.arrow_width / 2 : (w.tooltip_width - w.arrow_width) / 2, h + w.tooltip_width > u + b && (f -= u + b - (h + w.tooltip_width) - 6, h = u + b - w.tooltip_width - 6, f + w.arrow_width > w.tooltip_width - 6 && (f = w.tooltip_width - 6 - w.arrow_width), h + f + w.arrow_width / 2 < w.element_left && (f = -1e4)), h < b && (f -= b - h, h = b + 2, f < 0 && (f = w.arrow_width / 2), h + f + w.arrow_width / 2 > w.element_left + w.element_width && (f = -1e4)), w.message.css("margin-top", ""), w.arrow_container.removeClass("Zebra_Tooltip_Arrow_Top").addClass("Zebra_Tooltip_Arrow_Bottom"), c < v || "below" === w.vertical_alignment && w.element_top + w.element_height + w.vertical_offset + w.tooltip_height + w.animation_offset < T + v ? (c = w.element_top + w.element_height - w.vertical_offset, w.animation_offset = Math.abs(w.animation_offset), w.message.css("margin-top", w.arrow_height / 2), w.arrow_container.removeClass("Zebra_Tooltip_Arrow_Bottom").addClass("Zebra_Tooltip_Arrow_Top")) : (w.animation_offset = -Math.abs(w.animation_offset), c += w.vertical_offset), w.arrow_container.css("left", f), w.tooltip.css({ left: h, top: c }), Z.extend(w, { tooltip_left: h, tooltip_top: c, arrow_left: f }), w = Z.extend(e.data("Zebra_Tooltip"), w), e.data("Zebra_Tooltip", w), w }, g = function (t) { var o = t.data("Zebra_Tooltip"); clearTimeout(o.show_timeout), o.muted || (clearTimeout(o.hide_timeout), o.show_timeout = setTimeout(function () { (o = _(t)).onBeforeShow && "function" == typeof o.onBeforeShow && !1 === o.onBeforeShow(t, o.tooltip) || ("block" !== o.tooltip.css("display") && o.tooltip.css({ top: o.tooltip_top + o.animation_offset }), o.tooltip.css("display", "block"), o.tooltip.stop(), o.tooltip.animate({ top: o.tooltip_top, opacity: o.opacity }, o.animation_speed, function () { o.onShow && "function" == typeof o.onShow && o.onShow(t, o.tooltip) })) }, o.show_delay)) }, y = function (t) { var o = t.data("Zebra_Tooltip"); clearTimeout(o.hide_timeout), o.sticky || (clearTimeout(o.show_timeout), o.hide_timeout = setTimeout(function () { if (o.tooltip) { if (o.onBeforeHide && "function" == typeof o.onBeforeHide && !1 === o.onBeforeHide(t, o.tooltip)) return; o.close = !1, o.destroy && (o.muted = !0), t.data("Zebra_Tooltip", o), Z("a.Zebra_Tooltip_Close", o.tooltip).remove(), o.tooltip.stop(), o.tooltip.animate({ opacity: 0, top: o.tooltip_top + o.animation_offset }, o.animation_speed, function () { Z(this).css("display", "none"), o.onHide && "function" == typeof o.onHide && o.onHide(t, o.tooltip) }) } }, o.hide_delay)) }; r.hide = function (t, e) { t.each(function () { var t = Z(this), o = t.data("Zebra_Tooltip"); o && (o.sticky = !1, e && (o.destroy = !0), t.data("Zebra_Tooltip", o), y(t)) }) }, r.show = function (t, e) { t.each(function () { var t = Z(this), o = t.data("Zebra_Tooltip"); o && (o.sticky = !0, o.muted = !1, e && (o.destroy = !0), t.data("Zebra_Tooltip", o), g(t)) }) }, t.each(function () { var t, o = Z(this), e = o.attr("title"), i = o.data(), a = {}; for (t in i) 0 === t.indexOf("ztt_") && (t = t.replace(/^ztt\_/, ""), void 0 !== n[t] && (a[t] = i["ztt_" + t])); a = Z.extend(n, r.settings, l, a), e && (a.content = o.attr("title")), void 0 !== a.content && "" !== a.content.trim() && (o.on({ mouseenter: function () { e && Z(this).attr("title", ""), g(o) }, mouseleave: function () { y(o), e && Z(this).attr("title", e) } }), o.data("Zebra_Tooltip", Z.extend({ tooltip: null, show_timeout: null, hide_timeout: null, sticky: !1, destroy: !1, muted: !1 }, a)), a.prerender && _(o)) }) } }($);
 
 	function selectorSearch(selectors) {
 		var input = null;
-		return function() {
+		return function () {
 			if (input !== null)
 				return input;
 			for (var i = 0; i < selectors.length; i++) {
@@ -28,7 +28,7 @@
 		var input = null, form = null, extra = {};
 
 		var findInput = selectorSearch(inputSelectors);
-		var search = function() {
+		var search = function () {
 			input = findInput();
 			if (input === null)
 				return false;
@@ -48,18 +48,18 @@
 			}
 			return true;
 		};
-		this.locate = function() {
+		this.locate = function () {
 			if (!found)
 				found = search();
 			return found;
 		};
-		this.getInput = function() {
+		this.getInput = function () {
 			return found ? input : null;
 		};
-		this.getForm = function() {
+		this.getForm = function () {
 			return found ? form : null;
 		};
-		this.getExtra = function(key) {
+		this.getExtra = function (key) {
 			if (key in extra)
 				return extra[key];
 			return null;
@@ -95,13 +95,13 @@
 		}
 		return inputs;
 	}
-	
-	var wfls_init_captcha = function(actionCallback, log) {
+
+	var wfls_init_captcha = function (actionCallback, log) {
 		if (typeof log === 'undefined')
 			log = getRelevantInputs();
 		if (typeof grecaptcha === 'object') {
-			grecaptcha.ready(function() {
-				grecaptcha.execute(WFLSVars.recaptchasitekey, {action: 'login'}).then(function(token) {
+			grecaptcha.ready(function () {
+				grecaptcha.execute(WFLSVars.recaptchasitekey, { action: 'login' }).then(function (token) {
 					var tokenField = $('#wfls-captcha-token');
 					if (tokenField.length) {
 						tokenField.val(token);
@@ -149,7 +149,7 @@
 			dom.get(0).scrollIntoView();
 			return;
 		}
-		else if ($('.woocommerce').length > 0){
+		else if ($('.woocommerce').length > 0) {
 			var content = $('<div class="woocommerce wfls-login-message">');
 			var errorList = $('<ul role="alert">')
 				.addClass(type === 'error' ? 'woocommerce-error' : 'woocommerce-info');
@@ -201,16 +201,16 @@
 				)
 				.append(
 					$('<button>').text('Dismiss')
-						.on('click', function() {
+						.on('click', function () {
 							messageModal.remove();
 						})
 				)
 		);
 	}
-		
-	
-	var wfls_init_captcha_contact = function() {
-		$('.wfls-registration-captcha-contact').on('click', function(e) {
+
+
+	var wfls_init_captcha_contact = function () {
+		$('.wfls-registration-captcha-contact').on('click', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 
@@ -226,24 +226,24 @@
 				wrapper.append(field).append(nonce).append(button);
 				overlay.append(wrapper);
 				registrationLocator.getForm().css('position', 'relative').append(overlay);
-				
+
 				$('#wfls-message-nonce').val($(this).data('token'));
-	
-				$('#wfls-support-submit').on('click', function(e) {
+
+				$('#wfls-support-submit').on('click', function (e) {
 					e.preventDefault();
 					e.stopPropagation();
 
 					$('#login_error, p.message').remove();
-	
+
 					var data = registrationLocator.getForm().serialize();
-					data += '&action=wordfence_ls_register_support';
+					data += '&action=TFA_LS_register_support';
 
 					$.ajax({
 						type: 'POST',
 						url: WFLSVars.ajaxurl,
 						dataType: 'json',
 						data: data,
-						success: function(json) {
+						success: function (json) {
 							if (json.hasOwnProperty('error')) {
 								showLoginMessage(json.error, 'error');
 								var dom = $('<div id="login_error">' + json.error + '</div>');
@@ -256,7 +256,7 @@
 								$('#wfls-support-submit, #wfls-message').attr('disabled', true);
 							}
 						},
-						error: function(err) {
+						error: function (err) {
 							showLoginMessage(__('An error was encountered while trying to send the message. Please try again.'), 'error');
 							var dom = $('<div id="login_error"></div>');
 							dom.html(__('<strong>ERROR</strong>: An error was encountered while trying to send the message. Please try again.'));
@@ -278,11 +278,11 @@
 		clickOnSubmit = clickOnSubmit || false;
 		var clickSubmitInProgress = false;
 
-		this.getButtons = function() {
+		this.getButtons = function () {
 			return form.find(buttonSelector);
 		}
 
-		this.block = function() {
+		this.block = function () {
 			if (blocked)
 				return false;
 			blocked = true;
@@ -290,25 +290,25 @@
 			return true;
 		}
 
-		this.unblock = function() {
+		this.unblock = function () {
 			this.getButtons().removeClass('disabled').prop('disabled', false);
 			blocked = false;
 		}
 
-		this.release = function() {
+		this.release = function () {
 			released = true;
 		}
 
-		this.clickSubmit = function() {
+		this.clickSubmit = function () {
 			this.unblock();
 			var submitButton = this.getButtons().first();
-			setTimeout(function() {
+			setTimeout(function () {
 				submitButton.trigger('click');
 			}, 1);
 		}
 
-		this.initialize = function(callback) {
-			form.on('submit', function(event) {
+		this.initialize = function (callback) {
+			form.on('submit', function (event) {
 				if (released && (!clickOnSubmit || clickSubmitInProgress)) {
 					if (clickSubmitInProgress)
 						clickSubmitInProgress = false;
@@ -329,7 +329,7 @@
 
 	}
 
-	var wfls_query_ajax = function(blocker) {
+	var wfls_query_ajax = function (blocker) {
 		$('.wfls-login-message').remove();
 
 		if (!loginLocator.locate()) {
@@ -339,20 +339,20 @@
 		var form = loginLocator.getForm();
 		var log = loginLocator.getInput();
 		var pwd = loginLocator.getExtra('password');
-		
+
 		var data = $(form).serialize();
-		data += '&action=wordfence_ls_authenticate';
+		data += '&action=TFA_LS_authenticate';
 
 		$.ajax({
 			type: 'POST',
 			url: WFLSVars.ajaxurl,
 			dataType: 'json',
 			data: data,
-			success: function(json) {
+			success: function (json) {
 				if (json.hasOwnProperty('reset') && json.reset) {
 					$('#wfls-prompt-overlay').remove();
 				}
-				
+
 				if (json.hasOwnProperty('error')) {
 					showLoginMessage(json.error, 'error');
 					$('#wfls-token').val('');
@@ -376,10 +376,10 @@
 							captchaField = $('<input type="hidden" name="wfls-captcha-jwt" id="wfls-captcha-jwt" value=""/>');
 							form.append(captchaField);
 						}
-						
+
 						$('#wfls-captcha-jwt').val(json.captcha);
 					}
-					
+
 					blocker.release();
 					if (json.hasOwnProperty('two_factor_required') && json.two_factor_required) {
 						if ($('#wfls-prompt-overlay').length === 0) {
@@ -402,7 +402,7 @@
 							wrapper.append(button);
 							overlay.append(wrapper);
 							form.css('position', 'relative').append(overlay);
-							form.on('submit', function() {
+							form.on('submit', function () {
 								$('#wfls-token-submit').prop('disabled', true).addClass('disabled');
 							});
 							$('#wfls-token').focus();
@@ -416,7 +416,7 @@
 				}
 				blocker.unblock();
 			},
-			error: function(err) {
+			error: function (err) {
 				if (err.status == 503 || err.status == 403) {
 					if ($('.woocommerce').length > 0) {
 						if (err.status == 503) {
@@ -430,7 +430,7 @@
 					else {
 						window.location.reload(true);
 					}
-					
+
 					return;
 				}
 				showLoginMessage(__('<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again.'), 'error');
@@ -438,14 +438,14 @@
 			}
 		});
 	};
-	
-	$(function() {
+
+	$(function () {
 		//Login
 		if (loginLocator.locate()) {
 			var loginBlocker = new FormBlocker(loginLocator.getForm(), '#wp-submit,[type=submit][name=login]', true);
-			loginBlocker.initialize(function() {
+			loginBlocker.initialize(function () {
 				if (parseInt(WFLSVars.useCAPTCHA)) {
-					wfls_init_captcha(function() { wfls_query_ajax(loginBlocker); });
+					wfls_init_captcha(function () { wfls_query_ajax(loginBlocker); });
 				}
 				else {
 					wfls_query_ajax(loginBlocker);
@@ -456,9 +456,9 @@
 		//Registration
 		if (registrationLocator.locate() && parseInt(WFLSVars.useCAPTCHA)) {
 			var registrationBlocker = new FormBlocker(registrationLocator.getForm(), '[type=submit]');
-			registrationBlocker.initialize(function() {
+			registrationBlocker.initialize(function () {
 				wfls_init_captcha(
-					function() {
+					function () {
 						registrationBlocker.release();
 						registrationBlocker.clickSubmit();
 					},

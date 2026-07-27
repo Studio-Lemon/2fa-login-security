@@ -1,6 +1,6 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
 class Controller_Support
 {

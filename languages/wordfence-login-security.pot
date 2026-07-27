@@ -603,7 +603,7 @@ msgid "Show last login column on WP Users page"
 msgstr ""
 
 #: classes/controller/javascript.php:101
-msgid "The constant WORDFENCE_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP."
+msgid "The constant TFA_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP."
 msgstr ""
 
 #: classes/controller/javascript.php:102

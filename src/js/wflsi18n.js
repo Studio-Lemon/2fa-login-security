@@ -1,12 +1,12 @@
 (function () {
 	window.wflsi18n = {
-		__: function(text) {
-			if (window.WordfenceLSI18nStrings && text in window.WordfenceLSI18nStrings) {
-				return window.WordfenceLSI18nStrings[text];
+		__: function (text) {
+			if (window.TFAuthLSI18nStrings && text in window.TFAuthLSI18nStrings) {
+				return window.TFAuthLSI18nStrings[text];
 			}
 			return text;
 		},
-		_n: function(singular, plural, count) {
+		_n: function (singular, plural, count) {
 			if (count === 1) {
 				return window.wflsi18n.__(singular);
 			}
@@ -62,7 +62,7 @@
 					arg = argv[cursor]
 					for (k = 0; k < ph.keys.length; k++) {
 						if (arg == undefined) {
-							throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
+							throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k - 1]))
 						}
 						arg = arg[ph.keys[k]]
 					}
@@ -207,14 +207,14 @@
 				parse_tree.push(
 					{
 						placeholder: match[0],
-						param_no:    match[1],
-						keys:        match[2],
-						sign:        match[3],
-						pad_char:    match[4],
-						align:       match[5],
-						width:       match[6],
-						precision:   match[7],
-						type:        match[8]
+						param_no: match[1],
+						keys: match[2],
+						sign: match[3],
+						pad_char: match[4],
+						align: match[5],
+						width: match[6],
+						precision: match[7],
+						type: match[8]
 					}
 				)
 			}

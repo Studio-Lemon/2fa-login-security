@@ -1,10 +1,10 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-use WordfenceLS\Settings\Model_DB;
-use WordfenceLS\Settings\Model_WPOptions;
-use WordfenceLS\Utility_Number;
+use TFAuthLS\Settings\Model_DB;
+use TFAuthLS\Settings\Model_WPOptions;
+use TFAuthLS\Utility_Number;
 
 class Controller_Settings
 {
@@ -229,7 +229,7 @@ class Controller_Settings
 				return true;
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD:
 				$gracePeriodEnd = strtotime($value);
-				if ($gracePeriodEnd <= \WordfenceLS\Controller_Time::time()) {
+				if ($gracePeriodEnd <= \TFAuthLS\Controller_Time::time()) {
 					return __('The grace period end time must be in the future.', '2fa-login-security');
 				}
 				return true;
@@ -423,7 +423,7 @@ class Controller_Settings
 			 * @param string $role The name of the role.
 			 * @param string $state The state of 2FA on the role.
 			 */
-			do_action('wordfence_ls_changed_2fa_required', $role, $value);
+			do_action('TFA_LS_changed_2fa_required', $role, $value);
 
 			return true;
 		}
@@ -443,7 +443,7 @@ class Controller_Settings
 					 * @param bool $before The previous value.
 					 * @param bool $after The new value.
 					 */
-					do_action('wordfence_ls_xml_rpc_2fa_toggled', $before, $after);
+					do_action('TFA_LS_xml_rpc_2fa_toggled', $before, $after);
 				}
 				break;
 			case self::OPTION_IP_SOURCE:
@@ -459,7 +459,7 @@ class Controller_Settings
 					 * @param string $before The previous value.
 					 * @param string $after The new value.
 					 */
-					do_action('wordfence_ls_changed_ip_source', $before, $after);
+					do_action('TFA_LS_changed_ip_source', $before, $after);
 				}
 				break;
 			case self::OPTION_IP_TRUSTED_PROXIES:
@@ -475,7 +475,7 @@ class Controller_Settings
 					 * @param string[] $before The previous value.
 					 * @param string[] $after The new value.
 					 */
-					do_action('wordfence_ls_updated_trusted_proxies', $before, $after);
+					do_action('TFA_LS_updated_trusted_proxies', $before, $after);
 				}
 				break;
 			case self::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD:
@@ -491,7 +491,7 @@ class Controller_Settings
 					 * @param int $before The previous value.
 					 * @param int $after The new value.
 					 */
-					do_action('wordfence_ls_changed_grace_period', $before, $after);
+					do_action('TFA_LS_changed_grace_period', $before, $after);
 				}
 				break;
 			case self::OPTION_ALLOW_XML_RPC:
@@ -507,7 +507,7 @@ class Controller_Settings
 					 * @param bool $before The previous value.
 					 * @param bool $after The new value.
 					 */
-					do_action('wordfence_ls_xml_rpc_enabled_toggled', $before, $after);
+					do_action('TFA_LS_xml_rpc_enabled_toggled', $before, $after);
 				}
 				break;
 		}
@@ -564,7 +564,7 @@ class Controller_Settings
 
 	public function is_ntp_disabled_via_constant()
 	{
-		return defined('WORDFENCE_LS_DISABLE_NTP') && WORDFENCE_LS_DISABLE_NTP;
+		return defined('TFA_LS_DISABLE_NTP') && TFA_LS_DISABLE_NTP;
 	}
 
 	public function is_ntp_enabled($requireOffset = true)

@@ -1,10 +1,10 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-use WordfenceLS\Crypto\Model_JWT;
-use WordfenceLS\Crypto\Model_Symmetric;
-use WordfenceLS\Utility_Number;
+use TFAuthLS\Crypto\Model_JWT;
+use TFAuthLS\Crypto\Model_Symmetric;
+use TFAuthLS\Utility_Number;
 
 class Controller_AJAX
 {
@@ -129,9 +129,9 @@ class Controller_AJAX
 	{
 		foreach ($this->_actions as $action => $parameters) {
 			if (isset($parameters['nopriv']) && $parameters['nopriv']) {
-				add_action('wp_ajax_nopriv_wordfence_ls_' . $action, array($this, '_ajax_handler'));
+				add_action('wp_ajax_nopriv_TFA_LS_' . $action, array($this, '_ajax_handler'));
 			}
-			add_action('wp_ajax_wordfence_ls_' . $action, array($this, '_ajax_handler'));
+			add_action('wp_ajax_TFA_LS_' . $action, array($this, '_ajax_handler'));
 		}
 	}
 
@@ -151,7 +151,7 @@ class Controller_AJAX
 	public function _ajax_handler()
 	{
 		$action = (isset($_POST['action']) && is_string($_POST['action']) && $_POST['action']) ? $_POST['action'] : $_GET['action'];
-		if (preg_match('~wordfence_ls_([a-zA-Z_0-9]+)$~', $action, $matches)) {
+		if (preg_match('~TFA_LS_([a-zA-Z_0-9]+)$~', $action, $matches)) {
 			$action = $matches[1];
 			if (!isset($this->_actions[$action])) {
 				self::send_json(array('error' => esc_html__('An unknown action was provided.', '2fa-login-security')));
@@ -205,17 +205,17 @@ class Controller_AJAX
 			self::send_json(array('error' => wp_kses(sprintf(/* translators: Forgot password URL */__('<strong>ERROR</strong>: A username and password must be provided. <a href="%s" title="Password Lost and Found">Lost your password</a>?', '2fa-login-security'), wp_lostpassword_url()), array('strong' => array(), 'a' => array('href' => array(), 'title' => array())))));
 		}
 
-		$legacy2FAActive = Controller_WordfenceLS::shared()->legacy_2fa_active();
+		$legacy2FAActive = Controller_TFAuthLS::shared()->legacy_2fa_active();
 		if ($legacy2FAActive) { //Legacy 2FA is active, pass it on to the authenticate filter
 			self::send_json(array('login' => 1));
 		}
 
 		do_action_ref_array('wp_authenticate', array(&$username, &$password));
 
-		define('WORDFENCE_LS_AUTHENTICATION_CHECK', true); //Prevents our auth filter from recursing
+		define('TFA_LS_AUTHENTICATION_CHECK', true); //Prevents our auth filter from recursing
 		$user = wp_authenticate($username, $password);
 		if (is_object($user) && ($user instanceof \WP_User)) {
-			if (!Controller_Users::shared()->has_2fa_active($user) || Controller_Users::shared()->has_remembered_2fa($user) || defined('WORDFENCE_LS_COMBINED_IS_VALID')) { //Not enabled for this user, has a valid remembered cookie, or has already provided a 2FA code via the password field pass the credentials on to the normal login flow
+			if (!Controller_Users::shared()->has_2fa_active($user) || Controller_Users::shared()->has_remembered_2fa($user) || defined('TFA_LS_COMBINED_IS_VALID')) { //Not enabled for this user, has a valid remembered cookie, or has already provided a 2FA code via the password field pass the credentials on to the normal login flow
 				self::send_json(array('login' => 1));
 			}
 			self::send_json(array('login' => 1, 'two_factor_required' => true));

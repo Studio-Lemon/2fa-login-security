@@ -1,14 +1,14 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-use WordfenceLS\Controller_WordfenceLS;
-use WordfenceLS\Controller_Settings;
-use WordfenceLS\Model_Asset;
-use WordfenceLS\Model_Request;
-use WordfenceLS\Controller_Permissions;
-use WordfenceLS\Controller_Support;
-use WordfenceLS\Controller_Time;
+use TFAuthLS\Controller_TFAuthLS;
+use TFAuthLS\Controller_Settings;
+use TFAuthLS\Model_Asset;
+use TFAuthLS\Model_Request;
+use TFAuthLS\Controller_Permissions;
+use TFAuthLS\Controller_Support;
+use TFAuthLS\Controller_Time;
 
 class Controller_Javascript
 {
@@ -98,7 +98,7 @@ class Controller_Javascript
 			'Skipped' => __('Skipped', '2fa-login-security'),
 			'Show 2FA menu on WooCommerce Account page' => __('Show 2FA menu on WooCommerce Account page', '2fa-login-security'),
 			'Show last login column on WP Users page' => __('Show last login column on WP Users page', '2fa-login-security'),
-			'The constant WORDFENCE_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP.' => __('The constant WORDFENCE_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP.', '2fa-login-security'),
+			'The constant TFA_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP.' => __('The constant TFA_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP.', '2fa-login-security'),
 			'These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.' => __('These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line.', '2fa-login-security'),
 			'Trusted Proxies' => __('Trusted Proxies', '2fa-login-security'),
 			'Use single-column layout for WooCommerce/shortcode 2FA management interface' => __('Use single-column layout for WooCommerce/shortcode 2FA management interface', '2fa-login-security'),

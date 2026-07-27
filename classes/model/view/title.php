@@ -1,6 +1,6 @@
 <?php
 
-namespace WordfenceLS\View;
+namespace TFAuthLS\View;
 
 /**
  * Class Model_Title
@@ -10,20 +10,23 @@ namespace WordfenceLS\View;
  * @var string $helpURL The help URL.
  * @var string|Model_HTML $helpLink The text/HTML of the help link.
  */
-class Model_Title {
+class Model_Title
+{
 	private $_id;
 	private $_title;
 	private $_helpURL;
 	private $_helpLink;
-	
-	public function __construct($id, $title, $helpURL = null, $helpLink = null) {
+
+	public function __construct($id, $title, $helpURL = null, $helpLink = null)
+	{
 		$this->_id = $id;
 		$this->_title = $title;
 		$this->_helpURL = $helpURL;
 		$this->_helpLink = $helpLink;
 	}
-	
-	public function __get($name) {
+
+	public function __get($name)
+	{
 		switch ($name) {
 			case 'id':
 				return $this->_id;
@@ -34,7 +37,7 @@ class Model_Title {
 			case 'helpLink':
 				return $this->_helpLink;
 		}
-		
+
 		throw new \OutOfBoundsException('Invalid key: ' . $name);
 	}
 }

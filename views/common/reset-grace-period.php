@@ -1,8 +1,10 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('TFA_LS_VERSION')) {
+	exit;
+}
 
 if (!isset($defaultGracePeriod))
-	$defaultGracePeriod = \WordfenceLS\Controller_Settings::shared()->get_user_2fa_grace_period();
+	$defaultGracePeriod = \TFAuthLS\Controller_Settings::shared()->get_user_2fa_grace_period();
 $defaultGracePeriod = max($defaultGracePeriod, 1);
 $errorMessage = $gracePeriod === null ? __('Unable to Activate Grace Period', '2fa-login-security') : __('Unable to Reset Grace Period', '2fa-login-security');
 ?>
@@ -28,11 +30,11 @@ $errorMessage = $gracePeriod === null ? __('Unable to Activate Grace Period', '2
 			var failureMessage = $('#wfls-reset-grace-period-failed');
 			var overrideInput = $('#wfls-user-grace-period-override');
 			var button = $('#wfls-reset-grace-period');
+
 			function reset2faGracePeriod(userId, gracePeriodOverride, success, failure) {
 				var ajaxContext = (typeof WFLS === 'undefined' ? GWFLS : WFLS);
 				ajaxContext.ajax(
-					'wordfence_ls_reset_2fa_grace_period',
-					{
+					'TFA_LS_reset_2fa_grace_period', {
 						user_id: userId,
 						grace_period_override: gracePeriodOverride
 					},
@@ -40,14 +42,14 @@ $errorMessage = $gracePeriod === null ? __('Unable to Activate Grace Period', '2
 					failure
 				);
 			}
+
 			function handleError() {
 				if (typeof WFLS === 'object') {
 					WFLS.standaloneModal(
 						<?php echo json_encode($errorMessage) ?>,
 						<?php echo json_encode($gracePeriod === null ? __('An unexpected error occurred while attempting to activate the grace period.', '2fa-login-security') : __('An unexpected error occurred while attempting to reset the grace period.', '2fa-login-security')) ?>
 					);
-				}
-				else {
+				} else {
 					failureMessage.show();
 				}
 				button.prop('disabled', false);

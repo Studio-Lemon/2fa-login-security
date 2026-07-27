@@ -1,5 +1,7 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('TFA_LS_VERSION')) {
+	exit;
+}
 
 ?>
 <table id="wfls-grace-period-toggle-container" style="display: none">

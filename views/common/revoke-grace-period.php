@@ -1,5 +1,7 @@
 <?php
-if (!defined('WORDFENCE_LS_VERSION')) { exit; }
+if (!defined('TFA_LS_VERSION')) {
+	exit;
+}
 
 $errorMessage = __('Unable to Revoke Grace Period', '2fa-login-security');
 ?>
@@ -19,25 +21,25 @@ $errorMessage = __('Unable to Revoke Grace Period', '2fa-login-security');
 		$(function() {
 			var failureMessage = $('#wfls-revoke-grace-period-failed');
 			var button = $('#wfls-revoke-grace-period');
+
 			function revoke2faGracePeriod(userId, success, failure) {
 				var ajaxContext = (typeof WFLS === 'undefined' ? GWFLS : WFLS);
 				ajaxContext.ajax(
-					'wordfence_ls_revoke_2fa_grace_period',
-					{
+					'TFA_LS_revoke_2fa_grace_period', {
 						user_id: userId
 					},
 					success,
 					failure
 				);
 			}
+
 			function handleError() {
 				if (typeof WFLS === 'object') {
 					WFLS.standaloneModal(
 						<?php echo json_encode($errorMessage) ?>,
 						<?php echo json_encode(__('An unexpected error occurred while attempting to revoke the grace period.', '2fa-login-security')) ?>
 					);
-				}
-				else {
+				} else {
 					failureMessage.show();
 				}
 				button.prop('disabled', false);

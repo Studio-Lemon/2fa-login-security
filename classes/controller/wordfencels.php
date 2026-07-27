@@ -1,16 +1,16 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-use WordfenceLS\Controller_Javascript;
-use WordfenceLS\Text\Model_HTML;
-use WordfenceLS\Utility_URL;
-use WordfenceLS\View\Model_Tab;
-use WordfenceLS\View\Model_Title;
+use TFAuthLS\Controller_Javascript;
+use TFAuthLS\Text\Model_HTML;
+use TFAuthLS\Utility_URL;
+use TFAuthLS\View\Model_Tab;
+use TFAuthLS\View\Model_Title;
 
-class Controller_WordfenceLS
+class Controller_TFAuthLS
 {
-	const VERSION_KEY = 'wordfence_ls_version';
+	const VERSION_KEY = 'TFA_LS_version';
 	const USERS_PER_PAGE = 25;
 
 	private $management_assets_registered = false;
@@ -19,13 +19,13 @@ class Controller_WordfenceLS
 	/**
 	 * Returns the singleton Controller_Wordfence2FA.
 	 *
-	 * @return Controller_WordfenceLS
+	 * @return Controller_TFAuthLS
 	 */
 	public static function shared()
 	{
 		static $_shared = null;
 		if ($_shared === null) {
-			$_shared = new Controller_WordfenceLS();
+			$_shared = new Controller_TFAuthLS();
 		}
 		return $_shared;
 	}
@@ -41,11 +41,11 @@ class Controller_WordfenceLS
 
 	protected function _init_actions()
 	{
-		register_activation_hook(WORDFENCE_LS_FCPATH, array($this, '_install_plugin'));
-		register_deactivation_hook(WORDFENCE_LS_FCPATH, array($this, '_uninstall_plugin'));
+		register_activation_hook(TFA_LS_FCPATH, array($this, '_install_plugin'));
+		register_deactivation_hook(TFA_LS_FCPATH, array($this, '_uninstall_plugin'));
 
 		$versionInOptions = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, self::VERSION_KEY, false) : get_option(self::VERSION_KEY, false));
-		if (!$versionInOptions || version_compare(WORDFENCE_LS_VERSION, $versionInOptions, '>')) { //Either there is no version in options or the version in options is greater and we need to run the upgrade
+		if (!$versionInOptions || version_compare(TFA_LS_VERSION, $versionInOptions, '>')) { //Either there is no version in options or the version in options is greater and we need to run the upgrade
 			$this->_install();
 		}
 
@@ -80,7 +80,7 @@ class Controller_WordfenceLS
 
 	public function _wordpress_init()
 	{
-		load_plugin_textdomain('2fa-login-security', false, WORDFENCE_LS_PATH . 'languages');
+		load_plugin_textdomain('2fa-login-security', false, TFA_LS_PATH . 'languages');
 	}
 
 	public function _admin_init()
@@ -151,15 +151,15 @@ class Controller_WordfenceLS
 
 		$previousVersion = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, self::VERSION_KEY, '0.0.0') : get_option(self::VERSION_KEY, '0.0.0'));
 		if (is_multisite() && function_exists('update_network_option')) {
-			update_network_option(null, self::VERSION_KEY, WORDFENCE_LS_VERSION); //In case we have a fatal error we don't want to keep running install.	
+			update_network_option(null, self::VERSION_KEY, TFA_LS_VERSION); //In case we have a fatal error we don't want to keep running install.	
 		} else {
-			update_option(self::VERSION_KEY, WORDFENCE_LS_VERSION); //In case we have a fatal error we don't want to keep running install.
+			update_option(self::VERSION_KEY, TFA_LS_VERSION); //In case we have a fatal error we don't want to keep running install.
 		}
 
 		Controller_DB::shared()->install();
 		Controller_Settings::shared()->set_defaults();
 
-		if (\WordfenceLS\Controller_Time::time() > Controller_Settings::shared()->get_int(Controller_Settings::OPTION_LAST_SECRET_REFRESH) + 180 * 86400) {
+		if (\TFAuthLS\Controller_Time::time() > Controller_Settings::shared()->get_int(Controller_Settings::OPTION_LAST_SECRET_REFRESH) + 180 * 86400) {
 			Model_Crypto::refresh_secrets();
 		}
 
@@ -201,7 +201,7 @@ class Controller_WordfenceLS
 		if ($useCAPTCHA || Controller_Users::shared()->any_2fa_active()) {
 			$this->validate_email_verification_token(null, $verification);
 
-			Model_Script::create('wordfence-ls-login', Model_Asset::js('login.js'), array('jquery'), WORDFENCE_LS_VERSION)
+			Model_Script::create('wordfence-ls-login', Model_Asset::js('login.js'), array('jquery'), TFA_LS_VERSION)
 				->withTranslations(array(
 					'Message to Support' => __('Message to Support', '2fa-login-security'),
 					'Send' => __('Send', '2fa-login-security'),
@@ -219,7 +219,7 @@ class Controller_WordfenceLS
 				))
 				->setTranslationObjectName('WFLS_LOGIN_TRANSLATIONS')
 				->enqueue();
-			wp_enqueue_style('wordfence-ls-login', Model_Asset::css('login.css'), array(), WORDFENCE_LS_VERSION);
+			wp_enqueue_style('wordfence-ls-login', Model_Asset::css('login.css'), array(), TFA_LS_VERSION);
 			wp_localize_script('wordfence-ls-login', 'WFLSVars', array(
 				'ajaxurl' => Utility_URL::relative_admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('wp-ajax'),
@@ -247,18 +247,18 @@ class Controller_WordfenceLS
 	private function get_2fa_management_assets($embedded = false)
 	{
 		$assets = array(
-			Model_Script::create('wordfence-ls-jquery.qrcode', Model_Asset::js('jquery.qrcode.min.js'), array('jquery'), WORDFENCE_LS_VERSION),
+			Model_Script::create('wordfence-ls-jquery.qrcode', Model_Asset::js('jquery.qrcode.min.js'), array('jquery'), TFA_LS_VERSION),
 		);
-		$assets[] = Model_Script::create('wordfence-ls-admin', Model_Asset::js('admin.js'), array('jquery'), WORDFENCE_LS_VERSION)
+		$assets[] = Model_Script::create('wordfence-ls-admin', Model_Asset::js('admin.js'), array('jquery'), TFA_LS_VERSION)
 			->withTranslation('You have unsaved changes to your options. If you leave this page, those changes will be lost.', __('You have unsaved changes to your options. If you leave this page, those changes will be lost.', '2fa-login-security'))
 			->setTranslationObjectName('WFLS_ADMIN_TRANSLATIONS');
-		$assets[] = Model_Style::create('wordfence-ls-admin', Model_Asset::css('admin.css'), array(), WORDFENCE_LS_VERSION);
-		$assets[] = Model_Style::create('wordfence-ls-ionicons', Model_Asset::css('ionicons.css'), array(), WORDFENCE_LS_VERSION);
+		$assets[] = Model_Style::create('wordfence-ls-admin', Model_Asset::css('admin.css'), array(), TFA_LS_VERSION);
+		$assets[] = Model_Style::create('wordfence-ls-ionicons', Model_Asset::css('ionicons.css'), array(), TFA_LS_VERSION);
 		if ($embedded) {
 			$assets[] = Model_Style::create('dashicons');
-			$assets[] = Model_Style::create('wordfence-ls-embedded', Model_Asset::css('embedded.css'), array(), WORDFENCE_LS_VERSION);
+			$assets[] = Model_Style::create('wordfence-ls-embedded', Model_Asset::css('embedded.css'), array(), TFA_LS_VERSION);
 		} else {
-			$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), WORDFENCE_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('WordfenceLSI18nStrings');
+			$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), TFA_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('TFAuthLSI18nStrings');
 		}
 
 		return $assets;
@@ -288,11 +288,11 @@ class Controller_WordfenceLS
 		if (isset($_GET['page']) && $_GET['page'] == 'WFLS') {
 			$this->enqueue_2fa_management_assets();
 		} else {
-			wp_enqueue_style('wordfence-ls-admin-global', Model_Asset::css('admin-global.css'), array(), WORDFENCE_LS_VERSION);
+			wp_enqueue_style('wordfence-ls-admin-global', Model_Asset::css('admin-global.css'), array(), TFA_LS_VERSION);
 		}
 
 		if (Controller_Notices::shared()->has_notice(wp_get_current_user()) || in_array($hookSuffix, array('user-edit.php', 'user-new.php', 'profile.php'))) {
-			wp_enqueue_script('wordfence-ls-admin-global', Model_Asset::js('admin-global.js'), array('jquery'), WORDFENCE_LS_VERSION);
+			wp_enqueue_script('wordfence-ls-admin-global', Model_Asset::js('admin-global.js'), array('jquery'), TFA_LS_VERSION);
 
 			wp_localize_script('wordfence-ls-admin-global', 'GWFLSVars', array(
 				'ajaxurl' => admin_url('admin-ajax.php'),
@@ -451,8 +451,8 @@ class Controller_WordfenceLS
 			return $user;
 		}
 
-		$isLogin = !(defined('WORDFENCE_LS_AUTHENTICATION_CHECK') && WORDFENCE_LS_AUTHENTICATION_CHECK); //Checking for the purpose of prompting for 2FA, don't enforce it here
-		$isCombinedCheck = (defined('WORDFENCE_LS_CHECKING_COMBINED') && WORDFENCE_LS_CHECKING_COMBINED);
+		$isLogin = !(defined('TFA_LS_AUTHENTICATION_CHECK') && TFA_LS_AUTHENTICATION_CHECK); //Checking for the purpose of prompting for 2FA, don't enforce it here
+		$isCombinedCheck = (defined('TFA_LS_CHECKING_COMBINED') && TFA_LS_CHECKING_COMBINED);
 		$combinedTwoFactor = false;
 
 		/*
@@ -460,7 +460,7 @@ class Controller_WordfenceLS
 		 * to see if the user has provided a combined password in the format `<password><code>`, populating $user from
 		 * that if so.
 		 */
-		if (!defined('WORDFENCE_LS_CHECKING_COMBINED') && (!isset($_POST['wfls-token']) || !is_string($_POST['wfls-token'])) && (!is_object($user) || !($user instanceof \WP_User))) {
+		if (!defined('TFA_LS_CHECKING_COMBINED') && (!isset($_POST['wfls-token']) || !is_string($_POST['wfls-token'])) && (!is_object($user) || !($user instanceof \WP_User))) {
 			//Compatibility with WF legacy 2FA
 			$combinedTOTPRegex = '/((?:[0-9]{3}\s*){2})$/i';
 			$combinedRecoveryRegex = '/((?:[a-f0-9]{4}\s*){4})$/i';
@@ -482,13 +482,13 @@ class Controller_WordfenceLS
 			}
 
 			if (isset($revisedPassword)) {
-				define('WORDFENCE_LS_CHECKING_COMBINED', true); //Avoid recursing into this block
-				if (!defined('WORDFENCE_LS_AUTHENTICATION_CHECK')) {
-					define('WORDFENCE_LS_AUTHENTICATION_CHECK', true);
+				define('TFA_LS_CHECKING_COMBINED', true); //Avoid recursing into this block
+				if (!defined('TFA_LS_AUTHENTICATION_CHECK')) {
+					define('TFA_LS_AUTHENTICATION_CHECK', true);
 				}
 				$revisedUser = wp_authenticate($username, $revisedPassword);
 				if (is_object($revisedUser) && ($revisedUser instanceof \WP_User) && Controller_TOTP::shared()->validate_2fa($revisedUser, $code, $isLogin)) {
-					define('WORDFENCE_LS_COMBINED_IS_VALID', true); //This will cause the front-end to skip the 2FA prompt
+					define('TFA_LS_COMBINED_IS_VALID', true); //This will cause the front-end to skip the 2FA prompt
 					$user = $revisedUser;
 					$combinedTwoFactor = true;
 				}
@@ -511,7 +511,7 @@ class Controller_WordfenceLS
 				$in2faGracePeriod = false;
 				$time2faRequired = null;
 				if (Controller_Users::shared()->has_2fa_active($user)) {
-					$legacy2FAActive = Controller_WordfenceLS::shared()->legacy_2fa_active();
+					$legacy2FAActive = Controller_TFAuthLS::shared()->legacy_2fa_active();
 					if ($legacy2FAActive) {
 						return new \WP_Error('wfls_twofactor_required', wp_kses(__('<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field.', '2fa-login-security'), array('strong' => array())));
 					}

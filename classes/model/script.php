@@ -1,17 +1,18 @@
 <?php
 
-namespace WordfenceLS;
+namespace TFAuthLS;
 
-class Model_Script extends Model_Asset {
+class Model_Script extends Model_Asset
+{
 
 	private $translations = array();
 	private $translationObjectName = null;
 
-	public function enqueue() {
+	public function enqueue()
+	{
 		if ($this->registered) {
 			wp_enqueue_script($this->handle);
-		}
-		else {
+		} else {
 			wp_enqueue_script($this->handle, $this->source, $this->dependencies, $this->version);
 		}
 		if ($this->translationObjectName && !empty($this->translations)) {
@@ -19,11 +20,13 @@ class Model_Script extends Model_Asset {
 		}
 	}
 
-	public function isEnqueued() {
+	public function isEnqueued()
+	{
 		return wp_script_is($this->handle);
 	}
 
-	public function renderInline() {
+	public function renderInline()
+	{
 		if (empty($this->source))
 			return;
 ?>
@@ -31,24 +34,27 @@ class Model_Script extends Model_Asset {
 <?php
 	}
 
-	public function register() {
+	public function register()
+	{
 		wp_register_script($this->handle, $this->source, $this->dependencies, $this->version);
 		return parent::register();
 	}
 
-	public function withTranslation($placeholder, $translation) {
+	public function withTranslation($placeholder, $translation)
+	{
 		$this->translations[$placeholder] = $translation;
 		return $this;
 	}
 
-	public function withTranslations($translations) {
+	public function withTranslations($translations)
+	{
 		$this->translations = $translations;
 		return $this;
 	}
 
-	public function setTranslationObjectName($name) {
+	public function setTranslationObjectName($name)
+	{
 		$this->translationObjectName = $name;
 		return $this;
 	}
-
 }
