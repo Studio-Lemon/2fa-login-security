@@ -52,3 +52,9 @@ This file tracks implementation changes made while creating the public fork.
 - Replaced conditional Wordfence/core Font Awesome icon class usage in views with plugin-local icon classes.
 - Added lightweight CSS glyph fallbacks for the icon classes used by the plugin UI.
 - Removed bundled Font Awesome CSS and webfont assets.
+
+## Step 8 - Remove Vue dependency and use native admin UI
+- Replaced the Vue-mounted settings page with a server-rendered native WordPress admin form.
+- Added a dedicated authenticated form handler (`admin_post_wfls_save_settings`) to validate and persist settings updates.
+- Removed Vue-specific script loading, import-map injection, script tag mutation hooks, and Vue mount points.
+- Removed bundled Vue runtime and Vue settings app assets from the plugin package.

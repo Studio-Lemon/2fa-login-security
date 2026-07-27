@@ -14,7 +14,6 @@ class Controller_WordfenceLS {
 
 	private $management_assets_registered = false;
 	private $management_assets_enqueued = false;
-	private $use_core_font_awesome_styles = null;
 	
 	/**
 	 * Returns the singleton Controller_Wordfence2FA.
@@ -70,8 +69,7 @@ class Controller_WordfenceLS {
 			add_action('network_admin_menu', array($this, '_admin_menu'), $useSubmenu ? 55 : 10);
 		}
 		add_action('admin_enqueue_scripts', array($this, '_admin_enqueue_scripts'));
-		add_action('admin_print_scripts', array($this, '_setupImportMap'), 0);
-		add_filter('script_loader_tag', array($this, '_tagVueScriptAsModule') , 10, 3);
+		add_action('admin_post_wfls_save_settings', array($this, '_save_settings_form'));
 		
 		add_action('show_user_profile', array($this, '_edit_user_profile'), 0); //We can't add it to the password section directly -- priority 0 is as close as we can get
 		add_action('edit_user_profile', array($this, '_edit_user_profile'), 0);
@@ -297,9 +295,6 @@ END
 		}
 		else {
 			$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), WORDFENCE_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('WordfenceLSI18nStrings');
-			if (!WORDFENCE_LS_FROM_CORE) {
-				$assets[] = Model_Script::create('wordfence-ls-vue', Model_Asset::js('wordfence-login-security.js'), array('jquery'), WORDFENCE_LS_VERSION);
-			}
 		}
 
 		return $assets;
@@ -315,7 +310,6 @@ END
 		foreach ($this->get_2fa_management_script_data() as $key => $data) {
 			wp_localize_script('wordfence-ls-admin', $key, $data);
 		}
-		$this->setupJSConstants();
 		$this->management_assets_enqueued = true;
 	}
 
@@ -341,52 +335,65 @@ END
 
 	}
 
-	/**
-	 * Leverages an internalized version of `wp_localize_script` to pass through a set of constants for the Vue side to
-	 * avoid hardcoding values.
-	 */
-	private function setupJSConstants() {
-		static $called;
-		if ($called) {
-			return;
-		}
-		$called = true;
-
-		global $wp_scripts;
-		$script = "var WordfenceLSJSConstants = " . wp_json_encode(Controller_Javascript::jsConstants()) . ";\n";
-
-		$handle = WORDFENCE_LS_FROM_CORE ? 'wordfenceVuejs' : 'wordfence-ls-vue';
-		$data = $wp_scripts->get_data($handle, 'data');
-
-		if (!empty($data)) {
-			$script = "$data\n$script";
+	public function _save_settings_form() {
+		if (!current_user_can(Controller_Permissions::CAP_MANAGE_SETTINGS)) {
+			wp_die(esc_html__('You do not have permission to change options.', 'wordfence-login-security'));
 		}
 
-		$wp_scripts->add_data($handle, 'data', $script);
-	}
-
-	public function _setupImportMap() {
-		if (!WORDFENCE_LS_FROM_CORE && isset($_GET['page']) && $_GET['page'] == 'WFLS') {
-			echo "<script type=\"importmap\">" . wp_json_encode(Controller_Javascript::importMap()) . "</script>\n";
-		}
-	}
-
-	public function _tagVueScriptAsModule($tag, $handle, $src) {
-		if (WORDFENCE_LS_FROM_CORE) {
-			return $tag;
+		if (!isset($_POST['wfls-settings-nonce']) || !wp_verify_nonce($_POST['wfls-settings-nonce'], 'wfls-save-settings')) {
+			wp_die(esc_html__('Your browser sent an invalid security token. Please reload and try again.', 'wordfence-login-security'));
 		}
 
-		if ('wordfence-ls-vue' == $handle && strpos($tag, 'module') === false) {
-			if (($typeIndex = strpos($tag, 'type=')) !== false) {
-				$quoteChar = substr($tag, $typeIndex + 5, 1);
-				$closingQuoteIndex = strpos($tag, $quoteChar, $typeIndex + 6);
-				$tag = str_replace(substr($tag, $typeIndex, $closingQuoteIndex - $typeIndex + 1), 'type="module"', $tag);
+		$submitted = isset($_POST['wfls_settings']) && is_array($_POST['wfls_settings']) ? $_POST['wfls_settings'] : array();
+		$settings = Controller_Settings::shared();
+		$changes = array();
+
+		$boolOptions = array(
+			Controller_Settings::OPTION_XMLRPC_ENABLED,
+			Controller_Settings::OPTION_REMEMBER_DEVICE_ENABLED,
+			Controller_Settings::OPTION_ALLOW_XML_RPC,
+			Controller_Settings::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS,
+			Controller_Settings::OPTION_STACK_UI_COLUMNS,
+			Controller_Settings::OPTION_USE_NTP,
+			Controller_Settings::OPTION_DELETE_ON_DEACTIVATION,
+		);
+		foreach ($boolOptions as $optionKey) {
+			$changes[$optionKey] = isset($submitted[$optionKey]);
+		}
+
+		if (isset($submitted['remember-device-duration-days'])) {
+			$days = max(1, (int) $submitted['remember-device-duration-days']);
+			$changes[Controller_Settings::OPTION_REMEMBER_DEVICE_DURATION] = $days * 86400;
+		}
+
+		if (isset($submitted[Controller_Settings::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD])) {
+			$changes[Controller_Settings::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD] = (int) $submitted[Controller_Settings::OPTION_REQUIRE_2FA_USER_GRACE_PERIOD];
+		}
+
+		if (isset($submitted[Controller_Settings::OPTION_IP_SOURCE])) {
+			$changes[Controller_Settings::OPTION_IP_SOURCE] = sanitize_text_field($submitted[Controller_Settings::OPTION_IP_SOURCE]);
+		}
+
+		if (isset($submitted[Controller_Settings::OPTION_IP_TRUSTED_PROXIES])) {
+			$changes[Controller_Settings::OPTION_IP_TRUSTED_PROXIES] = sanitize_textarea_field($submitted[Controller_Settings::OPTION_IP_TRUSTED_PROXIES]);
+		}
+
+		foreach ($submitted as $key => $value) {
+			if (strpos($key, 'enabled-roles.') === 0) {
+				$changes[$key] = sanitize_text_field($value);
 			}
-			else {
-				$tag = str_replace(' src', ' type="module" src', $tag);
-			}
 		}
-		return $tag;
+
+		$valid = $settings->validate_multiple($changes);
+		$redirectURL = add_query_arg(array('page' => 'WFLS'), self_admin_url('admin.php'));
+		if ($valid !== true) {
+			wp_safe_redirect(add_query_arg(array('wfls_settings_error' => 1), $redirectURL));
+			exit;
+		}
+
+		$settings->set_multiple($changes, true);
+		wp_safe_redirect(add_query_arg(array('wfls_settings_saved' => 1), $redirectURL));
+		exit;
 	}
 	
 	public function _edit_user_profile($user) {

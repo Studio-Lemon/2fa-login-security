@@ -212,9 +212,4 @@ class Controller_Javascript {
 	 *
 	 * @return array
 	 */
-	public static function importMap() {
-		return array('imports' => array(
-			'vue' => Model_Asset::js('vue.esm-browser.prod.js'),
-		));
-	}
 }

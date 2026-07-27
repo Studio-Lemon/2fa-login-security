@@ -33,7 +33,6 @@ if (!defined('WORDFENCE_LS_VERSION')) { exit; }
 		</div> <!-- end row -->
 	</div> <!-- end container -->
 </div>
-<div class="wordfence-vue-wrapper" data-base-component="WFLSCommonModals"></div>
 <?php
 /**
  * Fires after the main content of 2 WFLS page has been output.
