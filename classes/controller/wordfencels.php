@@ -202,7 +202,7 @@ class Controller_TFAuthLS
 						'The 2FA code can be found in the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.' => __('The 2FA code can be found in the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.', '2fa-login-security'),
 					)
 				)
-				->setTranslationObjectName('WFLS_LOGIN_TRANSLATIONS')
+				->setTranslationObjectName('2FA_LS_LOGIN_TRANSLATIONS')
 				->enqueue();
 			wp_enqueue_style('wordfence-ls-login', Model_Asset::css('login.css'), array(), TFA_LS_VERSION);
 			wp_localize_script(
