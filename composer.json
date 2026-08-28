@@ -12,8 +12,8 @@
     "wp-coding-standards/wpcs": "^3.1"
   },
   "scripts": {
-    "phpcs": "vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
-    "phpcbf": "vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
+    "cs": "@php ./vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
+    "cs:fix": "@php ./vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
     "rector": "vendor/bin/rector process",
     "rector:dry-run": "vendor/bin/rector process --dry-run"
   },
