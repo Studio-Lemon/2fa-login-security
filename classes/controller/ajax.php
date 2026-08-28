@@ -113,13 +113,6 @@ class Controller_AJAX
 				}),
 				'required_parameters' => array(),
 			),
-			'dismiss_persistent_notice' => array(
-				'handler' => array($this, '_ajax_dismiss_persistent_notice_callback'),
-				'permissions' => array(Controller_Permissions::CAP_MANAGE_SETTINGS => function () {
-					return __('You do not have permission to dismiss this notice.', '2fa-login-security');
-				}),
-				'required_parameters' => array('nonce', 'notice_id')
-			)
 		);
 
 		$this->_init_actions();
@@ -570,17 +563,5 @@ class Controller_AJAX
 	public function _ajax_disable_ntp_callback(): void
 	{
 		Controller_Settings::shared()->disable_ntp_cron();
-	}
-
-	public function _ajax_dismiss_persistent_notice_callback(): void
-	{
-		$userId = get_current_user_id();
-		$noticeId = $_POST['notice_id'];
-		if ($userId !== 0 && Controller_Notices::shared()->dismiss_persistent_notice($userId, $noticeId)) {
-			self::send_json(array('success' => true));
-		}
-		self::send_json(array(
-			'error' => esc_html__('Unable to dismiss notice', '2fa-login-security')
-		));
 	}
 }

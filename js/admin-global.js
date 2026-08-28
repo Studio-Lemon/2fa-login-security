@@ -2,13 +2,6 @@
 	window['GWFLS'] = {
 		init: function () {
 			this.register_create_user_events();
-
-			$('.wfls-persistent-notice').on('click', 'button', function () {
-				GWFLS.ajax(
-					'TFA_LS_dismiss_persistent_notice',
-					{ notice_id: $(this).parent('.notice').attr('id') },
-				);
-			});
 		},
 
 		/**

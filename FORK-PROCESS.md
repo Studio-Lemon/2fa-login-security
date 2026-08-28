@@ -69,3 +69,9 @@
 - Added `src/css/` and `src/js/` directories as stable source locations for front-end assets.
 - Seeded source files from currently shipped versioned assets to establish an editable baseline.
 - Added `src/README.md` documenting source-to-bundle mapping and current workflow state.
+
+## Step 10 - Remove standalone-discontinuing persistent notice and dismiss mechanism
+
+- Removed the unused `wfls-standalone-will-be-discontinued` persistent notice identifier, which referenced the original Wordfence standalone-plugin messaging and had no active caller in this fork.
+- Removed the generic persistent-notice dismiss mechanism (`wfls-dismiss-{noticeId}` user meta key, `register_persistent_notice()`/`has_persistent_notices()`/`dismiss_persistent_notice()`, and the `dismiss_persistent_notice` AJAX action) since it had no remaining registered notices to serve.
+- Removed the matching front-end dismiss handler for `.wfls-persistent-notice` in `admin-global.js` and rebuilt bundled assets.
