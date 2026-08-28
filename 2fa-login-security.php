@@ -85,7 +85,6 @@ require_once __DIR__ . '/classes/controller/totp.php';
 require_once __DIR__ . '/classes/controller/users.php';
 require_once __DIR__ . '/classes/controller/whitelist.php';
 require_once __DIR__ . '/classes/controller/ajax.php';
-require_once __DIR__ . '/classes/controller/javascript.php';
 require_once __DIR__ . '/classes/controller/2fa-login-security.php';
 
 if (! defined('TFA_LS_VERSIONONLY_MODE')) { // Used to get version from file
