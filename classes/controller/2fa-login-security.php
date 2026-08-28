@@ -2,7 +2,6 @@
 
 namespace TFAuthLS;
 
-use TFAuthLS\Controller_Javascript;
 use TFAuthLS\Text\Model_HTML;
 use TFAuthLS\Utility_URL;
 use TFAuthLS\View\Model_Tab;
@@ -283,7 +282,6 @@ class Controller_TFAuthLS
 		$assets[] = Model_Style::create('2fa-ls-admin', Model_Asset::css('admin.css'), array(), TFA_LS_VERSION);
 
 
-		$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), TFA_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('TFAuthLSI18nStrings');
 
 
 		return $assets;
