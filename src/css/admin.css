@@ -919,9 +919,7 @@ hr.wfls-half {
   background-color: #fff;
   color: #777;
 }
-.wordfenceTopTab.active {
-  display: block;
-}
+
 .wfLoadMoreButton.disabled,
 .wfLoadMoreButton[disabled] {
   pointer-events: none;
