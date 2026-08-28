@@ -184,7 +184,7 @@ class Controller_TFAuthLS
 		if (Controller_Users::shared()->any_2fa_active()) {
 			$this->validate_email_verification_token(null, $verification);
 
-			Model_Script::create('wordfence-ls-login', Model_Asset::js('login.js'), array('jquery'), TFA_LS_VERSION)
+			Model_Script::create('2fa-ls-login', Model_Asset::js('login.js'), array('jquery'), TFA_LS_VERSION)
 				->withTranslations(
 					array(
 						'Message to Support'   => __('Message to Support', '2fa-login-security'),
@@ -204,9 +204,9 @@ class Controller_TFAuthLS
 				)
 				->setTranslationObjectName('2FA_LS_LOGIN_TRANSLATIONS')
 				->enqueue();
-			wp_enqueue_style('wordfence-ls-login', Model_Asset::css('login.css'), array(), TFA_LS_VERSION);
+			wp_enqueue_style('2fa-ls-login', Model_Asset::css('login.css'), array(), TFA_LS_VERSION);
 			wp_localize_script(
-				'wordfence-ls-login',
+				'2fa-ls-login',
 				'WFLSVars',
 				array(
 					'ajaxurl'       => Utility_URL::relative_admin_url('admin-ajax.php'),
@@ -275,12 +275,12 @@ class Controller_TFAuthLS
 	private function get_2fa_management_assets(): array
 	{
 		$assets   = array(
-			Model_Script::create('wordfence-ls-jquery.qrcode', Model_Asset::js('jquery.qrcode.min.js'), array('jquery'), TFA_LS_VERSION),
+			Model_Script::create('2fa-ls-jquery.qrcode', Model_Asset::js('jquery.qrcode.min.js'), array('jquery'), TFA_LS_VERSION),
 		);
-		$assets[] = Model_Script::create('wordfence-ls-admin', Model_Asset::js('admin.js'), array('jquery'), TFA_LS_VERSION)
+		$assets[] = Model_Script::create('2fa-ls-admin', Model_Asset::js('admin.js'), array('jquery'), TFA_LS_VERSION)
 			->withTranslation('You have unsaved changes to your options. If you leave this page, those changes will be lost.', __('You have unsaved changes to your options. If you leave this page, those changes will be lost.', '2fa-login-security'))
 			->setTranslationObjectName('WFLS_ADMIN_TRANSLATIONS');
-		$assets[] = Model_Style::create('wordfence-ls-admin', Model_Asset::css('admin.css'), array(), TFA_LS_VERSION);
+		$assets[] = Model_Style::create('2fa-ls-admin', Model_Asset::css('admin.css'), array(), TFA_LS_VERSION);
 
 
 		$assets[] = Model_Script::create('wflsi18njs', Model_Asset::js('wflsi18n.js'), array(), TFA_LS_VERSION)->withTranslations(Controller_Javascript::i18nStrings())->setTranslationObjectName('TFAuthLSI18nStrings');
@@ -300,7 +300,7 @@ class Controller_TFAuthLS
 			$asset->enqueue();
 		}
 		foreach ($this->get_2fa_management_script_data() as $key => $data) {
-			wp_localize_script('wordfence-ls-admin', $key, $data);
+			wp_localize_script('2fa-ls-admin', $key, $data);
 		}
 		$this->management_assets_enqueued = true;
 	}
@@ -313,14 +313,14 @@ class Controller_TFAuthLS
 		if (isset($_GET['page']) && $_GET['page'] == 'WFLS') {
 			$this->enqueue_2fa_management_assets();
 		} else {
-			wp_enqueue_style('wordfence-ls-admin-global', Model_Asset::css('admin-global.css'), array(), TFA_LS_VERSION);
+			wp_enqueue_style('2fa-ls-admin-global', Model_Asset::css('admin-global.css'), array(), TFA_LS_VERSION);
 		}
 
 		if (Controller_Notices::shared()->has_notice(wp_get_current_user()) || in_array($hookSuffix, array('user-edit.php', 'user-new.php', 'profile.php'))) {
-			wp_enqueue_script('wordfence-ls-admin-global', Model_Asset::js('admin-global.js'), array('jquery'), TFA_LS_VERSION);
+			wp_enqueue_script('2fa-ls-admin-global', Model_Asset::js('admin-global.js'), array('jquery'), TFA_LS_VERSION);
 
 			wp_localize_script(
-				'wordfence-ls-admin-global',
+				'2fa-ls-admin-global',
 				'GWFLSVars',
 				array(
 					'ajaxurl' => admin_url('admin-ajax.php'),
@@ -415,8 +415,8 @@ class Controller_TFAuthLS
 ?>
 			<h2 id="wfls-user-settings"><?php esc_html_e('2FA Login Security', '2fa-login-security'); ?></h2>
 			<table class="form-table">
-				<tr id="wordfence-ls">
-					<th><label for="wordfence-ls-btn"><?php esc_html_e('2FA Status', '2fa-login-security'); ?></label></th>
+				<tr id="2fa-ls">
+					<th><label for="2fa-ls-btn"><?php esc_html_e('2FA Status', '2fa-login-security'); ?></label></th>
 					<td>
 						<?php if ($userAllowed2fa) : ?>
 							<p>

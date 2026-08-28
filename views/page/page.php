@@ -10,7 +10,7 @@ if (! defined('TFA_LS_VERSION')) {
  * @var array $sections The content tabs, each element is an array of the syntax array('tab' => Model_Tab instance, 'title' => Title instance, 'content' => HTML content). Required.
  */
 ?>
-<div class="wrap wordfence-ls">
+<div class="wrap tfa-ls-page">
 	<div class="wfls-container-fluid">
 		<?php
 		$tabs = array_map(

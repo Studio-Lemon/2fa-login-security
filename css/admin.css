@@ -876,21 +876,21 @@ fieldset[disabled] .wfls-checkbox label {
   pointer-events: none;
 }
 @media (min-width: 768px) {
-  .wrap.wordfence-ls {
+  .wrap.tfa-ls-page {
     max-width: 750px;
   }
 }
 @media (min-width: 992px) {
-  .wrap.wordfence-ls {
+  .wrap.tfa-ls-page {
     max-width: 970px;
   }
 }
 @media (min-width: 1200px) {
-  .wrap.wordfence-ls {
+  .wrap.tfa-ls-page {
     max-width: 1170px;
   }
 }
-.wrap.wordfence-ls > .wfls-container-fluid {
+.wrap.tfa-ls-page > .wfls-container-fluid {
   padding-left: 0;
   padding-right: 0;
 }
@@ -901,7 +901,7 @@ hr.wfls-half {
   width: 50%;
   margin: 1.25rem auto;
 }
-.wrap.wordfence-ls {
+.wrap.tfa-ls-page {
   direction: ltr;
 }
 .wfls-header-icon {
