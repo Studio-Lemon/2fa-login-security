@@ -10,7 +10,6 @@ Requires at least: 4.7
 Requires PHP: 7.0
 Text Domain: 2fa-login-security
 Domain Path: /languages
-@copyright Copyright (C) 2019-2023 Defiant Inc.
 */
 if (defined('WP_INSTALLING') && WP_INSTALLING) {
 	return;
@@ -87,7 +86,7 @@ require_once __DIR__ . '/classes/controller/users.php';
 require_once __DIR__ . '/classes/controller/whitelist.php';
 require_once __DIR__ . '/classes/controller/ajax.php';
 require_once __DIR__ . '/classes/controller/javascript.php';
-require_once __DIR__ . '/classes/controller/wordfencels.php';
+require_once __DIR__ . '/classes/controller/2fa-login-security.php';
 
 if (! defined('TFA_LS_VERSIONONLY_MODE')) { // Used to get version from file
 	\TFAuthLS\Controller_TFAuthLS::shared()->init();
