@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-28T19:07:50+00:00\n"
+"POT-Creation-Date: 2026-08-28T19:25:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: 2fa-login-security\n"
 
 #. Plugin Name of the plugin
 #: 2fa-login-security.php
-#: classes/controller/2fa-login-security.php:416
+#: classes/controller/2fa-login-security.php:414
 msgid "2FA Login Security"
 msgstr ""
 
@@ -36,238 +36,233 @@ msgid "https://wordpress.org/plugins/2fa-login-security/"
 msgstr ""
 
 #. translators: Configuration URL
-#: classes/controller/2fa-login-security.php:98
+#: classes/controller/2fa-login-security.php:97
 #, php-format
 msgid "XML-RPC authentication is disabled. Jetpack is currently active and requires XML-RPC authentication to work correctly. <a href=\"%s\">Manage Settings</a>"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:190
+#: classes/controller/2fa-login-security.php:189
 msgid "Message to Support"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:191
+#: classes/controller/2fa-login-security.php:190
 msgid "Send"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:192
+#: classes/controller/2fa-login-security.php:191
 msgid "An error was encountered while trying to send the message. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:193
+#: classes/controller/2fa-login-security.php:192
 msgid "<strong>ERROR</strong>: An error was encountered while trying to send the message. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:194
+#: classes/controller/2fa-login-security.php:193
 msgid "Login failed with status code 403. Please contact the site administrator."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:195
+#: classes/controller/2fa-login-security.php:194
 msgid "<strong>ERROR</strong>: Login failed with status code 403. Please contact the site administrator."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:196
+#: classes/controller/2fa-login-security.php:195
 msgid "Login failed with status code 503. Please contact the site administrator."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:197
+#: classes/controller/2fa-login-security.php:196
 msgid "<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:198
+#: classes/controller/2fa-login-security.php:197
 msgid "2FA Code"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:199
+#: classes/controller/2fa-login-security.php:198
 msgid "Remember for 30 days"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:200
+#: classes/controller/2fa-login-security.php:199
 msgid "Log In"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:201
+#: classes/controller/2fa-login-security.php:200
 msgid "<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:202
+#: classes/controller/2fa-login-security.php:201
 msgid "The 2FA code can be found in the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:235
-#: classes/controller/2fa-login-security.php:266
-#: classes/controller/javascript.php:43
+#: classes/controller/2fa-login-security.php:234
+#: classes/controller/2fa-login-security.php:265
 msgid "Close"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:254
+#: classes/controller/2fa-login-security.php:253
 msgid "Reload"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:281
+#: classes/controller/2fa-login-security.php:280
 msgid "You have unsaved changes to your options. If you leave this page, those changes will be lost."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:336
+#: classes/controller/2fa-login-security.php:334
 #: classes/controller/ajax.php:65
 #: classes/controller/ajax.php:79
 msgid "You do not have permission to change options."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:340
+#: classes/controller/2fa-login-security.php:338
 msgid "Your browser sent an invalid security token. Please reload and try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:419
+#: classes/controller/2fa-login-security.php:417
 #: classes/controller/users.php:556
 msgid "2FA Status"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:423
-#: classes/controller/2fa-login-security.php:690
+#: classes/controller/2fa-login-security.php:421
+#: classes/controller/2fa-login-security.php:688
 #: views/manage/grace-period.php:24
 msgid "Locked Out"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:423
+#: classes/controller/2fa-login-security.php:421
 #: classes/controller/users.php:575
 msgid "Active"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:423
+#: classes/controller/2fa-login-security.php:421
 #: classes/controller/users.php:581
 msgid "Inactive"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:426
+#: classes/controller/2fa-login-security.php:424
 #: views/manage/grace-period.php:52
 msgid "Two-factor authentication is required for your account, but has not been configured."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:426
+#: classes/controller/2fa-login-security.php:424
 #: views/manage/grace-period.php:53
 msgid "Two-factor authentication is required for this account, but has not been configured."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:427
+#: classes/controller/2fa-login-security.php:425
 msgid "2FA is active."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:427
+#: classes/controller/2fa-login-security.php:425
 msgid "2FA is inactive."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:429
-#: classes/controller/2fa-login-security.php:450
-#: classes/controller/javascript.php:64
+#: classes/controller/2fa-login-security.php:427
+#: classes/controller/2fa-login-security.php:448
 msgid "Learn More"
 msgstr ""
 
 #. translators: Date
-#: classes/controller/2fa-login-security.php:436
+#: classes/controller/2fa-login-security.php:434
 #, php-format
 msgid "Two-factor authentication must be activated for your account prior to %s to avoid losing access."
 msgstr ""
 
 #. translators: Date
-#: classes/controller/2fa-login-security.php:437
+#: classes/controller/2fa-login-security.php:435
 #, php-format
 msgid "Two-factor authentication must be activated for this account prior to %s."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:446
+#: classes/controller/2fa-login-security.php:444
 msgid "Manage 2FA"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:446
+#: classes/controller/2fa-login-security.php:444
 msgid "Activate 2FA"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:450
-#: classes/controller/javascript.php:123
+#: classes/controller/2fa-login-security.php:448
 #: views/page/settings.php:9
 msgid "Disabled"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:450
+#: classes/controller/2fa-login-security.php:448
 msgid "Two-factor authentication is not currently enabled for this account type. To enable it, visit the 2FA Settings page."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:473
+#: classes/controller/2fa-login-security.php:471
 msgid "Manage 2FA Settings"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:546
+#: classes/controller/2fa-login-security.php:544
 msgid "<strong>CODE INVALID</strong>: The 2FA code provided is either expired or invalid. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:554
+#: classes/controller/2fa-login-security.php:552
 msgid "<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:556
+#: classes/controller/2fa-login-security.php:554
 msgid "<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:559
+#: classes/controller/2fa-login-security.php:557
 msgid "<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your account. Please contact the site administrator."
 msgstr ""
 
 #. translators: 1. Date; 2. Configuration URL
-#: classes/controller/2fa-login-security.php:562
+#: classes/controller/2fa-login-security.php:560
 #, php-format
 msgid "You do not currently have two-factor authentication active on your account, which will be required beginning %1$s. <a href=\"%2$s\">Configure 2FA</a>"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:610
+#: classes/controller/2fa-login-security.php:608
 msgid "Email verification succeeded. Please continue logging in."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:612
+#: classes/controller/2fa-login-security.php:610
 msgid "Email verification invalid or expired. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:648
-#: classes/controller/2fa-login-security.php:649
+#: classes/controller/2fa-login-security.php:646
+#: classes/controller/2fa-login-security.php:647
 msgid "Login Security"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:682
-#: classes/controller/javascript.php:144
+#: classes/controller/2fa-login-security.php:680
 #: views/page/settings.php:121
 #: views/settings/user-stats.php:35
 msgid "Super Administrator"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:686
-#: classes/controller/javascript.php:59
+#: classes/controller/2fa-login-security.php:684
 #: views/manage/grace-period.php:24
 msgid "Grace Period"
 msgstr ""
 
 #. translators: User count
-#: classes/controller/2fa-login-security.php:706
+#: classes/controller/2fa-login-security.php:704
 #, php-format
 msgid "Users without 2FA active (%s)"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:726
-#: classes/controller/2fa-login-security.php:727
+#: classes/controller/2fa-login-security.php:724
+#: classes/controller/2fa-login-security.php:725
 msgid "Two-Factor Authentication"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:727
+#: classes/controller/2fa-login-security.php:725
 msgid "Learn more<span class=\"wfls-hidden-xs\"> about Two-Factor Authentication</span>"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:739
+#: classes/controller/2fa-login-security.php:737
 msgid "Settings"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:740
+#: classes/controller/2fa-login-security.php:738
 msgid "Login Security Settings"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:740
+#: classes/controller/2fa-login-security.php:738
 msgid "Learn more<span class=\"wfls-hidden-xs\"> about Login Security</span>"
 msgstr ""
 
@@ -500,314 +495,6 @@ msgstr ""
 msgid "Failed to reset grace period"
 msgstr ""
 
-#: classes/controller/javascript.php:27
-msgid "(definitely a human)"
-msgstr ""
-
-#: classes/controller/javascript.php:28
-msgid "(probably a bot)"
-msgstr ""
-
-#: classes/controller/javascript.php:29
-msgid "(probably a human)"
-msgstr ""
-
-#. translators: Username
-#: classes/controller/javascript.php:30
-#: classes/controller/users.php:658
-msgid "2FA"
-msgstr ""
-
-#: classes/controller/javascript.php:31
-msgid "2FA Notifications"
-msgstr ""
-
-#: classes/controller/javascript.php:32
-msgid "2FA Relative URL (optional)"
-msgstr ""
-
-#: classes/controller/javascript.php:33
-msgid "2FA Role"
-msgstr ""
-
-#: classes/controller/javascript.php:34
-msgid "2FA Roles"
-msgstr ""
-
-#: classes/controller/javascript.php:35
-msgid "2FA management shortcode"
-msgstr ""
-
-#: classes/controller/javascript.php:36
-msgid "Allow remembering device for 30 days"
-msgstr ""
-
-#: classes/controller/javascript.php:37
-msgid "An error occurred"
-msgstr ""
-
-#: classes/controller/javascript.php:38
-msgid "An error was encountered while trying to disable NTP. Please try again."
-msgstr ""
-
-#: classes/controller/javascript.php:39
-msgid "An error was encountered while trying to reset the NTP state. Please try again."
-msgstr ""
-
-#: classes/controller/javascript.php:40
-msgid "An error was encountered while trying to send the notification. Please try again."
-msgstr ""
-
-#: classes/controller/javascript.php:41
-#: views/manage/deactivate.php:46
-#: views/manage/regenerate.php:33
-msgid "Cancel"
-msgstr ""
-
-#: classes/controller/javascript.php:42
-msgid "Cancel Changes"
-msgstr ""
-
-#: classes/controller/javascript.php:44
-msgid "Count"
-msgstr ""
-
-#: classes/controller/javascript.php:45
-msgid "Detected IP(s)"
-msgstr ""
-
-#: classes/controller/javascript.php:46
-#: views/common/reset-grace-period.php:16
-msgid "days"
-msgstr ""
-
-#: classes/controller/javascript.php:47
-msgid "Delete Login Security tables and data on deactivation"
-msgstr ""
-
-#: classes/controller/javascript.php:48
-msgid "Disable"
-msgstr ""
-
-#: classes/controller/javascript.php:49
-msgid "Disable XML-RPC authentication"
-msgstr ""
-
-#: classes/controller/javascript.php:50
-msgid "Edit trusted proxies"
-msgstr ""
-
-#: classes/controller/javascript.php:51
-msgid "e.g., /my-account/"
-msgstr ""
-
-#: classes/controller/javascript.php:52
-msgid "Error Disabling NTP"
-msgstr ""
-
-#: classes/controller/javascript.php:53
-msgid "Error Resetting NTP"
-msgstr ""
-
-#: classes/controller/javascript.php:54
-msgid "Error Saving Option"
-msgstr ""
-
-#: classes/controller/javascript.php:55
-msgid "Error Saving Options"
-msgstr ""
-
-#: classes/controller/javascript.php:56
-msgid "Error Sending Notification"
-msgstr ""
-
-#: classes/controller/javascript.php:57
-msgid "For roles that require 2FA, users will have this many days to set up 2FA. Failure to set up 2FA during this period will result in the user losing account access. This grace period will apply to new users from the time of account creation. For existing users, this grace period will apply relative to the time at which the requirement is implemented. This grace period will not automatically apply to admins and must be manually enabled for each admin user."
-msgstr ""
-
-#: classes/controller/javascript.php:58
-msgid "General"
-msgstr ""
-
-#: classes/controller/javascript.php:60
-msgid "How to get IPs"
-msgstr ""
-
-#: classes/controller/javascript.php:61
-msgid "If enabled, users with 2FA enabled may choose to be prompted for a code only once every 30 days per device."
-msgstr ""
-
-#: classes/controller/javascript.php:62
-msgid "If enabled, XML-RPC calls that require authentication will also require a valid 2FA code to be appended to the password. You must choose the \"Skipped\" option if you use the WordPress app, the Jetpack plugin, or other services that require XML-RPC."
-msgstr ""
-
-#: classes/controller/javascript.php:63
-msgid "If enabled, all settings and 2FA records will be deleted on deactivation. If later reactivated, all users that previously had 2FA active will need to set it up again."
-msgstr ""
-
-#: classes/controller/javascript.php:65
-msgid "NTP"
-msgstr ""
-
-#: classes/controller/javascript.php:66
-msgid "NTP is a protocol that allows for remote time synchronization. 2FA Login Security uses this protocol to ensure that it has the most accurate time which is necessary for TOTP-based two-factor authentication."
-msgstr ""
-
-#: classes/controller/javascript.php:67
-msgid "NTP is currently <strong>enabled</strong>."
-msgstr ""
-
-#. translators: number of attempts
-#: classes/controller/javascript.php:68
-#, php-format
-msgid "NTP is currently disabled as %d subsequent attempts have failed."
-msgstr ""
-
-#. translators: number of attempts
-#: classes/controller/javascript.php:69
-msgid "NTP updates are currently failing."
-msgstr ""
-
-#: classes/controller/javascript.php:70
-msgid "NTP was manually disabled."
-msgstr ""
-
-#. translators: number of attempts
-#: classes/controller/javascript.php:71
-#, php-format
-msgid "NTP will be automatically disabled after %d more attempts."
-msgstr ""
-
-#. translators: number of attempts
-#: classes/controller/javascript.php:72
-msgid "NTP will be automatically disabled after 1 more attempt."
-msgstr ""
-
-#: classes/controller/javascript.php:73
-msgid "Notification Results"
-msgstr ""
-
-#: classes/controller/javascript.php:74
-msgid "Notification Sent"
-msgstr ""
-
-#: classes/controller/javascript.php:75
-msgid "Notify"
-msgstr ""
-
-#: classes/controller/javascript.php:76
-msgid "Requests"
-msgstr ""
-
-#: classes/controller/javascript.php:77
-#: classes/controller/javascript.php:125
-#: views/page/settings.php:11
-msgid "Required"
-msgstr ""
-
-#: classes/controller/javascript.php:78
-msgid "Requiring 2FA for customers is not recommended as some customers may experience difficulties setting up or using two-factor authentication. Instead, using the \"Optional\" mode for users with the customer role is recommended which will allow customers to enable 2FA, but will not require them to do so."
-msgstr ""
-
-#: classes/controller/javascript.php:79
-msgid "Reset"
-msgstr ""
-
-#: classes/controller/javascript.php:80
-msgid "Reset Score Statistics"
-msgstr ""
-
-#: classes/controller/javascript.php:81
-msgid "Save"
-msgstr ""
-
-#: classes/controller/javascript.php:82
-msgid "Save Changes"
-msgstr ""
-
-#: classes/controller/javascript.php:83
-msgid "Send Anyway"
-msgstr ""
-
-#: classes/controller/javascript.php:84
-msgid "Send an email to users with the selected role to notify them of the grace period for enabling 2FA. Select the desired role and optionally specify the URL to be sent in the email to setup 2FA. If left blank, the URL defaults to the standard wordpress login and Wordfence’s Two-Factor Authentication plugin page. For example, if using WooCommerce, input the relative URL of the account page."
-msgstr ""
-
-#: classes/controller/javascript.php:85
-msgid "Setting the grace period to 0 will prevent users in roles where 2FA is required, including newly created users, from logging in if they have not already enabled two-factor authentication."
-msgstr ""
-
-#: classes/controller/javascript.php:86
-msgid "Skipped"
-msgstr ""
-
-#: classes/controller/javascript.php:87
-msgid "Show 2FA menu on WooCommerce Account page"
-msgstr ""
-
-#: classes/controller/javascript.php:88
-msgid "Show last login column on WP Users page"
-msgstr ""
-
-#: classes/controller/javascript.php:89
-msgid "The constant TFA_LS_DISABLE_NTP is defined which disables NTP entirely. Remove this constant or set it to a falsy value to enable NTP."
-msgstr ""
-
-#: classes/controller/javascript.php:90
-msgid "These IPs (or CIDR ranges) will be ignored when determining the requesting IP via the X-Forwarded-For HTTP header. Enter one IP or CIDR range per line."
-msgstr ""
-
-#: classes/controller/javascript.php:91
-#: views/page/settings.php:89
-msgid "Trusted Proxies"
-msgstr ""
-
-#: classes/controller/javascript.php:92
-msgid "2FA Login Security Installed"
-msgstr ""
-
-#: classes/controller/javascript.php:93
-msgid "You have just installed 2FA Login Security. Use the Login Security menu to activate and manage two-factor authentication for user accounts."
-msgstr ""
-
-#: classes/controller/javascript.php:94
-msgid "Visit the plugin page for updates and documentation."
-msgstr ""
-
-#: classes/controller/javascript.php:95
-msgid "Your IP with this setting"
-msgstr ""
-
-#: classes/controller/javascript.php:96
-msgid "WooCommerce & Custom Integrations"
-msgstr ""
-
-#: classes/controller/javascript.php:97
-msgid "WooCommerce integration"
-msgstr ""
-
-#: classes/controller/javascript.php:124
-#: views/manage/activate.php:23
-#: views/page/settings.php:10
-msgid "Optional"
-msgstr ""
-
-#: classes/controller/javascript.php:167
-msgid "Use the most secure method to get visitor IP addresses. Prevents spoofing and works with most sites."
-msgstr ""
-
-#: classes/controller/javascript.php:172
-msgid "Use PHP's built in REMOTE_ADDR and don't use anything else. Very secure if this is compatible with your site."
-msgstr ""
-
-#: classes/controller/javascript.php:176
-msgid "Use the X-Forwarded-For HTTP header. Only use if you have a front-end proxy or spoofing may result."
-msgstr ""
-
-#: classes/controller/javascript.php:180
-msgid "Use the X-Real-IP HTTP header. Only use if you have a front-end proxy or spoofing may result."
-msgstr ""
-
 #. translators: IP or range
 #: classes/controller/settings.php:225
 #, php-format
@@ -854,6 +541,11 @@ msgstr ""
 msgid "Edit two-factor authentication for %s"
 msgstr ""
 
+#. translators: Username
+#: classes/controller/users.php:658
+msgid "2FA"
+msgstr ""
+
 #: classes/controller/users.php:671
 #: views/manage/deactivate.php:19
 #: views/settings/user-stats.php:27
@@ -879,6 +571,10 @@ msgstr ""
 
 #: views/common/reset-grace-period.php:14
 msgid "Grace Period Override"
+msgstr ""
+
+#: views/common/reset-grace-period.php:16
+msgid "days"
 msgstr ""
 
 #: views/common/reset-grace-period.php:20
@@ -940,6 +636,11 @@ msgstr ""
 #: views/manage/activate.php:23
 #: views/manage/activate.php:59
 msgid "Download Recovery Codes"
+msgstr ""
+
+#: views/manage/activate.php:23
+#: views/page/settings.php:10
+msgid "Optional"
 msgstr ""
 
 #. translators: 1. Count; 2. length
@@ -1027,6 +728,11 @@ msgstr ""
 
 #: views/manage/deactivate.php:43
 msgid "Are you sure you want to deactivate two-factor authentication?"
+msgstr ""
+
+#: views/manage/deactivate.php:46
+#: views/manage/regenerate.php:33
+msgid "Cancel"
 msgstr ""
 
 #: views/manage/deactivate.php:84
@@ -1155,6 +861,10 @@ msgstr ""
 msgid "Page "
 msgstr ""
 
+#: views/page/settings.php:11
+msgid "Required"
+msgstr ""
+
 #: views/page/settings.php:30
 msgid "Settings updated."
 msgstr ""
@@ -1190,6 +900,10 @@ msgstr ""
 
 #: views/page/settings.php:81
 msgid "Automatic"
+msgstr ""
+
+#: views/page/settings.php:89
+msgid "Trusted Proxies"
 msgstr ""
 
 #: views/page/settings.php:92
