@@ -1052,18 +1052,6 @@ hr.wfls-half {
 .wfls-page-fixed-tabs > *:first-child {
   flex-grow: 0;
 }
-.wfls-page-tabs .wordfence-icon32,
-.wfls-page-fixed-tabs .wordfence-icon32 {
-  margin: 0;
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
-}
-@media (min-width: 768px) {
-  .wfls-page-tabs .wordfence-icon32,
-  .wfls-page-fixed-tabs .wordfence-icon32 {
-    margin-left: 0;
-  }
-}
 .wfls-page-tabs .wfls-text-tab,
 .wfls-page-fixed-tabs .wfls-text-tab {
   margin: 0;
@@ -1165,10 +1153,6 @@ hr.wfls-half {
 }
 .wfls-section-title h4 {
   font-size: 1rem;
-}
-.wfls-section-title .wordfence-icon32 {
-  margin: 0;
-  margin-right: 0.5rem;
 }
 .wfls-boolean-switch.wfls-active {
   border: 1px solid #00709e;
@@ -1889,13 +1873,6 @@ ul.wfls-option.wfls-option-howgetips .wfls-option-ip-source-details {
 .wfls-block .wfls-block-content .wfls-block-left-center-right > li.wfls-center {
   text-align: center;
   justify-content: center;
-}
-.wfls-block
-  .wfls-block-content
-  .wfls-block-left-center-right
-  > li.wfls-center
-  .wordfence-icon32 {
-  margin: 0;
 }
 .wfls-block .wfls-block-content .wfls-block-left-center-right > li.wfls-right {
   text-align: right;
