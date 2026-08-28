@@ -16,7 +16,7 @@ class Controller_TFAuthLS
 	private bool $management_assets_enqueued = false;
 
 	/**
-	 * Returns the singleton Controller_Wordfence2FA.
+	 * Returns the singleton Controller_TFAuthLS.
 	 *
 	 * @return Controller_TFAuthLS
 	 */
