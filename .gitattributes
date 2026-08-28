@@ -1,0 +1,23 @@
+# Keep development and repository metadata out of distribution archives.
+.gitignore export-ignore
+.gitattributes export-ignore
+FORK-PROCESS.md export-ignore
+legacy-plugin-inventory.md export-ignore
+
+# Source and build tooling are not required at runtime.
+src export-ignore
+src/** export-ignore
+scripts export-ignore
+scripts/** export-ignore
+webpack.config.js export-ignore
+package.json export-ignore
+package-lock.json export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+phpcs.xml.dist export-ignore
+rector.php export-ignore
+
+# Keep internal development documentation out of distribution archives.
+docs export-ignore
+docs/** export-ignore
+readme.MD export-ignore
