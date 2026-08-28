@@ -75,3 +75,22 @@
 - Removed the unused `wfls-standalone-will-be-discontinued` persistent notice identifier, which referenced the original Wordfence standalone-plugin messaging and had no active caller in this fork.
 - Removed the generic persistent-notice dismiss mechanism (`wfls-dismiss-{noticeId}` user meta key, `register_persistent_notice()`/`has_persistent_notices()`/`dismiss_persistent_notice()`, and the `dismiss_persistent_notice` AJAX action) since it had no remaining registered notices to serve.
 - Removed the matching front-end dismiss handler for `.wfls-persistent-notice` in `admin-global.js` and rebuilt bundled assets.
+
+## Step 11 - Remove unused assets, classes, and code paths. General cleanup.
+
+- `1d6bc35` - Removed undocumented actions from the management and page views and simplified the related view state and navigation.
+- `c393e9a` - Renamed the login translation object consistently in the controller and login scripts.
+- `0bdb275` - Removed a redundant WooCommerce customer-role translation string from the JavaScript translation map.
+- `63ac034` - Renamed `wordfence-ls` asset handles/classes to `2fa-ls` across the controller, styles, and page markup.
+- `7ed0e4e` - Removed the unused `.wordfenceTopTab.active` CSS rule.
+- `c066ded` - Removed additional unused admin CSS rules from both shipped and source stylesheets.
+- `c3effac` - Renamed the primary controller file from `wordfencels.php` to `2fa-login-security.php` without changing its implementation.
+- `8c7cf38` - Added distribution `export-ignore` rules, moved fork documentation into `docs/`, refreshed the translation catalog, and removed the CSS-pruning script from the repository.
+- `8041c73` - Removed unused image assets, including legacy menu, header, loading, checkbox, and jQuery UI icon files.
+- `c3d90a0` - Removed the unused Ionicons font asset.
+- `c91c37f` - Corrected the translation object name used by the login scripts so it works consistently.
+- `fe6cfe8` - Updated the main plugin controller file reference and removed the inherited copyright notice.
+- `c4f0ec7` - Updated package names in docblocks and applied formatting improvements to the JWT, HTML, JavaScript, tab, and title model classes.
+- `b66a3e7` - Removed the unused `Controller_Javascript` class, its registration, and the shared `wflsi18n.js` files.
+- `7dfb4e8` - Updated the translation catalog creation date and corrected its source line references.
+- `6815e2e` - Removed the remaining unused JavaScript controller file and its include from the main plugin file.
