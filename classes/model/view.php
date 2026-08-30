@@ -45,7 +45,7 @@ class Model_View {
 	 * @return string
 	 * @throws ViewNotFoundException
 	 */
-	public function render(): string|false {
+	public function render(): string {
 		$view = preg_replace( '/\.{2,}/', '.', $this->view );
 		$path = $this->path . '/' . $view . $this->file_extension;
 		if ( ! file_exists( $path ) ) {
@@ -57,7 +57,8 @@ class Model_View {
 		ob_start();
 		/** @noinspection PhpIncludeInspection */
 		include $path;
-		return ob_get_clean();
+		$output = ob_get_clean();
+		return false === $output ? '' : $output;
 	}
 
 	public function __toString(): string {
@@ -114,7 +115,7 @@ class Model_View {
 	 */
 	public function __wakeup() {
 		$this->path           = TFA_LS_PATH . 'views';
-		$this->view           = null;
+		$this->view           = '';
 		$this->data           = array();
 		$this->file_extension = '.php';
 	}
