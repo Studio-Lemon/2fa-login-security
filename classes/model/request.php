@@ -76,7 +76,7 @@ class Model_Request {
 	 * @return mixed[][]
 	 */
 	protected function _possible_ips( $source = null ): array {
-		$defaultIP = ( is_array( $_SERVER ) && isset( $_SERVER[ self::IP_SOURCE_REMOTE_ADDR ] ) ) ? array( $_SERVER[ self::IP_SOURCE_REMOTE_ADDR ], self::IP_SOURCE_REMOTE_ADDR ) : array( '127.0.0.1', self::IP_SOURCE_REMOTE_ADDR );
+		$defaultIP = isset( $_SERVER[ self::IP_SOURCE_REMOTE_ADDR ] ) ? array( $_SERVER[ self::IP_SOURCE_REMOTE_ADDR ], self::IP_SOURCE_REMOTE_ADDR ) : array( '127.0.0.1', self::IP_SOURCE_REMOTE_ADDR );
 
 		if ( $source ) {
 			if ( $source == self::IP_SOURCE_REMOTE_ADDR ) {

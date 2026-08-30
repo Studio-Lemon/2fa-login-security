@@ -63,7 +63,7 @@ class Model_TokenBucket {
 			return true;
 		}
 		if ( $this->_backing == self::BACKING_REDIS ) {
-			if ( $this->_redis === false ) {
+			if ( null === $this->_redis ) {
 				return false;
 			}
 			$start = microtime( true );
@@ -83,7 +83,7 @@ class Model_TokenBucket {
 		if ( $this->_backing == self::BACKING_WP_OPTIONS ) {
 			$this->_wp_options_release_lock( $this->_identifier );
 		} elseif ( $this->_backing == self::BACKING_REDIS ) {
-			if ( $this->_redis === false ) {
+			if ( null === $this->_redis ) {
 				return;
 			}
 			$this->_redis->del( 'lock:' . $this->_identifier );

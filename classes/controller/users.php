@@ -295,9 +295,9 @@ class Controller_Users
 	 * Returns whether or not 2FA is required for the user regardless of activation status. 2FA is considered required
 	 * when the option to require it is enabled and there is at least one administrator with it active.
 	 *
-	 * @param \WP_User $user
-	 * @param bool     &$gracePeriod
-	 * @param int      &$requiredAt
+	 * @param \WP_User  $user
+	 * @param bool|null &$gracePeriod
+	 * @param int|null  &$requiredAt
 	 * @return bool
 	 */
 	public function requires_2fa($user, &$gracePeriod = false, &$requiredAt = null)
@@ -575,7 +575,7 @@ class Controller_Users
 						$value = esc_html__('Active', '2fa-login-security');
 					} elseif ($inGracePeriod) {
 						$value = wp_kses(__('Inactive<small class="wfls-sub-status">(Grace Period)</small>', '2fa-login-security'), array('small' => array('class' => array())));
-					} elseif (($requires2fa && ! $has2fa)) {
+					} elseif ($requires2fa) {
 						$value = wp_kses($inGracePeriod === null ? __('Locked Out<small class="wfls-sub-status">(Grace Period Disabled)</small>', '2fa-login-security') : __('Locked Out<small class="wfls-sub-status">(Grace Period Exceeded)</small>', '2fa-login-security'), array('small' => array('class' => array())));
 					} else {
 						$value = esc_html__('Inactive', '2fa-login-security');

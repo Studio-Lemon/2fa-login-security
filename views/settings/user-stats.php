@@ -3,7 +3,7 @@ if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 /**
- * @var ?array $counts The counts to display or null to hide user counts.
+ * @var array|false|null $counts The counts to display, false if the last count failed, or null to hide user counts.
  */
 ?>
 <div class="wfls-block wfls-always-active wfls-flex-item-full-width">

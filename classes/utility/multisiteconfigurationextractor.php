@@ -6,7 +6,7 @@ class Utility_MultisiteConfigurationExtractor {
 
 
 	private $prefix, $suffix;
-	private float|int $suffixOffset;
+	private int $suffixOffset;
 
 	public function __construct( $prefix, $suffix ) {
 		$this->prefix       = new Utility_MeasuredString( $prefix );

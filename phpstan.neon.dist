@@ -1,5 +1,5 @@
 parameters:
-	level: 3
+	level: 4
 	phpVersion: 80100
 
 	paths:
@@ -30,3 +30,9 @@ parameters:
 		-
 			identifier: variable.undefined
 			path: views/*
+		# wp_send_json() is stubbed as never-returning, but wp_die() can be
+		# short-circuited by a filter, so the trailing die() is a real guard.
+		-
+			identifier: deadCode.unreachable
+			path: classes/controller/ajax.php
+			count: 1

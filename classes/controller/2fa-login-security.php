@@ -132,7 +132,7 @@ class Controller_TFAuthLS
 		}
 		$_runInstallCalled = true;
 
-		if (function_exists('ignore_user_abort') && is_callable('ignore_user_abort')) {
+		if (function_exists('ignore_user_abort')) {
 			@ignore_user_abort(true);
 		}
 
@@ -416,37 +416,32 @@ class Controller_TFAuthLS
 				<tr id="2fa-ls">
 					<th><label for="2fa-ls-btn"><?php esc_html_e('2FA Status', '2fa-login-security'); ?></label></th>
 					<td>
-						<?php if ($userAllowed2fa) : ?>
-							<p>
-								<strong><?php echo $lockedOut ? esc_html__('Locked Out', '2fa-login-security') : ($has2fa ? esc_html__('Active', '2fa-login-security') : esc_html__('Inactive', '2fa-login-security')); ?>:</strong>
-								<?php
-								echo $lockedOut ?
-									($viewerIsUser ? esc_html__('Two-factor authentication is required for your account, but has not been configured.', '2fa-login-security') : esc_html__('Two-factor authentication is required for this account, but has not been configured.', '2fa-login-security'))
-									: ($has2fa ? esc_html__('2FA is active.', '2fa-login-security') : esc_html__('2FA is inactive.', '2fa-login-security'));
-								?>
-								<a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', '2fa-login-security'); ?></a>
-							</p>
-							<?php if (! $has2fa && $inGracePeriod) : ?>
-								<p><strong>
-										<?php
-										printf(
-											$viewerIsUser ?
-												/* translators: Date */ esc_html__('Two-factor authentication must be activated for your account prior to %s to avoid losing access.', '2fa-login-security')
-												: /* translators: Date */ esc_html__('Two-factor authentication must be activated for this account prior to %s.', '2fa-login-security'),
-											Controller_Time::format_site_datetime($requiredAt)
-										)
-										?>
-									</strong></p>
-							<?php endif ?>
+						<p>
+							<strong><?php echo $lockedOut ? esc_html__('Locked Out', '2fa-login-security') : ($has2fa ? esc_html__('Active', '2fa-login-security') : esc_html__('Inactive', '2fa-login-security')); ?>:</strong>
 							<?php
-							if ($has2fa || $viewerIsUser) :
+							echo $lockedOut ?
+								($viewerIsUser ? esc_html__('Two-factor authentication is required for your account, but has not been configured.', '2fa-login-security') : esc_html__('Two-factor authentication is required for this account, but has not been configured.', '2fa-login-security'))
+								: ($has2fa ? esc_html__('2FA is active.', '2fa-login-security') : esc_html__('2FA is inactive.', '2fa-login-security'));
 							?>
-								<p><a href="<?php echo esc_url($manageURL); ?>" class="button"><?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Manage 2FA', '2fa-login-security') : esc_html__('Activate 2FA', '2fa-login-security')); ?></a></p><?php endif ?>
+							<a href="<?php echo Controller_Support::esc_supportURL(Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('Learn More', '2fa-login-security'); ?></a>
+						</p>
+						<?php if (! $has2fa && $inGracePeriod) : ?>
+							<p><strong>
+									<?php
+									printf(
+										$viewerIsUser ?
+											/* translators: Date */ esc_html__('Two-factor authentication must be activated for your account prior to %s to avoid losing access.', '2fa-login-security')
+											: /* translators: Date */ esc_html__('Two-factor authentication must be activated for this account prior to %s.', '2fa-login-security'),
+										Controller_Time::format_site_datetime($requiredAt)
+									)
+									?>
+								</strong></p>
 						<?php endif ?>
+						<?php
+						if ($has2fa || $viewerIsUser) :
+						?>
+							<p><a href="<?php echo esc_url($manageURL); ?>" class="button"><?php echo (Controller_Users::shared()->has_2fa_active($user) ? esc_html__('Manage 2FA', '2fa-login-security') : esc_html__('Activate 2FA', '2fa-login-security')); ?></a></p><?php endif ?>
 						<?php if ($viewerCanManage2fa) : ?>
-							<?php if (! $userAllowed2fa) : ?>
-								<p><strong><?php esc_html_e('Disabled', '2fa-login-security'); ?>:</strong> <?php esc_html_e('Two-factor authentication is not currently enabled for this account type. To enable it, visit the 2FA Settings page.', '2fa-login-security'); ?> <a href="#"><?php esc_html_e('Learn More', '2fa-login-security'); ?></a></p>
-							<?php endif ?>
 							<?php if ($lockedOut) : ?>
 								<?php
 								echo Model_View::create(

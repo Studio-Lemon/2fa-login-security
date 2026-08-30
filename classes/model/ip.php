@@ -117,7 +117,7 @@ class Model_IP {
 	 * Some hosts appear to not have inet_ntop, and others appear to have inet_ntop but are unable to process IPv6 addresses.
 	 */
 	public static function has_ipv6(): bool {
-		return defined( 'AF_INET6' ) && is_callable( 'inet_ntop' ) && is_callable( 'inet_pton' );
+		return defined( 'AF_INET6' ) && function_exists( 'inet_ntop' ) && function_exists( 'inet_pton' );
 	}
 
 	/**
