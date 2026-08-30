@@ -8,9 +8,9 @@ class Model_IP {
 	 * Returns the human-readable representation of a packed binary IP address.
 	 *
 	 * @param string $ip
-	 * @return bool|string
+	 * @return string|false
 	 */
-	public static function inet_ntop( $ip ): string|false|array {
+	public static function inet_ntop( $ip ): string|false {
 		if ( Model_Crypto::strlen( $ip ) == 16 && Model_Crypto::substr( $ip, 0, 12 ) == "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff" ) {
 			$ip = Model_Crypto::substr( $ip, 12, 4 );
 		}

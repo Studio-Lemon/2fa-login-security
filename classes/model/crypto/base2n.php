@@ -46,7 +46,7 @@ class Model_Base2n {
 	 * @param   boolean $padFinalGroup      Add padding to end of encoded output
 	 * @param   string  $padCharacter       Character to use for padding
 	 *
-	 * @throws  InvalidArgumentException    for incompatible parameters
+	 * @throws  \InvalidArgumentException    for incompatible parameters
 	 */
 	public function __construct(
 		$bitsPerCharacter,

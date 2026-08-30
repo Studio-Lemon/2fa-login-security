@@ -3,7 +3,7 @@ if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 /**
- * @var \TFAuthLS\Page\Model_Title $title The page title parameters.
+ * @var \TFAuthLS\View\Model_Title $title The page title parameters.
  * @var bool $showIcon Whether or not to show the header icon. Optional, defaults to false.
  */
 ?>

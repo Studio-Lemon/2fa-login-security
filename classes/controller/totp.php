@@ -116,11 +116,11 @@ class Controller_TOTP {
 	 * Checks whether or not the code is valid for the given secret. If it is, it returns the time window (as a timestamp)
 	 * that matched. If no time windows are provided, it checks the current and one on each side.
 	 *
-	 * @param string                                              $secret The secret as a hex string.
-	 * @param string                                              $code The code.
-	 * @param null|int The last-used time window (as a timestamp).
-	 * @param null|array                                          $windows An array of time windows or null to use the default.
-	 * @return bool|int The time window if matches, otherwise false.
+	 * @param string     $secret The secret as a hex string.
+	 * @param string     $code The code.
+	 * @param null|int   $previous The last-used time window (as a timestamp).
+	 * @param null|array $windows An array of time windows or null to use the default.
+	 * @return int|float|false The time window if matches, otherwise false.
 	 */
 	public function check_code( $secret, $code, $previous = null, $windows = null ): int|float|false {
 		$timeCode = floor( Controller_Time::time() / self::TIME_WINDOW_LENGTH );

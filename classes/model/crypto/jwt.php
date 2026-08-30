@@ -22,7 +22,7 @@ class Model_JWT
 	 * Decodes and returns the payload of a JWT. This also validates the signature and expiration. Currently assumes HS256 JWTs.
 	 *
 	 * @param string $token
-	 * @return Model_JWT|bool The decoded JWT or false if the token is invalid or fails validation.
+	 * @return Model_JWT|false The decoded JWT or false if the token is invalid or fails validation.
 	 */
 	public static function decode_jwt($token): false|\TFAuthLS\Crypto\Model_JWT
 	{

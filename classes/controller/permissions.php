@@ -381,7 +381,7 @@ class Controller_Permissions {
 	 * Returns the sites + roles that a user has on multisite. The structure of the returned array has the keys as the
 	 * individual site IDs and the associated value as an array of the user's capabilities on that site.
 	 *
-	 * @param WP_User $user
+	 * @param \WP_User $user
 	 */
 	public function get_multisite_roles_for_user( $user ): array {
 		global $wpdb;

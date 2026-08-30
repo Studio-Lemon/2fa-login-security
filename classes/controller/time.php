@@ -76,7 +76,7 @@ class Controller_Time
 	 * @param bool|int $time The timestamp to apply any offset to. If `false`, it will use the current timestamp.
 	 * @return int
 	 */
-	public static function time($time = false): float|int|array
+	public static function time($time = false): int
 	{
 		if ($time === false) {
 			$time = time();
@@ -94,9 +94,9 @@ class Controller_Time
 	 * Returns the current timestamp from ntp.org using the NTP protocol. If unable to (e.g., UDP connections are blocked),
 	 * it will return false.
 	 *
-	 * @return bool|float
+	 * @return float|false
 	 */
-	public static function ntp_time(): float|int|false
+	public static function ntp_time(): float|false
 	{
 		$servers = array('0.pool.ntp.org', '1.pool.ntp.org', '2.pool.ntp.org', '3.pool.ntp.org');
 

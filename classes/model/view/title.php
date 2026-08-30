@@ -6,10 +6,10 @@ namespace TFAuthLS\View;
  * Class Model_Title
  *
  * @package LS2FA\Page
- * @var string $id A valid DOM ID for the title.
- * @var string|Model_HTML $title The title text or HTML.
- * @var string $helpURL The help URL.
- * @var string|Model_HTML $helpLink The text/HTML of the help link.
+ * @property-read string $id A valid DOM ID for the title.
+ * @property-read string|\TFAuthLS\Text\Model_HTML $title The title text or HTML.
+ * @property-read string|null $helpURL The help URL.
+ * @property-read string|\TFAuthLS\Text\Model_HTML|null $helpLink The text/HTML of the help link.
  */
 class Model_Title
 {
