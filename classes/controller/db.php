@@ -4,6 +4,12 @@ namespace TFAuthLS;
 
 use RuntimeException;
 
+/**
+ * @property-read string $secrets
+ * @property-read string $settings
+ * @property-read string $role_counts
+ * @property-read string $role_counts_temporary
+ */
 class Controller_DB {
 
 	const TABLE_2FA_SECRETS           = 'wfls_2fa_secrets';

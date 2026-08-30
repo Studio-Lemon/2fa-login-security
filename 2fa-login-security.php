@@ -11,7 +11,7 @@ Requires PHP: 8.1
 Text Domain: 2fa-login-security
 Domain Path: /languages
 */
-if (defined('WP_INSTALLING') && WP_INSTALLING) {
+if (function_exists('wp_installing') && wp_installing()) {
 	return;
 }
 if (! defined('ABSPATH')) {

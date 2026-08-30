@@ -11,7 +11,7 @@ abstract class Model_Asset {
 	protected $version;
 	protected $registered = false;
 
-	public function __construct( $handle, $source = '', $dependencies = array(), $version = false ) {
+	final public function __construct( $handle, $source = '', $dependencies = array(), $version = false ) {
 		$this->handle       = $handle;
 		$this->source       = $source;
 		$this->dependencies = $dependencies;

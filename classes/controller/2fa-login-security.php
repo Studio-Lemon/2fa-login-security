@@ -54,7 +54,7 @@ class Controller_TFAuthLS
 		add_action('set_logged_in_cookie', array($this, '_set_logged_in_cookie'), 25, 4);
 		add_action('wp_login', array($this, '_record_login'), 999, 1);
 		add_action('register_post', array($this, '_register_post'), 25, 3);
-		add_filter('wp_login_errors', array($this, '_wp_login_errors'), 25, 3);
+		add_filter('wp_login_errors', array($this, '_wp_login_errors'), 25, 2);
 		add_action('user_new_form', array($this, '_user_new_form'));
 		add_action('user_register', array($this, '_user_register'));
 
@@ -504,6 +504,9 @@ class Controller_TFAuthLS
 				$combinedRecoveryRegex = '/(?<! wf)((?:[a-f0-9]{4}\s*){4})$/i';
 			}
 
+			$revisedPassword = null;
+			$code            = null;
+
 			if (preg_match($combinedTOTPRegex, $password, $matches)) {
 				// Possible TOTP code
 				if (strlen($password) > strlen($matches[1])) {
@@ -518,7 +521,7 @@ class Controller_TFAuthLS
 				}
 			}
 
-			if (isset($revisedPassword)) {
+			if (null !== $revisedPassword && null !== $code) {
 				define('TFA_LS_CHECKING_COMBINED', true); // Avoid recursing into this block
 				if (! defined('TFA_LS_AUTHENTICATION_CHECK')) {
 					define('TFA_LS_AUTHENTICATION_CHECK', true);

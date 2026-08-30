@@ -390,7 +390,7 @@ class Controller_AJAX
 		}, $codes), 'text' => sprintf(/* translators: count */_n('%d unused recovery code remains. You may generate a new set by clicking below.', '%d unused recovery codes remain. You may generate a new set by clicking below.', count($codes), '2fa-login-security'), count($codes))));
 	}
 
-	public function _ajax_save_options_callback()
+	public function _ajax_save_options_callback(): void
 	{
 		if (!empty($_POST['changes']) && is_string($_POST['changes']) && is_array($changes = json_decode(stripslashes($_POST['changes']), true))) {
 			try {
@@ -418,7 +418,8 @@ class Controller_AJAX
 				Controller_Settings::shared()->set_multiple($changes);
 
 				$response = array('success' => true);
-				return self::send_json($response);
+				self::send_json($response);
+				return;
 			} catch (\Exception $e) {
 				self::send_json(array(
 					'error' => $e->getMessage(),
@@ -429,7 +430,6 @@ class Controller_AJAX
 		self::send_json(array(
 			'error' => esc_html__('No configuration changes were provided to save.', '2fa-login-security'),
 		));
-		return null;
 	}
 
 	public function _ajax_send_grace_period_notification_callback(): void

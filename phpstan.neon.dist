@@ -1,0 +1,32 @@
+parameters:
+	level: 1
+	phpVersion: 80100
+
+	paths:
+		- 2fa-login-security.php
+		- classes
+		- views
+
+	excludePaths:
+		analyseAndScan:
+			- vendor/*
+			- node_modules/*
+			- .webpack-cache/*
+			- src/*
+			- css/*
+			- js/*
+			- languages/*
+			- img/*
+			- font/*
+
+	bootstrapFiles:
+		- phpstan-bootstrap.php
+
+	treatPhpDocTypesAsCertain: false
+	reportUnmatchedIgnoredErrors: false
+
+	ignoreErrors:
+		# Views receive their variables through extract() in classes/model/view.php.
+		-
+			identifier: variable.undefined
+			path: views/*
