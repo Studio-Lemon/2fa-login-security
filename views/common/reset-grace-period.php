@@ -1,29 +1,29 @@
 <?php
-if ( ! defined( 'TFA_LS_VERSION' ) ) {
+if (! defined('TFA_LS_VERSION')) {
 	exit;
 }
 
-if ( ! isset( $defaultGracePeriod ) ) {
+if (! isset($defaultGracePeriod)) {
 	$defaultGracePeriod = \TFAuthLS\Controller_Settings::shared()->get_user_2fa_grace_period();
 }
-$defaultGracePeriod = max( $defaultGracePeriod, 1 );
-$errorMessage       = $gracePeriod === null ? __( 'Unable to Activate Grace Period', '2fa-login-security' ) : __( 'Unable to Reset Grace Period', '2fa-login-security' );
+$defaultGracePeriod = max($defaultGracePeriod, 1);
+$errorMessage       = $gracePeriod === null ? __('Unable to Activate Grace Period', '2fa-login-security') : __('Unable to Reset Grace Period', '2fa-login-security');
 ?>
 <div class="wfls-add-top wfls-add-bottom wfls-grace-period-container">
 	<div class="wfls-grace-period-input-container">
-		<label for="wfls-user-grace-period-override" style="display: none"><?php esc_html_e( 'Grace Period Override', '2fa-login-security' ); ?></label>
+		<label for="wfls-user-grace-period-override" style="display: none"><?php esc_html_e('Grace Period Override', '2fa-login-security'); ?></label>
 		<input type="text" id="wfls-user-grace-period-override" maxlength="2" pattern="[0-9]+" value="<?php echo (int) $defaultGracePeriod; ?>">
-		<label for="wfls-user-grace-period-override"><?php esc_html_e( 'days', '2fa-login-security' ); ?></label>
+		<label for="wfls-user-grace-period-override"><?php esc_html_e('days', '2fa-login-security'); ?></label>
 	</div>
 	<div class="wfls-grace-period-button-container">
 		<button class="wfls-btn wfls-btn-default" id="wfls-reset-grace-period">
-			<?php echo $gracePeriod === null ? esc_html__( 'Activate Grace Period', '2fa-login-security' ) : esc_html__( 'Reset Grace Period', '2fa-login-security' ); ?>
+			<?php echo $gracePeriod === null ? esc_html__('Activate Grace Period', '2fa-login-security') : esc_html__('Reset Grace Period', '2fa-login-security'); ?>
 		</button>
 
 	</div>
 </div>
 <div>
-	<p id="wfls-reset-grace-period-failed" style="display: none"><strong><?php echo esc_html( $errorMessage ); ?></strong></p>
+	<p id="wfls-reset-grace-period-failed" style="display: none"><strong><?php echo esc_html($errorMessage); ?></strong></p>
 </div>
 <script type="application/javascript">
 	(function($) {
@@ -47,8 +47,8 @@ $errorMessage       = $gracePeriod === null ? __( 'Unable to Activate Grace Peri
 			function handleError() {
 				if (typeof WFLS === 'object') {
 					WFLS.standaloneModal(
-						<?php echo json_encode( $errorMessage ); ?>,
-						<?php echo json_encode( $gracePeriod === null ? __( 'An unexpected error occurred while attempting to activate the grace period.', '2fa-login-security' ) : __( 'An unexpected error occurred while attempting to reset the grace period.', '2fa-login-security' ) ); ?>
+						<?php echo json_encode($errorMessage); ?>,
+						<?php echo json_encode($gracePeriod === null ? __('An unexpected error occurred while attempting to activate the grace period.', '2fa-login-security') : __('An unexpected error occurred while attempting to reset the grace period.', '2fa-login-security')); ?>
 					);
 				} else {
 					failureMessage.show();
@@ -63,7 +63,7 @@ $errorMessage       = $gracePeriod === null ? __( 'Unable to Activate Grace Peri
 				overrideInput.prop('disabled', true);
 				failureMessage.hide();
 				reset2faGracePeriod(
-					<?php echo json_encode( $user->ID, true ); ?>,
+					<?php echo (int) $user->ID; ?>,
 					overrideInput.val(),
 					function(data) {
 						if ('error' in data) {

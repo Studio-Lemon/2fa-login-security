@@ -626,8 +626,8 @@ class Controller_Settings
 
 		if (preg_match('/^\d+-\d+$/', $range)) { // v5 32 bit int style format
 			list($start, $end) = explode('-', $range);
-			$start             = long2ip($start);
-			$end               = long2ip($end);
+			$start             = long2ip((int) $start);
+			$end               = long2ip((int) $end);
 			$range             = "{$start}-{$end}";
 		}
 

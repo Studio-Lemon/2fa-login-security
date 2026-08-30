@@ -2,15 +2,17 @@
 
 namespace TFAuthLS;
 
-class Utility_MultisiteConfigurationExtractor {
+class Utility_MultisiteConfigurationExtractor
+{
 
 
 	private $prefix, $suffix;
 	private int $suffixOffset;
 
-	public function __construct( $prefix, $suffix ) {
-		$this->prefix       = new Utility_MeasuredString( $prefix );
-		$this->suffix       = new Utility_MeasuredString( $suffix );
+	public function __construct($prefix, $suffix)
+	{
+		$this->prefix       = new Utility_MeasuredString($prefix);
+		$this->suffix       = new Utility_MeasuredString($suffix);
 		$this->suffixOffset = -$this->suffix->length;
 	}
 
@@ -33,15 +35,16 @@ class Utility_MultisiteConfigurationExtractor {
 	 *
 	 * @param array $values
 	 */
-	private function parseBlogIds( $values ): array {
+	private function parseBlogIds($values): array
+	{
 		$parsed = array();
-		foreach ( $values as $key => $value ) {
-			if ( substr( $key, $this->suffixOffset ) === $this->suffix->string && strpos( $key, (string) $this->prefix ) === 0 ) {
-				$blogId = substr( $key, $this->prefix->length, strlen( $key ) - $this->prefix->length + $this->suffixOffset );
-				if ( $blogId === '' || $blogId === '0' ) {
+		foreach ($values as $key => $value) {
+			if (substr($key, $this->suffixOffset) === $this->suffix->string && strpos($key, (string) $this->prefix) === 0) {
+				$blogId = substr($key, $this->prefix->length, strlen($key) - $this->prefix->length + $this->suffixOffset);
+				if ($blogId === '' || $blogId === '0') {
 					$parsed[1] = $value;
-				} elseif ( substr( $blogId, -1 ) === '_' ) {
-					$parsed[ (int) $blogId ] = $value;
+				} elseif (substr($blogId, -1) === '_') {
+					$parsed[(int) $blogId] = $value;
 				}
 			}
 		}
@@ -54,11 +57,12 @@ class Utility_MultisiteConfigurationExtractor {
 	 *
 	 * @param array $sites
 	 */
-	private function filterValues( array $values, $sites ): array {
+	private function filterValues(array $values, $sites): array
+	{
 		$filtered = array();
-		foreach ( $sites as $site ) {
+		foreach ($sites as $site) {
 			$blogId              = (int) $site->blog_id;
-			$filtered[ $blogId ] = $values[ $blogId ];
+			$filtered[$blogId] = $values[$blogId];
 		}
 		return $filtered;
 	}
@@ -70,12 +74,13 @@ class Utility_MultisiteConfigurationExtractor {
 	 * @param array $values
 	 * @return array
 	 */
-	public function extract( $values ) {
-		$parsed = $this->parseBlogIds( $values );
-		if ( empty( $parsed ) ) {
+	public function extract($values)
+	{
+		$parsed = $this->parseBlogIds($values);
+		if (empty($parsed)) {
 			return $parsed;
 		}
-		$sites = Utility_Multisite::retrieve_active_sites( array_keys( $parsed ) );
-		return $this->filterValues( $parsed, $sites );
+		$sites = Utility_Multisite::retrieve_active_sites(array_keys($parsed));
+		return $this->filterValues($parsed, $sites);
 	}
 }

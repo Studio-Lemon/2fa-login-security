@@ -110,7 +110,8 @@ class Controller_Time
 
 		foreach ($servers as $s) {
 			$socket = @fsockopen('udp://' . $s, 123, $err_no, $err_str, 1);
-			if ($socket) {				stream_set_timeout($socket, 1);
+			if ($socket) {
+				stream_set_timeout($socket, 1);
 				$remote_originate = microtime(true);
 				$secondsNTP       = ((int) $remote_originate) + self::NTP_EPOCH_CONVERT;
 				$fractional       = sprintf('%010d', round(($remote_originate - ((int) $remote_originate)) * 0x100000000));

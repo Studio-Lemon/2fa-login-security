@@ -85,7 +85,7 @@ class Controller_Users
 			$logins = get_super_admins();
 			$users  = array();
 			foreach ($logins as $l) {
-				$user = new \WP_User(null, $l);
+				$user = new \WP_User(0, $l);
 				if ($user->ID > 0) {
 					$users[] = $user;
 				}
@@ -94,11 +94,9 @@ class Controller_Users
 		}
 
 		$query = new \WP_User_Query(
-			http_build_query(
-				array(
-					'role'   => 'administrator',
-					'number' => -1,
-				)
+			array(
+				'role'   => 'administrator',
+				'number' => -1,
 			)
 		);
 		return $query->get_results();
@@ -114,11 +112,9 @@ class Controller_Users
 			return $superAdmins;
 		}
 		$query = new \WP_User_Query(
-			http_build_query(
-				array(
-					'role'   => $role,
-					'number' => is_int($limit) ? $limit : -1,
-				)
+			array(
+				'role'   => $role,
+				'number' => is_int($limit) ? $limit : -1,
 			)
 		);
 		return $query->get_results();

@@ -2,7 +2,8 @@
 
 namespace TFAuthLS;
 
-class Model_View {
+class Model_View
+{
 
 	protected string $path;
 
@@ -27,15 +28,17 @@ class Model_View {
 	 * @param string $view
 	 * @param array  $data
 	 */
-	public static function create( $view, $data = array() ): self {
-		return new self( $view, $data );
+	public static function create($view, $data = array()): self
+	{
+		return new self($view, $data);
 	}
 
 	/**
 	 * @param string $view
 	 * @param array  $data
 	 */
-	public function __construct( $view, $data = array() ) {
+	public function __construct($view, $data = array())
+	{
 		$this->path = TFA_LS_PATH . 'views';
 		$this->view = $view;
 		$this->data = $data;
@@ -45,14 +48,15 @@ class Model_View {
 	 * @return string
 	 * @throws ViewNotFoundException
 	 */
-	public function render(): string {
-		$view = preg_replace( '/\.{2,}/', '.', $this->view );
+	public function render(): string
+	{
+		$view = preg_replace('/\.{2,}/', '.', $this->view);
 		$path = $this->path . '/' . $view . $this->file_extension;
-		if ( ! file_exists( $path ) ) {
-			throw new ViewNotFoundException( 'The view ' . $path . ' does not exist or is not readable.' );
+		if (! file_exists($path)) {
+			throw new ViewNotFoundException('The view ' . $path . ' does not exist or is not readable.');
 		}
 
-		extract( $this->data, EXTR_SKIP );
+		extract($this->data, EXTR_SKIP);
 
 		ob_start();
 		/** @noinspection PhpIncludeInspection */
@@ -61,11 +65,12 @@ class Model_View {
 		return false === $output ? '' : $output;
 	}
 
-	public function __toString(): string {
+	public function __toString(): string
+	{
 		try {
 			return $this->render();
-		} catch ( ViewNotFoundException $e ) {
-			return defined( 'WP_DEBUG' ) && WP_DEBUG ? $e->getMessage() : 'The view could not be loaded.';
+		} catch (ViewNotFoundException $e) {
+			return defined('WP_DEBUG') && WP_DEBUG ? $e->getMessage() : 'The view could not be loaded.';
 		}
 	}
 
@@ -73,15 +78,17 @@ class Model_View {
 	 * @param $data
 	 * @return $this
 	 */
-	public function addData( $data ): static {
-		$this->data = array_merge( $data, $this->data );
+	public function addData($data): static
+	{
+		$this->data = array_merge($data, $this->data);
 		return $this;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getData() {
+	public function getData()
+	{
 		return $this->data;
 	}
 
@@ -89,7 +96,8 @@ class Model_View {
 	 * @param array $data
 	 * @return $this
 	 */
-	public function setData( $data ): static {
+	public function setData($data): static
+	{
 		$this->data = $data;
 		return $this;
 	}
@@ -97,7 +105,8 @@ class Model_View {
 	/**
 	 * @return string
 	 */
-	public function getView() {
+	public function getView()
+	{
 		return $this->view;
 	}
 
@@ -105,7 +114,8 @@ class Model_View {
 	 * @param string $view
 	 * @return $this
 	 */
-	public function setView( $view ): static {
+	public function setView($view): static
+	{
 		$this->view = $view;
 		return $this;
 	}
@@ -113,7 +123,8 @@ class Model_View {
 	/**
 	 * Prevent POP
 	 */
-	public function __wakeup() {
+	public function __wakeup()
+	{
 		$this->path           = TFA_LS_PATH . 'views';
 		$this->view           = '';
 		$this->data           = array();

@@ -67,7 +67,7 @@ $currentRoleState = function ($roleName, $roleObject = null) use ($settings) {
 					</tr>
 					<tr>
 						<th scope="row"><?php esc_html_e('Remember Duration (days)', '2fa-login-security'); ?></th>
-						<td><input type="number" min="1" name="wfls_settings[remember-device-duration-days]" value="<?php echo esc_attr(max(1, (int) floor($settings->get_int(\TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_DURATION, 30 * 86400) / 86400))); ?>"></td>
+						<td><input type="number" min="1" name="wfls_settings[remember-device-duration-days]" value="<?php echo esc_attr((string) max(1, (int) floor($settings->get_int(\TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_DURATION, 30 * 86400) / 86400))); ?>"></td>
 					</tr>
 					<tr>
 						<th scope="row"><?php esc_html_e('2FA Grace Period (days)', '2fa-login-security'); ?></th>
