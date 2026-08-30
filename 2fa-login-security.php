@@ -7,7 +7,7 @@ Author URI: https://wordpress.org/plugins/2fa-login-security/
 Version: 1.1.16
 Network: true
 Requires at least: 4.7
-Requires PHP: 7.0
+Requires PHP: 8.1
 Text Domain: 2fa-login-security
 Domain Path: /languages
 */
