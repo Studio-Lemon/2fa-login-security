@@ -3,7 +3,9 @@
   "description": "Composer setup for 2FA Login Security tooling",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
-  "require": {},
+  "require": {
+    "composer/installers": "^2.3"
+  },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
@@ -29,6 +31,7 @@
   "config": {
     "sort-packages": true,
     "allow-plugins": {
+      "composer/installers": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true
     }
