@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.0.0-beta.2](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.1...2.0.0-beta.2) (2026-09-25)
+
+
+### 🐛 Bug Fixes
+
+* add extra section for WordPress installation directory in composer.json ([0020b8d](https://github.com/Studio-Lemon/2fa-login-security/commit/0020b8dd5364250cec3e4429df40e6a443a0a40e))
+* add missing build:ci script to package.json ([16184b5](https://github.com/Studio-Lemon/2fa-login-security/commit/16184b59d1cda55425d5217373395dcdfcaded15))
+* add missing stable version badge to README ([033d140](https://github.com/Studio-Lemon/2fa-login-security/commit/033d1408a7d86a73acd56624852a424ed7e61491))
+* add optimize-autoloader and preferred-install settings to composer.json ([f4cf253](https://github.com/Studio-Lemon/2fa-login-security/commit/f4cf2532d1b722cb05602191039d572ede38258a))
+* add phpstan configuration files to .gitattributes export-ignore ([8217b30](https://github.com/Studio-Lemon/2fa-login-security/commit/8217b30fff669c4f636d346d1cdb0b936ffc3af2))
+* add versioning configuration for prerelease in release-please config ([0802c12](https://github.com/Studio-Lemon/2fa-login-security/commit/0802c128bd8e40a82e4f5cd94d311a7549591e87))
+* add yarn.lock to .gitattributes export-ignore ([e816c2c](https://github.com/Studio-Lemon/2fa-login-security/commit/e816c2c767a287d2370386fe7d20467729274159))
+* remove deploy_to_satispress option from release workflow ([8f8f767](https://github.com/Studio-Lemon/2fa-login-security/commit/8f8f767407e2a285c416835483e62cb11dc6152e))
+* set deploy_to_satispress to false in release workflow ([03db19d](https://github.com/Studio-Lemon/2fa-login-security/commit/03db19dd51751d8114cb63184e8e5dfe906811fb))
+* update composer.json and composer.lock to include composer/installers dependency ([fa9c246](https://github.com/Studio-Lemon/2fa-login-security/commit/fa9c24610d0dec514d66ba623baa0ab07363ea2e))
+* update remote_host variable syntax in release workflow ([541f2b7](https://github.com/Studio-Lemon/2fa-login-security/commit/541f2b72ebd02deba431aec38ee9c7881219b0fd))
+* update type in composer.json to wordpress-plugin ([d48a97c](https://github.com/Studio-Lemon/2fa-login-security/commit/d48a97ca7c701ba9c3e34ae3006c9f905f0102be))
+
+
+### 📚 Documentation
+
+* add section on how to install via composer ([b0ebc9e](https://github.com/Studio-Lemon/2fa-login-security/commit/b0ebc9ee77a750c47406e569b783e7e213100915))
+
+
+### ⚙️ Miscellaneous Tasks
+
+* add health files ([be79593](https://github.com/Studio-Lemon/2fa-login-security/commit/be79593c8e13620984d573a066424bc6168d7ccc))
+* migrate to yarn ([ba48d98](https://github.com/Studio-Lemon/2fa-login-security/commit/ba48d98dd0476be701d81bb941f86ee0917e40be))
+* update workflow ([07bcd5a](https://github.com/Studio-Lemon/2fa-login-security/commit/07bcd5adf63e9681cc0821be400c736b8dd1915c))
+
 ## 2.0.0-beta.1 (2026-09-25)
 
 
