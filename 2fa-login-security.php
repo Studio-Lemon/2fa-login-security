@@ -1,18 +1,25 @@
 <?php
-/*
-Plugin Name: 2FA Login Security
-Description: 2FA Login Security for WordPress
-Author: 2FA Login Security Contributors
-Author URI: https://wordpress.org/plugins/2fa-login-security/
-x-release-please-start-version
-Version: 1.1.16
-x-release-please-end
-Network: true
-Requires at least: 4.7
-Requires PHP: 8.1
-Text Domain: 2fa-login-security
-Domain Path: /languages
-*/
+
+/**
+ * Plugin Name:                 2FA Login Security
+ * Plugin URI:                  https://github.com/Studio-Lemon/2fa-login-security
+ * Description:                 2FA Login Security for WordPress
+ * Author:                      Erik van der Bas, Studio Lemon
+ * Author URI:                  https://wordpress.org/plugins/2fa-login-security/
+ * Text Domain:                 2fa-login-security
+ * Domain Path:                 /languages
+ * Requires PHP: 						8.1
+ * Requires at least: 				7.0
+ * x-release-please-start-version
+ * Version:                     1.1.16
+ * Network:                     true
+ * x-release-please-end
+ *
+ * @package TFAuthLS
+ */
+
+namespace TFAuthLS;
+
 if (function_exists('wp_installing') && wp_installing()) {
 	return;
 }
