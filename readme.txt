@@ -4,7 +4,7 @@ Tags: security, login security, 2fa, two factor authentication, xml-rpc, mfa, 2 
 Requires at least: 6.0
 Requires PHP: 8.1
 Tested up to: 7.0
-Stable tag: 1.1.16 // x-release-please-version
+Stable tag: 2.0.0-beta.1 // x-release-please-version
 
 Secure your website with 2FA Login Security, providing focused two-factor authentication for WordPress logins.
 
