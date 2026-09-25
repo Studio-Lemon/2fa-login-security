@@ -12,5 +12,5 @@ jobs:
     with:
       plugin_name: "2fa-login-security"
       deploy_to_satispress: true
-      remote_host: packagist.studiolemon.nl
+      remote_host: !secret REMOTE_HOST
     secrets: inherit
