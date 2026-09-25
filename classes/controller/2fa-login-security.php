@@ -302,10 +302,11 @@ class Controller_TFAuthLS
 	 */
 	public function _admin_enqueue_scripts($hookSuffix): void
 	{
+
+		wp_enqueue_style('2fa-ls-admin-global', Model_Asset::css('admin-global.css'), array(), TFA_LS_VERSION);
+
 		if (isset($_GET['page']) && $_GET['page'] == 'WFLS') {
 			$this->enqueue_2fa_management_assets();
-		} else {
-			wp_enqueue_style('2fa-ls-admin-global', Model_Asset::css('admin-global.css'), array(), TFA_LS_VERSION);
 		}
 
 		if (Controller_Notices::shared()->has_notice(wp_get_current_user()) || in_array($hookSuffix, array('user-edit.php', 'user-new.php', 'profile.php'))) {

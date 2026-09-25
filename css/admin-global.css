@@ -1,4 +1,3 @@
-
 .wfls-btn {
   display: inline-block;
   margin-bottom: 0;
@@ -668,6 +667,9 @@ small.wfls-sub-status {
 .wfls-grace-period-container .wfls-grace-period-input-container {
   margin-right: 1.5rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .wfls-grace-period-container .wfls-grace-period-input-container label {
   display: block;
