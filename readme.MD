@@ -1,5 +1,7 @@
 # 2FA Login Security
 
+[![Latest Stable Version](https://poser.pugx.org/studio-lemon/2fa-login-security/v/stable)](https://packagist.org/packages/studio-lemon/2fa-login-security)
+
 2FA Login Security is a standalone WordPress plugin focused on two-factor authentication. This repository started as a fork of Wordfence Login Security and is being pared down into a smaller plugin with fewer moving parts.
 
 This README covers the plugin's purpose, installation, day-to-day usage, and local development workflow. The user-facing setup guide from [docs/how-to.md](docs/how-to.md) is also included here so the main README can stand on its own.
