@@ -1,4 +1,5 @@
 # Keep development and repository metadata out of distribution archives.
+.github export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 FORK-PROCESS.md export-ignore
@@ -18,6 +19,8 @@ composer.json export-ignore
 composer.lock export-ignore
 phpcs.xml.dist export-ignore
 rector.php export-ignore
+phpstan-bootstrap.php export-ignore
+phpstan.neon.dist export-ignore
 
 # Keep internal development documentation out of distribution archives.
 docs export-ignore
