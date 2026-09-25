@@ -1,0 +1,85 @@
+name: Bug report
+description: Report a reproducible problem in 2FA Login Security
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem.
+
+        For questions about configuring or using the plugin, use [GitHub Discussions](https://github.com/Studio-Lemon/2fa-login-security/discussions). Do not report security vulnerabilities here; email [support@studiolemon.nl](mailto:support@studiolemon.nl) instead.
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Describe what you expected 2FA Login Security to do.
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: Describe what happened instead. Include error messages or screenshots when useful.
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest set of steps that consistently reproduces the problem. Do not include passwords, recovery codes, TOTP secrets, or other sensitive data.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: "Example: 2.0.0"
+    validations:
+      required: true
+  - type: input
+    id: wordpress-version
+    attributes:
+      label: WordPress version
+      placeholder: "Example: 6.8"
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: "Example: 8.3"
+    validations:
+      required: true
+  - type: dropdown
+    id: installation-method
+    attributes:
+      label: Installation method
+      options:
+        - WordPress plugin directory
+        - GitHub release
+        - Composer
+        - Manual installation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: multisite
+    attributes:
+      label: Is this a WordPress multisite installation?
+      options:
+        - "No"
+        - "Yes"
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add relevant configuration details, affected user roles, and any other context.
+    validations:
+      required: false
