@@ -1,5 +1,5 @@
 <?php
-if (! defined('TFA_LS_VERSION')) {
+if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 
@@ -8,40 +8,40 @@ if (! defined('TFA_LS_VERSION')) {
  * @var bool $canEditUsers Whether or not the viewer of the page can edit other users. Optional, defaults to false.
  */
 
-if (! isset($canEditUsers)) {
+if ( ! isset( $canEditUsers ) ) {
 	$canEditUsers = false;
 }
 
 $ownAccount = false;
 $ownUser    = wp_get_current_user();
-if ($ownUser->ID == $user->ID) {
+if ( $ownUser->ID == $user->ID ) {
 	$ownAccount = true;
 }
 
-$enabled     = \TFAuthLS\Controller_Users::shared()->has_2fa_active($user);
-$requires2fa = \TFAuthLS\Controller_Users::shared()->requires_2fa($user, $inGracePeriod, $requiredAt);
+$enabled     = \TFAuthLS\Controller_Users::shared()->has_2fa_active( $user );
+$requires2fa = \TFAuthLS\Controller_Users::shared()->requires_2fa( $user, $inGracePeriod, $requiredAt );
 $lockedOut   = $requires2fa && ! $enabled;
 
 ?>
 <p>
 	<?php
 	echo wp_kses(
-		sprintf( /* translators: Support URL */__('Two-Factor Authentication, or 2FA, significantly improves login security for your website. 2FA Login Security works with a number of TOTP-based apps like Google Authenticator, FreeOTP, and Authy. For more details, <a href="%s" target="_blank" rel="noopener noreferrer">visit the plugin page</a>.', '2fa-login-security'), \TFAuthLS\Controller_Support::esc_supportURL(\TFAuthLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA)),
+		sprintf( /* translators: Support URL */__( 'Two-Factor Authentication, or 2FA, significantly improves login security for your website. 2FA Login Security works with a number of TOTP-based apps like Google Authenticator, FreeOTP, and Authy. For more details, <a href="%s" target="_blank" rel="noopener noreferrer">visit the plugin page</a>.', '2fa-login-security' ), \TFAuthLS\Controller_Support::esc_supportURL( \TFAuthLS\Controller_Support::ITEM_MODULE_LOGIN_SECURITY_2FA ) ),
 		array(
 			'a' => array(
-				'href'   => array(),
+				'href' => array(),
 			),
 		)
 	);
 	?>
 </p>
-<?php if ($canEditUsers) : ?>
+<?php if ( $canEditUsers ) : ?>
 	<div id="wfls-editing-display" class="wfls-flex-row wfls-flex-row-xs-wrappable wfls-flex-row-equal-heights">
 		<div class="wfls-block wfls-always-active wfls-flex-item-full-width wfls-add-bottom">
 			<div class="wfls-block-header wfls-block-header-border-bottom">
 				<div class="wfls-block-header-content">
 					<div class="wfls-block-title">
-						<strong><?php echo wp_kses(sprintf( /* translators: 1. WordPress avatar tag; 2. WordPress username */__('Editing User:&nbsp;&nbsp;%1$s <span class="wfls-text-plain">%2$s</span>', '2fa-login-security'), get_avatar($user->ID, 16, '', $user->user_login), \TFAuthLS\Text\Model_HTML::esc_html($user->user_login) . ($ownAccount ? ' ' . __('(you)', '2fa-login-security') : '')), array('span' => array('class' => array()))); ?></strong>
+						<strong><?php echo wp_kses( sprintf( /* translators: 1. WordPress avatar tag; 2. WordPress username */__( 'Editing User:&nbsp;&nbsp;%1$s <span class="wfls-text-plain">%2$s</span>', '2fa-login-security' ), get_avatar( $user->ID, 16, '', $user->user_login ), \TFAuthLS\Text\Model_HTML::esc_html( $user->user_login ) . ( $ownAccount ? ' ' . __( '(you)', '2fa-login-security' ) : '' ) ), array( 'span' => array( 'class' => array() ) ) ); ?></strong>
 					</div>
 				</div>
 			</div>
@@ -50,10 +50,11 @@ $lockedOut   = $requires2fa && ! $enabled;
 <?php endif; ?>
 <div id="wfls-deactivation-controls" class="wfls-flex-row wfls-flex-row-wrappable wfls-flex-row-equal-heights"
 	<?php
-	if (! $enabled) {
+	if ( ! $enabled ) {
 		echo ' style="display: none;"';
 	}
-	?>>
+	?>
+	>
 	<!-- begin status content -->
 	<div class="wfls-flex-row wfls-flex-row-equal-heights wfls-flex-item-xs-100">
 		<?php
@@ -73,7 +74,7 @@ $lockedOut   = $requires2fa && ! $enabled;
 			'manage/regenerate',
 			array(
 				'user'      => $user,
-				'remaining' => \TFAuthLS\Controller_Users::shared()->recovery_code_count($user),
+				'remaining' => \TFAuthLS\Controller_Users::shared()->recovery_code_count( $user ),
 			)
 		)->render();
 		?>
@@ -82,12 +83,13 @@ $lockedOut   = $requires2fa && ! $enabled;
 </div>
 <div id="wfls-activation-controls" class="wfls-flex-row wfls-flex-row-xs-wrappable wfls-flex-row-equal-heights"
 	<?php
-	if ($enabled) {
+	if ( $enabled ) {
 		echo ' style="display: none;"';
 	}
-	?>>
+	?>
+	>
 	<?php
-	$initializationData = new \TFAuthLS\Model_2faInitializationData($user);
+	$initializationData = new \TFAuthLS\Model_2faInitializationData( $user );
 	?>
 	<!-- begin qr code -->
 	<div class="wfls-flex-row wfls-flex-row-equal-heights wfls-col-sm-half-padding-right wfls-flex-item-xs-100 wfls-flex-item-sm-50">
@@ -116,10 +118,11 @@ $lockedOut   = $requires2fa && ! $enabled;
 </div>
 <div id="wfls-grace-period-controls" class="wfls-flex-row wfls-flex-row-xs-wrappable wfls-flex-row-equal-heights"
 	<?php
-	if ($enabled || ! ($lockedOut || $inGracePeriod)) {
+	if ( $enabled || ! ( $lockedOut || $inGracePeriod ) ) {
 		echo ' style="display: none;"';
 	}
-	?>>
+	?>
+	>
 	<div class="wfls-flex-row wfls-flex-row-equal-heights wfls-flex-item-xs-100 wfls-add-top">
 		<?php
 		echo \TFAuthLS\Model_View::create(
@@ -136,23 +139,23 @@ $lockedOut   = $requires2fa && ! $enabled;
 </div>
 <?php
 $time          = time();
-$correctedTime = \TFAuthLS\Controller_Time::time($time);
-$tz            = get_option('timezone_string');
-if (empty($tz)) {
-	$offset = get_option('gmt_offset');
-	$tz     = 'UTC' . ($offset >= 0 ? '+' . $offset : $offset);
+$correctedTime = \TFAuthLS\Controller_Time::time( $time );
+$tz            = get_option( 'timezone_string' );
+if ( empty( $tz ) ) {
+	$offset = get_option( 'gmt_offset' );
+	$tz     = 'UTC' . ( $offset >= 0 ? '+' . $offset : $offset );
 }
 ?>
-<?php if (\TFAuthLS\Controller_Permissions::shared()->can_manage_settings()) : ?>
-	<p><?php esc_html_e('Server Time:', '2fa-login-security'); ?> <?php echo date('Y-m-d H:i:s', $time); ?> UTC (<?php echo \TFAuthLS\Controller_Time::format_local_time('Y-m-d H:i:s', $time) . ' ' . $tz; ?>)<br>
-		<?php esc_html_e('Browser Time:', '2fa-login-security'); ?> <script type="application/javascript">
+<?php if ( \TFAuthLS\Controller_Permissions::shared()->can_manage_settings() ) : ?>
+	<p><?php esc_html_e( 'Server Time:', '2fa-login-security' ); ?> <?php echo date( 'Y-m-d H:i:s', $time ); ?> UTC (<?php echo \TFAuthLS\Controller_Time::format_local_time( 'Y-m-d H:i:s', $time ) . ' ' . $tz; ?>)<br>
+		<?php esc_html_e( 'Browser Time:', '2fa-login-security' ); ?> <script type="application/javascript">
 			var date = new Date();
 			document.write(date.toUTCString() + ' (' + date.toString() + ')');
 		</script><br>
 		<?php
-		if (\TFAuthLS\Controller_Settings::shared()->is_ntp_enabled()) {
-			echo esc_html__('Corrected Time (NTP):', '2fa-login-security') . ' ' . date('Y-m-d H:i:s', $correctedTime) . ' UTC (' . \TFAuthLS\Controller_Time::format_local_time('Y-m-d H:i:s', $correctedTime) . ' ' . $tz . ')<br>';
+		if ( \TFAuthLS\Controller_Settings::shared()->is_ntp_enabled() ) {
+			echo esc_html__( 'Corrected Time (NTP):', '2fa-login-security' ) . ' ' . date( 'Y-m-d H:i:s', $correctedTime ) . ' UTC (' . \TFAuthLS\Controller_Time::format_local_time( 'Y-m-d H:i:s', $correctedTime ) . ' ' . $tz . ')<br>';
 		}
 		?>
-		<?php esc_html_e('Detected IP:', '2fa-login-security'); ?> <?php echo \TFAuthLS\Text\Model_HTML::esc_html(\TFAuthLS\Model_Request::current()->ip()); ?></p>
+		<?php esc_html_e( 'Detected IP:', '2fa-login-security' ); ?> <?php echo \TFAuthLS\Text\Model_HTML::esc_html( \TFAuthLS\Model_Request::current()->ip() ); ?></p>
 <?php endif; ?>

@@ -4,8 +4,8 @@ namespace TFAuthLS;
 
 use RuntimeException;
 
-class Utility_DatabaseLock implements Utility_Lock
-{
+class Utility_DatabaseLock implements Utility_Lock {
+
 
 
 	const DEFAULT_TIMEOUT = 30;
@@ -17,28 +17,25 @@ class Utility_DatabaseLock implements Utility_Lock
 	private $timeout;
 	private int|float|null $expirationTimestamp = null;
 
-	public function __construct($dbController, $key, $timeout = null)
-	{
+	public function __construct( $dbController, $key, $timeout = null ) {
 		$this->wpdb    = $dbController->get_wpdb();
 		$this->table   = $dbController->settings;
 		$this->key     = "lock:{$key}";
-		$this->timeout = $this->resolveTimeout($timeout);
+		$this->timeout = $this->resolveTimeout( $timeout );
 	}
 
-	private function resolveTimeout($timeout): int
-	{
-		if ($timeout === null) {
-			$timeout = ini_get('max_execution_time');
+	private function resolveTimeout( $timeout ): int {
+		if ( $timeout === null ) {
+			$timeout = ini_get( 'max_execution_time' );
 		}
 		$timeout = (int) $timeout;
-		if ($timeout <= 0 || $timeout > self::MAX_TIMEOUT) {
+		if ( $timeout <= 0 || $timeout > self::MAX_TIMEOUT ) {
 			return self::DEFAULT_TIMEOUT;
 		}
 		return $timeout;
 	}
 
-	private function clearExpired(int $timestamp): void
-	{
+	private function clearExpired( int $timestamp ): void {
 		$this->wpdb->query(
 			$this->wpdb->prepare(
 				<<<SQL
@@ -54,8 +51,7 @@ class Utility_DatabaseLock implements Utility_Lock
 		);
 	}
 
-	private function insert(int|float $expirationTimestamp): bool
-	{
+	private function insert( int|float $expirationTimestamp ): bool {
 		$result = $this->wpdb->query(
 			$this->wpdb->prepare(
 				<<<SQL
@@ -71,25 +67,23 @@ class Utility_DatabaseLock implements Utility_Lock
 		return $result === 1;
 	}
 
-	public function acquire($delay = self::DEFAULT_DELAY): void
-	{
-		$attempts = (int) ($this->timeout * 1000000 / $delay);
-		for (; $attempts > 0; $attempts--) {
+	public function acquire( $delay = self::DEFAULT_DELAY ): void {
+		$attempts = (int) ( $this->timeout * 1000000 / $delay );
+		for ( ; $attempts > 0; $attempts-- ) {
 			$timestamp = time();
-			$this->clearExpired($timestamp);
+			$this->clearExpired( $timestamp );
 			$expirationTimestamp = $timestamp + $this->timeout;
-			$locked              = $this->insert($expirationTimestamp);
-			if ($locked) {
+			$locked              = $this->insert( $expirationTimestamp );
+			if ( $locked ) {
 				$this->expirationTimestamp = $expirationTimestamp;
 				return;
 			}
-			usleep($delay);
+			usleep( $delay );
 		}
-		throw new RuntimeException("Failed to acquire lock {$this->key}");
+		throw new RuntimeException( "Failed to acquire lock {$this->key}" );
 	}
 
-	private function delete($expirationTimestamp): void
-	{
+	private function delete( $expirationTimestamp ): void {
 		$this->wpdb->delete(
 			$this->table,
 			array(
@@ -103,12 +97,11 @@ class Utility_DatabaseLock implements Utility_Lock
 		);
 	}
 
-	public function release(): void
-	{
-		if ($this->expirationTimestamp === null) {
+	public function release(): void {
+		if ( $this->expirationTimestamp === null ) {
 			return;
 		}
-		$this->delete($this->expirationTimestamp);
+		$this->delete( $this->expirationTimestamp );
 		$this->expirationTimestamp = null;
 	}
 }

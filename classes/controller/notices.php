@@ -4,8 +4,8 @@ namespace TFAuthLS;
 
 use TFAuthLS\Text\Model_HTML;
 
-class Controller_Notices
-{
+class Controller_Notices {
+
 
 	const USER_META_KEY = 'wfls_notices';
 
@@ -14,10 +14,9 @@ class Controller_Notices
 	 *
 	 * @return Controller_Notices
 	 */
-	public static function shared()
-	{
+	public static function shared() {
 		static $_shared = null;
-		if ($_shared === null) {
+		if ( $_shared === null ) {
 			$_shared = new Controller_Notices();
 		}
 		return $_shared;
@@ -33,27 +32,26 @@ class Controller_Notices
 	 * @param bool|\WP_User     $user If not false, the user that the notice should show for.
 	 * @param array             $buttons Additional buttons to display before the dismiss button.
 	 */
-	public function add_notice($severity, $message, $category = false, $user = false, $buttons = array()): void
-	{
-		$notices = $this->_notices($user);
-		foreach ($notices as $id => $n) {
-			if ($category !== false && isset($n['category']) && $n['category'] == $category) { // Same category overwrites previous entry
-				unset($notices[$id]);
+	public function add_notice( $severity, $message, $category = false, $user = false, $buttons = array() ): void {
+		$notices = $this->_notices( $user );
+		foreach ( $notices as $id => $n ) {
+			if ( $category !== false && isset( $n['category'] ) && $n['category'] == $category ) { // Same category overwrites previous entry
+				unset( $notices[ $id ] );
 			}
 		}
 
 		$id             = Model_Crypto::uuid();
-		$notices[$id] = array(
+		$notices[ $id ] = array(
 			'severity'    => $severity,
-			'messageHTML' => Model_HTML::esc_html($message),
+			'messageHTML' => Model_HTML::esc_html( $message ),
 			'buttons'     => $buttons,
 		);
 
-		if ($category !== false) {
-			$notices[$id]['category'] = $category;
+		if ( $category !== false ) {
+			$notices[ $id ]['category'] = $category;
 		}
 
-		$this->_save_notices($notices, $user);
+		$this->_save_notices( $notices, $user );
 	}
 
 	/**
@@ -66,30 +64,29 @@ class Controller_Notices
 	 * @param bool|string   $category
 	 * @param bool|\WP_User $user
 	 */
-	public function remove_notice($id = false, $category = false, $user = false): void
-	{
-		if ($id === false && $category === false) {
+	public function remove_notice( $id = false, $category = false, $user = false ): void {
+		if ( $id === false && $category === false ) {
 			return;
 		}
-		if ($id !== false) {
+		if ( $id !== false ) {
 			$category = false;
 		}
 
-		$notices = $this->_notices($user);
-		foreach ($notices as $nid => $n) {
-			if ($id == $nid) {
+		$notices = $this->_notices( $user );
+		foreach ( $notices as $nid => $n ) {
+			if ( $id == $nid ) {
 				// ID match
-				unset($notices[$nid]);
+				unset( $notices[ $nid ] );
 				break;
-			} elseif ($id !== false) {
+			} elseif ( $id !== false ) {
 				continue;
 			}
 
-			if ($category !== false && isset($n['category']) && $category == $n['category']) { // Category match
-				unset($notices[$nid]);
+			if ( $category !== false && isset( $n['category'] ) && $category == $n['category'] ) { // Category match
+				unset( $notices[ $nid ] );
 			}
 		}
-		$this->_save_notices($notices, $user);
+		$this->_save_notices( $notices, $user );
 	}
 
 	/**
@@ -97,10 +94,9 @@ class Controller_Notices
 	 *
 	 * @param bool|\WP_User $user
 	 */
-	public function has_notice($user): bool
-	{
-		$notices = $this->_notices($user);
-		return (bool) count($notices);
+	public function has_notice( $user ): bool {
+		$notices = $this->_notices( $user );
+		return (bool) count( $notices );
 	}
 
 	/**
@@ -108,29 +104,28 @@ class Controller_Notices
 	 *
 	 * @return bool Whether any notices were enqueued.
 	 */
-	public function enqueue_notices()
-	{
+	public function enqueue_notices() {
 		$user = wp_get_current_user();
-		if ($user->ID == 0) {
+		if ( $user->ID == 0 ) {
 			return false;
 		}
 
 		$added   = false;
 		$notices = array();
-		if (Controller_Permissions::shared()->can_manage_settings($user)) {
-			$globalNotices = $this->_notices(false);
-			$notices       = array_merge($notices, $globalNotices);
+		if ( Controller_Permissions::shared()->can_manage_settings( $user ) ) {
+			$globalNotices = $this->_notices( false );
+			$notices       = array_merge( $notices, $globalNotices );
 		}
 
-		$userNotices = $this->_notices($user);
-		$notices     = array_merge($notices, $userNotices);
+		$userNotices = $this->_notices( $user );
+		$notices     = array_merge( $notices, $userNotices );
 
-		foreach ($notices as $nid => $n) {
-			$notice = new Model_Notice($nid, $n['severity'], $n['messageHTML'], $n['category'], $n['buttons'] ?? array());
-			if (is_multisite()) {
-				add_action('network_admin_notices', array($notice, 'display_notice'));
+		foreach ( $notices as $nid => $n ) {
+			$notice = new Model_Notice( $nid, $n['severity'], $n['messageHTML'], $n['category'], $n['buttons'] ?? array() );
+			if ( is_multisite() ) {
+				add_action( 'network_admin_notices', array( $notice, 'display_notice' ) );
 			} else {
-				add_action('admin_notices', array($notice, 'display_notice'));
+				add_action( 'admin_notices', array( $notice, 'display_notice' ) );
 			}
 
 			$added = true;
@@ -149,13 +144,12 @@ class Controller_Notices
 	 * @param bool|\WP_User $user
 	 * @return array
 	 */
-	protected function _notices($user)
-	{
-		if ($user instanceof \WP_User) {
-			$notices = get_user_meta($user->ID, self::USER_META_KEY, true);
-			return array_filter((array) $notices);
+	protected function _notices( $user ) {
+		if ( $user instanceof \WP_User ) {
+			$notices = get_user_meta( $user->ID, self::USER_META_KEY, true );
+			return array_filter( (array) $notices );
 		}
-		return Controller_Settings::shared()->get_array(Controller_Settings::OPTION_GLOBAL_NOTICES);
+		return Controller_Settings::shared()->get_array( Controller_Settings::OPTION_GLOBAL_NOTICES );
 	}
 
 	/**
@@ -164,12 +158,11 @@ class Controller_Notices
 	 * @param array         $notices
 	 * @param bool|\WP_User $user
 	 */
-	protected function _save_notices($notices, $user)
-	{
-		if ($user instanceof \WP_User) {
-			update_user_meta($user->ID, self::USER_META_KEY, $notices);
+	protected function _save_notices( $notices, $user ) {
+		if ( $user instanceof \WP_User ) {
+			update_user_meta( $user->ID, self::USER_META_KEY, $notices );
 			return;
 		}
-		Controller_Settings::shared()->set(Controller_Settings::OPTION_GLOBAL_NOTICES, $notices, true);
+		Controller_Settings::shared()->set( Controller_Settings::OPTION_GLOBAL_NOTICES, $notices, true );
 	}
 }

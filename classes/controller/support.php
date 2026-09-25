@@ -2,39 +2,36 @@
 
 namespace TFAuthLS;
 
-class Controller_Support
-{
+class Controller_Support {
+
 
 	const ITEM_INDEX                     = 'index';
 	const ITEM_MODULE_LOGIN_SECURITY     = 'how-to';
 	const ITEM_MODULE_LOGIN_SECURITY_2FA = 'how-to-enable-two-factor-authentication';
 
 
-	public static function supportURLs(): array
-	{
-		$ref       = new \ReflectionClass(static::class);
+	public static function supportURLs(): array {
+		$ref       = new \ReflectionClass( static::class );
 		$constants = $ref->getConstants();
 
 		$items = array();
-		foreach ($constants as $name => $value) {
-			if (strpos($name, 'ITEM_') === 0) {
-				$name           = strtolower(substr($name, 5));
-				$items[$name] = static::supportURL($value);
+		foreach ( $constants as $name => $value ) {
+			if ( strpos( $name, 'ITEM_' ) === 0 ) {
+				$name           = strtolower( substr( $name, 5 ) );
+				$items[ $name ] = static::supportURL( $value );
 			}
 		}
 
 		return $items;
 	}
 
-	public static function esc_supportURL($item = self::ITEM_INDEX)
-	{
-		return esc_url(self::supportURL($item));
+	public static function esc_supportURL( $item = self::ITEM_INDEX ) {
+		return esc_url( self::supportURL( $item ) );
 	}
 
-	public static function supportURL(string $item = self::ITEM_INDEX): string
-	{
+	public static function supportURL( string $item = self::ITEM_INDEX ): string {
 		$base = 'https://github.com/Studio-Lemon/2fa-login-security';
-		switch ($item) {
+		switch ( $item ) {
 			case self::ITEM_INDEX:
 				return $base;
 

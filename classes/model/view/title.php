@@ -11,25 +11,23 @@ namespace TFAuthLS\View;
  * @property-read string|null $helpURL The help URL.
  * @property-read string|\TFAuthLS\Text\Model_HTML|null $helpLink The text/HTML of the help link.
  */
-class Model_Title
-{
+class Model_Title {
+
 
 	private $_id;
 	private $_title;
 	private $_helpURL;
 	private $_helpLink;
 
-	public function __construct($id, $title, $helpURL = null, $helpLink = null)
-	{
+	public function __construct( $id, $title, $helpURL = null, $helpLink = null ) {
 		$this->_id       = $id;
 		$this->_title    = $title;
 		$this->_helpURL  = $helpURL;
 		$this->_helpLink = $helpLink;
 	}
 
-	public function __get(string $name)
-	{
-		switch ($name) {
+	public function __get( string $name ) {
+		switch ( $name ) {
 			case 'id':
 				return $this->_id;
 			case 'title':
@@ -40,6 +38,6 @@ class Model_Title
 				return $this->_helpLink;
 		}
 
-		throw new \OutOfBoundsException('Invalid key: ' . $name);
+		throw new \OutOfBoundsException( 'Invalid key: ' . $name );
 	}
 }

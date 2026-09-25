@@ -2,7 +2,7 @@
 
 use TFAuthLS\Utility_URL;
 
-if (! defined('TFA_LS_VERSION')) {
+if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 
@@ -14,7 +14,7 @@ if (! defined('TFA_LS_VERSION')) {
 	<div class="wfls-container-fluid">
 		<?php
 		$tabs = array_map(
-			function ($t) {
+			function ( $t ) {
 				return $t['tab'];
 			},
 			$sections
@@ -28,8 +28,8 @@ if (! defined('TFA_LS_VERSION')) {
 		?>
 		<div class="wfls-row">
 			<div class="wfls-col-xs-12">
-				<?php foreach ($sections as $s) : ?>
-					<div id="<?php echo esc_attr($s['tab']->id); ?>" class="wfls-tab-content" data-title="<?php echo esc_attr($s['tab']->pageTitle); ?>">
+				<?php foreach ( $sections as $s ) : ?>
+					<div id="<?php echo esc_attr( $s['tab']->id ); ?>" class="wfls-tab-content" data-title="<?php echo esc_attr( $s['tab']->pageTitle ); ?>">
 						<?php
 						echo \TFAuthLS\Model_View::create(
 							'page/section-title',
@@ -39,7 +39,7 @@ if (! defined('TFA_LS_VERSION')) {
 						)->render();
 						echo $s['content'];
 						?>
-					</div> <!-- end <?php echo \TFAuthLS\Text\Model_HTML::esc_html($s['tab']->id); ?> block -->
+					</div> <!-- end <?php echo \TFAuthLS\Text\Model_HTML::esc_html( $s['tab']->id ); ?> block -->
 				<?php endforeach; ?>
 			</div> <!-- end content block -->
 		</div> <!-- end row -->
