@@ -11,6 +11,7 @@
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "phpstan/extension-installer": "^1.4",
     "phpstan/phpstan": "^2.2",
+    "10up/phpcs-composer": "^3.0",
     "phpstan/phpstan-deprecation-rules": "^2.0",
     "rector/rector": "^2.0",
     "squizlabs/php_codesniffer": "^3.11",
@@ -18,12 +19,11 @@
     "wp-coding-standards/wpcs": "^3.1"
   },
   "scripts": {
-    "cs": "@php ./vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
-    "cs:fix": "@php ./vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
     "rector": "vendor/bin/rector process",
     "rector:dry-run": "vendor/bin/rector process --dry-run",
-    "stan": "@php ./vendor/bin/phpstan analyse --memory-limit=1G",
-    "stan:level": "@php ./vendor/bin/phpstan analyse --memory-limit=1G --level"
+    "analyze": "@php ./vendor/bin/phpstan analyze",
+    "cs": "@php ./vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
+    "cs:fix": "@php ./vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./"
   },
   "extra": {
     "wordpress-install-dir": "vendor/.wordpress"
