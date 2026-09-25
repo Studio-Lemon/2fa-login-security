@@ -20,6 +20,8 @@
 
 namespace TFAuthLS;
 
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
 if (function_exists('wp_installing') && wp_installing()) {
 	return;
 }
@@ -37,6 +39,21 @@ if (! defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
 
 define('TFA_LS_FCPATH', __FILE__);
 define('TFA_LS_PATH', trailingslashit(dirname(TFA_LS_FCPATH)));
+
+
+require __DIR__ . '/plugin-update-checker/plugin-update-checker.php';
+
+$update_checker = PucFactory::buildUpdateChecker(
+	'https://github.com/Studio-Lemon/2fa-login-security/',
+	__FILE__,
+	'2fa-login-security'
+);
+
+$update_checker->setBranch('master');
+$vcs_api = $update_checker->getVcsApi();
+
+/** @var \YahnisElsts\PluginUpdateChecker\v5p6\Vcs\GitHubApi $vcs_api */
+$vcs_api->enableReleaseAssets('/2fa-login-security\.zip/', 2);
 
 require_once __DIR__ . '/classes/utility/array.php';
 require_once __DIR__ . '/classes/utility/baseconversion.php';
