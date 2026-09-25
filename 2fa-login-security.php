@@ -4,7 +4,9 @@ Plugin Name: 2FA Login Security
 Description: 2FA Login Security for WordPress
 Author: 2FA Login Security Contributors
 Author URI: https://wordpress.org/plugins/2fa-login-security/
+x-release-please-start-version
 Version: 1.1.16
+x-release-please-end
 Network: true
 Requires at least: 4.7
 Requires PHP: 8.1
@@ -18,7 +20,7 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
-define('TFA_LS_VERSION', '1.1.16');
+define('TFA_LS_VERSION', '1.1.16'); // x-release-please-version
 
 define('TFA_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
@@ -26,21 +28,8 @@ if (! defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
 	define('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15);
 }
 
-global $wp_plugin_paths;
-foreach ($wp_plugin_paths as $dir => $realdir) {
-	if (strpos(__FILE__, $realdir) === 0) {
-		define('TFA_LS_FCPATH', $dir . '/' . basename(__FILE__));
-		define('TFA_LS_PATH', trailingslashit($dir));
-		break;
-	}
-}
-
-if (! defined('TFA_LS_FCPATH')) {
-	/** @noinspection PhpConstantReassignmentInspection */
-	define('TFA_LS_FCPATH', __FILE__);
-	/** @noinspection PhpConstantReassignmentInspection */
-	define('TFA_LS_PATH', trailingslashit(dirname(TFA_LS_FCPATH)));
-}
+define('TFA_LS_FCPATH', __FILE__);
+define('TFA_LS_PATH', trailingslashit(dirname(TFA_LS_FCPATH)));
 
 require_once __DIR__ . '/classes/utility/array.php';
 require_once __DIR__ . '/classes/utility/baseconversion.php';
@@ -87,6 +76,5 @@ require_once __DIR__ . '/classes/controller/whitelist.php';
 require_once __DIR__ . '/classes/controller/ajax.php';
 require_once __DIR__ . '/classes/controller/2fa-login-security.php';
 
-if (! defined('TFA_LS_VERSIONONLY_MODE')) { // Used to get version from file
-	\TFAuthLS\Controller_TFAuthLS::shared()->init();
-}
+
+\TFAuthLS\Controller_TFAuthLS::shared()->init();
