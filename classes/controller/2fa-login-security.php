@@ -68,15 +68,9 @@ class Controller_TFAuthLS
 		add_action('show_user_profile', array($this, '_edit_user_profile'), 0); // We can't add it to the password section directly -- priority 0 is as close as we can get
 		add_action('edit_user_profile', array($this, '_edit_user_profile'), 0);
 
-		add_action('init', array($this, '_wordpress_init'));
-
 		Controller_Permissions::_init_actions();
 	}
 
-	public function _wordpress_init(): void
-	{
-		load_plugin_textdomain('2fa-login-security', false, TFA_LS_PATH . 'languages');
-	}
 
 	public function _admin_init(): void
 	{

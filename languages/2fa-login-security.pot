@@ -1,4 +1,4 @@
-# Copyright (C) 2026 2FA Login Security Contributors
+# Copyright (C) 2026 Erik van der Bas, Studio Lemon
 # This file is distributed under the same license as the 2FA Login Security plugin.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-28T19:25:41+00:00\n"
+"POT-Creation-Date: 2026-09-25T06:10:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: 2fa-login-security\n"
@@ -20,6 +20,11 @@ msgstr ""
 msgid "2FA Login Security"
 msgstr ""
 
+#. Plugin URI of the plugin
+#: 2fa-login-security.php
+msgid "https://github.com/Studio-Lemon/2fa-login-security"
+msgstr ""
+
 #. Description of the plugin
 #: 2fa-login-security.php
 msgid "2FA Login Security for WordPress"
@@ -27,7 +32,7 @@ msgstr ""
 
 #. Author of the plugin
 #: 2fa-login-security.php
-msgid "2FA Login Security Contributors"
+msgid "Erik van der Bas, Studio Lemon"
 msgstr ""
 
 #. Author URI of the plugin
@@ -117,152 +122,142 @@ msgid "Your browser sent an invalid security token. Please reload and try again.
 msgstr ""
 
 #: classes/controller/2fa-login-security.php:417
-#: classes/controller/users.php:556
+#: classes/controller/users.php:552
 msgid "2FA Status"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:421
-#: classes/controller/2fa-login-security.php:688
+#: classes/controller/2fa-login-security.php:420
+#: classes/controller/2fa-login-security.php:686
 #: views/manage/grace-period.php:24
 msgid "Locked Out"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:421
-#: classes/controller/users.php:575
+#: classes/controller/2fa-login-security.php:420
+#: classes/controller/users.php:571
 msgid "Active"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:421
-#: classes/controller/users.php:581
+#: classes/controller/2fa-login-security.php:420
+#: classes/controller/users.php:577
 msgid "Inactive"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:424
+#: classes/controller/2fa-login-security.php:423
 #: views/manage/grace-period.php:52
 msgid "Two-factor authentication is required for your account, but has not been configured."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:424
+#: classes/controller/2fa-login-security.php:423
 #: views/manage/grace-period.php:53
 msgid "Two-factor authentication is required for this account, but has not been configured."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:425
+#: classes/controller/2fa-login-security.php:424
 msgid "2FA is active."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:425
+#: classes/controller/2fa-login-security.php:424
 msgid "2FA is inactive."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:427
-#: classes/controller/2fa-login-security.php:448
+#: classes/controller/2fa-login-security.php:426
 msgid "Learn More"
 msgstr ""
 
 #. translators: Date
-#: classes/controller/2fa-login-security.php:434
+#: classes/controller/2fa-login-security.php:433
 #, php-format
 msgid "Two-factor authentication must be activated for your account prior to %s to avoid losing access."
 msgstr ""
 
 #. translators: Date
-#: classes/controller/2fa-login-security.php:435
+#: classes/controller/2fa-login-security.php:434
 #, php-format
 msgid "Two-factor authentication must be activated for this account prior to %s."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:444
+#: classes/controller/2fa-login-security.php:443
 msgid "Manage 2FA"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:444
+#: classes/controller/2fa-login-security.php:443
 msgid "Activate 2FA"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:448
-#: views/page/settings.php:9
-msgid "Disabled"
-msgstr ""
-
-#: classes/controller/2fa-login-security.php:448
-msgid "Two-factor authentication is not currently enabled for this account type. To enable it, visit the 2FA Settings page."
-msgstr ""
-
-#: classes/controller/2fa-login-security.php:471
+#: classes/controller/2fa-login-security.php:466
 msgid "Manage 2FA Settings"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:544
+#: classes/controller/2fa-login-security.php:542
 msgid "<strong>CODE INVALID</strong>: The 2FA code provided is either expired or invalid. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:552
+#: classes/controller/2fa-login-security.php:550
 msgid "<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after your password in the same field."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:554
+#: classes/controller/2fa-login-security.php:552
 msgid "<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:557
+#: classes/controller/2fa-login-security.php:555
 msgid "<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your account. Please contact the site administrator."
 msgstr ""
 
 #. translators: 1. Date; 2. Configuration URL
-#: classes/controller/2fa-login-security.php:560
+#: classes/controller/2fa-login-security.php:558
 #, php-format
 msgid "You do not currently have two-factor authentication active on your account, which will be required beginning %1$s. <a href=\"%2$s\">Configure 2FA</a>"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:608
+#: classes/controller/2fa-login-security.php:606
 msgid "Email verification succeeded. Please continue logging in."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:610
+#: classes/controller/2fa-login-security.php:608
 msgid "Email verification invalid or expired. Please try again."
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:646
-#: classes/controller/2fa-login-security.php:647
+#: classes/controller/2fa-login-security.php:644
+#: classes/controller/2fa-login-security.php:645
 msgid "Login Security"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:680
+#: classes/controller/2fa-login-security.php:678
 #: views/page/settings.php:121
 #: views/settings/user-stats.php:35
 msgid "Super Administrator"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:684
+#: classes/controller/2fa-login-security.php:682
 #: views/manage/grace-period.php:24
 msgid "Grace Period"
 msgstr ""
 
 #. translators: User count
-#: classes/controller/2fa-login-security.php:704
+#: classes/controller/2fa-login-security.php:702
 #, php-format
 msgid "Users without 2FA active (%s)"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:724
-#: classes/controller/2fa-login-security.php:725
+#: classes/controller/2fa-login-security.php:722
+#: classes/controller/2fa-login-security.php:723
 msgid "Two-Factor Authentication"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:725
+#: classes/controller/2fa-login-security.php:723
 msgid "Learn more<span class=\"wfls-hidden-xs\"> about Two-Factor Authentication</span>"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:737
+#: classes/controller/2fa-login-security.php:735
 msgid "Settings"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:738
+#: classes/controller/2fa-login-security.php:736
 msgid "Login Security Settings"
 msgstr ""
 
-#: classes/controller/2fa-login-security.php:738
+#: classes/controller/2fa-login-security.php:736
 msgid "Learn more<span class=\"wfls-hidden-xs\"> about Login Security</span>"
 msgstr ""
 
@@ -423,7 +418,7 @@ msgstr ""
 msgid "Errors occurred while saving the configuration."
 msgstr ""
 
-#: classes/controller/ajax.php:430
+#: classes/controller/ajax.php:431
 msgid "No configuration changes were provided to save."
 msgstr ""
 
@@ -515,44 +510,44 @@ msgstr ""
 msgid "The grace period day limit must be between %1$d and %2$d."
 msgstr ""
 
-#: classes/controller/users.php:560
+#: classes/controller/users.php:556
 msgid "Last Login"
 msgstr ""
 
-#: classes/controller/users.php:570
+#: classes/controller/users.php:566
 msgid "Not Allowed"
 msgstr ""
 
-#: classes/controller/users.php:577
+#: classes/controller/users.php:573
 msgid "Inactive<small class=\"wfls-sub-status\">(Grace Period)</small>"
 msgstr ""
 
-#: classes/controller/users.php:579
+#: classes/controller/users.php:575
 msgid "Locked Out<small class=\"wfls-sub-status\">(Grace Period Disabled)</small>"
 msgstr ""
 
-#: classes/controller/users.php:579
+#: classes/controller/users.php:575
 msgid "Locked Out<small class=\"wfls-sub-status\">(Grace Period Exceeded)</small>"
 msgstr ""
 
 #. translators: Username
-#: classes/controller/users.php:658
+#: classes/controller/users.php:654
 #, php-format
 msgid "Edit two-factor authentication for %s"
 msgstr ""
 
 #. translators: Username
-#: classes/controller/users.php:658
+#: classes/controller/users.php:654
 msgid "2FA"
 msgstr ""
 
-#: classes/controller/users.php:671
+#: classes/controller/users.php:667
 #: views/manage/deactivate.php:19
 #: views/settings/user-stats.php:27
 msgid "2FA Active"
 msgstr ""
 
-#: classes/controller/users.php:672
+#: classes/controller/users.php:668
 #: views/settings/user-stats.php:28
 msgid "2FA Inactive"
 msgstr ""
@@ -797,29 +792,29 @@ msgid "Two-Factor Authentication, or 2FA, significantly improves login security 
 msgstr ""
 
 #. translators: 1. WordPress avatar tag; 2. WordPress username
-#: views/page/manage.php:46
+#: views/page/manage.php:44
 #, php-format
 msgid "Editing User:&nbsp;&nbsp;%1$s <span class=\"wfls-text-plain\">%2$s</span>"
 msgstr ""
 
 #. translators: 1. WordPress avatar tag; 2. WordPress username
-#: views/page/manage.php:46
+#: views/page/manage.php:44
 msgid "(you)"
 msgstr ""
 
-#: views/page/manage.php:149
+#: views/page/manage.php:147
 msgid "Server Time:"
 msgstr ""
 
-#: views/page/manage.php:150
+#: views/page/manage.php:148
 msgid "Browser Time:"
 msgstr ""
 
-#: views/page/manage.php:156
+#: views/page/manage.php:154
 msgid "Corrected Time (NTP):"
 msgstr ""
 
-#: views/page/manage.php:159
+#: views/page/manage.php:157
 msgid "Detected IP:"
 msgstr ""
 
@@ -859,6 +854,10 @@ msgstr ""
 
 #: views/page/role.php:48
 msgid "Page "
+msgstr ""
+
+#: views/page/settings.php:9
+msgid "Disabled"
 msgstr ""
 
 #: views/page/settings.php:11

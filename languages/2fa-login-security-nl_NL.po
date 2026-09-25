@@ -1,0 +1,1289 @@
+# Copyright (C) 2026 2FA Login Security Contributors
+# This file is distributed under the same license as the 2FA Login Security plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: 2FA Login Security 1.1.16\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/2fa-login-"
+"security\n"
+"POT-Creation-Date: 2026-09-25T06:10:11+00:00\n"
+"PO-Revision-Date: 2026-09-25 08:18+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.9\n"
+"X-Domain: 2fa-login-security\n"
+
+#. Plugin Name of the plugin
+#: 2fa-login-security.php classes/controller/2fa-login-security.php:414
+msgid "2FA Login Security"
+msgstr "2FA-inlogbeveiliging"
+
+#. Plugin URI of the plugin
+#: 2fa-login-security.php
+msgid "https://github.com/Studio-Lemon/2fa-login-security"
+msgstr "https://github.com/Studio-Lemon/2fa-login-security"
+
+#. Description of the plugin
+#: 2fa-login-security.php
+msgid "2FA Login Security for WordPress"
+msgstr "2FA-inlogbeveiliging voor WordPress"
+
+#. Author of the plugin
+#: 2fa-login-security.php
+msgid "Erik van der Bas, Studio Lemon"
+msgstr "Erik van der Bas, Studio Lemon"
+
+#. Author URI of the plugin
+#: 2fa-login-security.php
+msgid "https://wordpress.org/plugins/2fa-login-security/"
+msgstr "https://wordpress.org/plugins/2fa-login-security/"
+
+#. translators: Configuration URL
+#: classes/controller/2fa-login-security.php:97
+#, php-format
+msgid ""
+"XML-RPC authentication is disabled. Jetpack is currently active and requires "
+"XML-RPC authentication to work correctly. <a href=\"%s\">Manage Settings</a>"
+msgstr ""
+"XML-RPC-authenticatie is uitgeschakeld. Jetpack is momenteel actief en "
+"vereist XML-RPC-authenticatie om correct te werken. <a "
+"href=\"%s\">Instellingen beheren</a>"
+
+#: classes/controller/2fa-login-security.php:189
+msgid "Message to Support"
+msgstr "Bericht aan de klantenservice"
+
+#: classes/controller/2fa-login-security.php:190
+msgid "Send"
+msgstr "Verzenden"
+
+#: classes/controller/2fa-login-security.php:191
+msgid ""
+"An error was encountered while trying to send the message. Please try again."
+msgstr ""
+"Er is een fout opgetreden bij het verzenden van het bericht. Probeer het nog "
+"eens."
+
+#: classes/controller/2fa-login-security.php:192
+msgid ""
+"<strong>ERROR</strong>: An error was encountered while trying to send the "
+"message. Please try again."
+msgstr ""
+"<strong>FOUT</strong>: Er is een fout opgetreden bij het verzenden van het "
+"bericht. Probeer het nog eens."
+
+#: classes/controller/2fa-login-security.php:193
+msgid ""
+"Login failed with status code 403. Please contact the site administrator."
+msgstr ""
+"Het inloggen is mislukt met statuscode 403. Neem contact op met de beheerder "
+"van de website."
+
+#: classes/controller/2fa-login-security.php:194
+msgid ""
+"<strong>ERROR</strong>: Login failed with status code 403. Please contact "
+"the site administrator."
+msgstr ""
+"<strong>FOUT</strong>: Het inloggen is mislukt met statuscode 403. Neem "
+"contact op met de beheerder van de website."
+
+#: classes/controller/2fa-login-security.php:195
+msgid ""
+"Login failed with status code 503. Please contact the site administrator."
+msgstr ""
+"Het inloggen is mislukt met statuscode 503. Neem contact op met de beheerder "
+"van de website."
+
+#: classes/controller/2fa-login-security.php:196
+msgid ""
+"<strong>ERROR</strong>: Login failed with status code 503. Please contact "
+"the site administrator."
+msgstr ""
+"<strong>FOUT</strong>: Inloggen is mislukt met statuscode 503. Neem contact "
+"op met de beheerder van de website."
+
+#: classes/controller/2fa-login-security.php:197
+msgid "2FA Code"
+msgstr "2FA code"
+
+#: classes/controller/2fa-login-security.php:198
+msgid "Remember for 30 days"
+msgstr "Onthoud dit 30 dagen lang"
+
+#: classes/controller/2fa-login-security.php:199
+msgid "Log In"
+msgstr "Inloggen"
+
+#: classes/controller/2fa-login-security.php:200
+msgid ""
+"<strong>ERROR</strong>: An error was encountered while trying to "
+"authenticate. Please try again."
+msgstr ""
+"<strong>FOUT</strong>: Er is een fout opgetreden tijdens het authenticeren. "
+"Probeer het nog eens."
+
+#: classes/controller/2fa-login-security.php:201
+msgid ""
+"The 2FA code can be found in the authenticator app you used when first "
+"activating two-factor authentication. You may also use one of your recovery "
+"codes."
+msgstr ""
+"De 2FA-code vind je in de authenticator-app die je hebt gebruikt toen je de "
+"tweefactorauthenticatie voor het eerst activeerde. Je kunt ook een van je "
+"herstelcodes gebruiken."
+
+#: classes/controller/2fa-login-security.php:234
+#: classes/controller/2fa-login-security.php:265
+msgid "Close"
+msgstr "Sluiten"
+
+#: classes/controller/2fa-login-security.php:253
+msgid "Reload"
+msgstr "Ververs"
+
+#: classes/controller/2fa-login-security.php:280
+msgid ""
+"You have unsaved changes to your options. If you leave this page, those "
+"changes will be lost."
+msgstr ""
+"Er zijn nog niet-opgeslagen wijzigingen in uw instellingen. Als u deze "
+"pagina verlaat, gaan deze wijzigingen verloren."
+
+#: classes/controller/2fa-login-security.php:334 classes/controller/ajax.php:65
+#: classes/controller/ajax.php:79
+msgid "You do not have permission to change options."
+msgstr "Je hebt geen toestemming om de instellingen te wijzigen."
+
+#: classes/controller/2fa-login-security.php:338
+msgid ""
+"Your browser sent an invalid security token. Please reload and try again."
+msgstr ""
+"Je browser heeft een ongeldig beveiligingstoken verzonden. Laad de pagina "
+"opnieuw en probeer het nog eens."
+
+#: classes/controller/2fa-login-security.php:417
+#: classes/controller/users.php:552
+msgid "2FA Status"
+msgstr "2FA-status"
+
+#: classes/controller/2fa-login-security.php:420
+#: classes/controller/2fa-login-security.php:686
+#: views/manage/grace-period.php:24
+msgid "Locked Out"
+msgstr "Buiten gesloten"
+
+#: classes/controller/2fa-login-security.php:420
+#: classes/controller/users.php:571
+msgid "Active"
+msgstr "Actief"
+
+#: classes/controller/2fa-login-security.php:420
+#: classes/controller/users.php:577
+msgid "Inactive"
+msgstr "Inactief"
+
+#: classes/controller/2fa-login-security.php:423
+#: views/manage/grace-period.php:52
+msgid ""
+"Two-factor authentication is required for your account, but has not been "
+"configured."
+msgstr ""
+"Tweefactorauthenticatie is vereist voor uw account, maar is nog niet "
+"ingesteld."
+
+#: classes/controller/2fa-login-security.php:423
+#: views/manage/grace-period.php:53
+msgid ""
+"Two-factor authentication is required for this account, but has not been "
+"configured."
+msgstr ""
+"Voor dit account is tweefactorauthenticatie vereist, maar deze is nog niet "
+"ingesteld."
+
+#: classes/controller/2fa-login-security.php:424
+msgid "2FA is active."
+msgstr "2FA is ingeschakeld."
+
+#: classes/controller/2fa-login-security.php:424
+msgid "2FA is inactive."
+msgstr "2FA is uitgeschakeld."
+
+#: classes/controller/2fa-login-security.php:426
+msgid "Learn More"
+msgstr "Leer meer"
+
+#. translators: Date
+#: classes/controller/2fa-login-security.php:433
+#, php-format
+msgid ""
+"Two-factor authentication must be activated for your account prior to %s to "
+"avoid losing access."
+msgstr ""
+"Tweefactorauthenticatie moet vóór %s voor uw account worden geactiveerd om "
+"te voorkomen dat u de toegang verliest."
+
+#. translators: Date
+#: classes/controller/2fa-login-security.php:434
+#, php-format
+msgid ""
+"Two-factor authentication must be activated for this account prior to %s."
+msgstr ""
+"Tweefactorauthenticatie moet voor dit account worden geactiveerd vóór %s."
+
+#: classes/controller/2fa-login-security.php:443
+msgid "Manage 2FA"
+msgstr "2FA beheren"
+
+#: classes/controller/2fa-login-security.php:443
+msgid "Activate 2FA"
+msgstr "2FA inschakelen"
+
+#: classes/controller/2fa-login-security.php:466
+msgid "Manage 2FA Settings"
+msgstr "2FA-instellingen beheren"
+
+#: classes/controller/2fa-login-security.php:542
+msgid ""
+"<strong>CODE INVALID</strong>: The 2FA code provided is either expired or "
+"invalid. Please try again."
+msgstr ""
+"<strong>ONGELDIGE CODE</strong>: De opgegeven 2FA-code is verlopen of "
+"ongeldig. Probeer het nog eens."
+
+#: classes/controller/2fa-login-security.php:550
+msgid ""
+"<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after "
+"your password in the same field."
+msgstr ""
+"<strong>CODE VEREIST</strong>: Voer uw 2FA-code direct na uw wachtwoord in "
+"hetzelfde veld in."
+
+#: classes/controller/2fa-login-security.php:552
+msgid ""
+"<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted."
+msgstr ""
+"<strong>CODE VEREIST</strong>: Voer uw 2FA-code in wanneer daarom wordt "
+"gevraagd."
+
+#: classes/controller/2fa-login-security.php:555
+msgid ""
+"<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your "
+"account. Please contact the site administrator."
+msgstr ""
+"<strong>INLOGGEN GEBLOKKEERD</strong>: 2FA moet op uw account zijn "
+"ingeschakeld. Neem contact op met de beheerder van de site."
+
+#. translators: 1. Date; 2. Configuration URL
+#: classes/controller/2fa-login-security.php:558
+#, php-format
+msgid ""
+"You do not currently have two-factor authentication active on your account, "
+"which will be required beginning %1$s. <a href=\"%2$s\">Configure 2FA</a>"
+msgstr ""
+"Tweefactorauthenticatie is momenteel niet ingeschakeld voor uw account, maar "
+"dit is vanaf %1$s verplicht. <a href=\"%2$s\">Configureer 2FA</a>"
+
+#: classes/controller/2fa-login-security.php:606
+msgid "Email verification succeeded. Please continue logging in."
+msgstr "De e-mailverificatie is gelukt. Ga verder met inloggen."
+
+#: classes/controller/2fa-login-security.php:608
+msgid "Email verification invalid or expired. Please try again."
+msgstr "De e-mailverificatie is ongeldig of verlopen. Probeer het nog eens."
+
+#: classes/controller/2fa-login-security.php:644
+#: classes/controller/2fa-login-security.php:645
+msgid "Login Security"
+msgstr "Login beveiliging"
+
+#: classes/controller/2fa-login-security.php:678 views/page/settings.php:121
+#: views/settings/user-stats.php:35
+msgid "Super Administrator"
+msgstr "Superbeheerder"
+
+#: classes/controller/2fa-login-security.php:682
+#: views/manage/grace-period.php:24
+msgid "Grace Period"
+msgstr "Uitstelperiode"
+
+#. translators: User count
+#: classes/controller/2fa-login-security.php:702
+#, php-format
+msgid "Users without 2FA active (%s)"
+msgstr "Gebruikers zonder actieve 2FA (%s)"
+
+#: classes/controller/2fa-login-security.php:722
+#: classes/controller/2fa-login-security.php:723
+msgid "Two-Factor Authentication"
+msgstr "Twee-staps authenticatie"
+
+#: classes/controller/2fa-login-security.php:723
+msgid ""
+"Learn more<span class=\"wfls-hidden-xs\"> about Two-Factor Authentication</"
+"span>"
+msgstr ""
+"Meer informatie<span class=\"wfls-hidden-xs\"> over tweefactorauthenticatie</"
+"span>"
+
+#: classes/controller/2fa-login-security.php:735
+msgid "Settings"
+msgstr "Instellingen"
+
+#: classes/controller/2fa-login-security.php:736
+msgid "Login Security Settings"
+msgstr "Beveiligingsinstellingen voor aanmelding"
+
+#: classes/controller/2fa-login-security.php:736
+msgid "Learn more<span class=\"wfls-hidden-xs\"> about Login Security</span>"
+msgstr ""
+"Meer informatie<span class=\"wfls-hidden-xs\"> over inlogbeveiliging</span>"
+
+#: classes/controller/ajax.php:72
+msgid "You do not have permission to send notifications."
+msgstr "Je hebt geen toestemming om meldingen te versturen."
+
+#: classes/controller/ajax.php:91
+msgid "You do not have permission to reset the 2FA grace period."
+msgstr ""
+"Je hebt geen toestemming om de respijtperiode voor tweefactorauthenticatie "
+"te resetten."
+
+#: classes/controller/ajax.php:98
+msgid "You do not have permission to revoke the 2FA grace period."
+msgstr "Je hebt geen toestemming om de respijtperiode voor 2FA in te trekken."
+
+#: classes/controller/ajax.php:105
+msgid "You do not have permission to reset the NTP failure count."
+msgstr "Je hebt geen toestemming om het aantal NTP-storingen te resetten."
+
+#: classes/controller/ajax.php:112
+msgid "You do not have permission to disable NTP."
+msgstr "Je hebt geen toestemming om NTP uit te schakelen."
+
+#: classes/controller/ajax.php:150
+msgid "An unknown action was provided."
+msgstr "Er is een onbekende actie opgegeven."
+
+#: classes/controller/ajax.php:157
+msgid "An expected parameter was not provided."
+msgstr "Een verwachte parameter is niet opgegeven."
+
+#: classes/controller/ajax.php:165
+msgid ""
+"Your browser sent an invalid security token. Please try reloading this page."
+msgstr ""
+"Uw browser heeft een ongeldig beveiligingstoken verzonden. Probeer deze "
+"pagina opnieuw te laden."
+
+#. translators: Forgot password URL
+#: classes/controller/ajax.php:198
+#, php-format
+msgid ""
+"<strong>ERROR</strong>: A username and password must be provided. <a "
+"href=\"%s\" title=\"Password Lost and Found\">Lost your password</a>?"
+msgstr ""
+"<strong>FOUT</strong>: U moet een gebruikersnaam en wachtwoord opgeven. <a "
+"href=\"%s\" title=\"Password Lost and Found\">Wachtwoord vergeten</a>?"
+
+#. translators: Forgot password URL
+#: classes/controller/ajax.php:221 classes/controller/ajax.php:249
+#, php-format
+msgid ""
+"<strong>ERROR</strong>: The username or password you entered is incorrect. "
+"<a href=\"%s\" title=\"Password Lost and Found\">Lost your password</a>?"
+msgstr ""
+"<strong>FOUT</strong>: De door u ingevoerde gebruikersnaam of het wachtwoord "
+"is onjuist. <a href=\"%s\" title=\"Password Lost and Found\">Wachtwoord "
+"vergeten</a>?"
+
+#: classes/controller/ajax.php:265 classes/controller/ajax.php:276
+#: classes/controller/ajax.php:284 classes/controller/ajax.php:307
+msgid ""
+"<strong>ERROR</strong>: Unable to send message. Please refresh the page and "
+"try again."
+msgstr ""
+"<strong>FOUT</strong>: Het bericht kan niet worden verzonden. Vernieuw de "
+"pagina en probeer het opnieuw."
+
+#: classes/controller/ajax.php:290
+msgid ""
+"<strong>ERROR</strong>: Unable to send message. You have exceeded the "
+"maximum number of messages that may be sent at this time. Please try again "
+"later."
+msgstr ""
+"<strong>FOUT</strong>: Het bericht kan niet worden verzonden. U hebt het "
+"maximale aantal berichten overschreden dat op dit moment mag worden "
+"verzonden. Probeer het later nog eens."
+
+#: classes/controller/ajax.php:295
+msgid "Blocked User Registration Contact Form"
+msgstr "Contactformulier voor geblokkeerde gebruikersregistratie"
+
+#. translators: 1. IP address; 2. Username; 3. Email address; 4. Score; 5. Message
+#: classes/controller/ajax.php:296
+#, php-format
+msgid ""
+"A visitor blocked from registration sent the following message.\n"
+"\n"
+"----------------------------------------\n"
+"\n"
+"IP: %1$s\n"
+"Username: %2$s\n"
+"Email: %3$s\n"
+"reCAPTCHA Score: %4$f\n"
+"\n"
+"----------------------------------------\n"
+"\n"
+"%5$s"
+msgstr ""
+"Een bezoeker die werd geblokkeerd bij het registreren, stuurde het volgende "
+"bericht.\n"
+"\n"
+"----------------------------------------\n"
+"\n"
+"IP: %1$s\n"
+"Gebruikersnaam: %2$s\n"
+"E-mail: %3$s\n"
+"reCAPTCHA-score: %4$f\n"
+"\n"
+"----------------------------------------\n"
+"\n"
+"%5$s"
+
+#: classes/controller/ajax.php:301
+msgid "<strong>MESSAGE SENT</strong>: Your message was sent to the site owner."
+msgstr ""
+"<strong>BERICHT VERZONDEN</strong>: Je bericht is naar de eigenaar van de "
+"website verzonden."
+
+#: classes/controller/ajax.php:304
+msgid ""
+"<strong>ERROR</strong>: An error occurred while sending the message. Please "
+"try again."
+msgstr ""
+"<strong>FOUT</strong>: Er is een fout opgetreden bij het verzenden van het "
+"bericht. Probeer het nog eens."
+
+#: classes/controller/ajax.php:316
+msgid "You do not have permission to activate the given user."
+msgstr "Je hebt geen toestemming om de betreffende gebruiker te activeren."
+
+#: classes/controller/ajax.php:320
+msgid "The given user does not exist."
+msgstr "De opgegeven gebruiker bestaat niet."
+
+#: classes/controller/ajax.php:324
+msgid "You do not have permission to activate 2FA."
+msgstr "Je hebt geen toestemming om 2FA in te schakelen."
+
+#: classes/controller/ajax.php:328
+msgid "The given user already has two-factor authentication active."
+msgstr ""
+"Voor de betreffende gebruiker is tweefactorauthenticatie al ingeschakeld."
+
+#: classes/controller/ajax.php:333
+msgid ""
+"The code provided does not match the expected value. Please verify that the "
+"time on your authenticator device is correct and that this server's time is "
+"correct."
+msgstr ""
+"De opgegeven code komt niet overeen met de verwachte waarde. Controleer of "
+"de tijd op uw authenticatorapparaat klopt en of de tijd op deze server "
+"correct is."
+
+#. translators: count
+#: classes/controller/ajax.php:338 classes/controller/ajax.php:390
+#: views/manage/regenerate.php:19
+#, php-format
+msgid ""
+"%d unused recovery code remains. You may generate a new set by clicking "
+"below."
+msgid_plural ""
+"%d unused recovery codes remain. You may generate a new set by clicking "
+"below."
+msgstr[0] ""
+"%d ongebruikte herstelcodes over. U kunt een nieuwe set genereren door "
+"hieronder te klikken."
+msgstr[1] ""
+"%d ongebruikte herstelcodes over. U kunt een nieuwe set genereren door "
+"hieronder te klikken."
+
+#: classes/controller/ajax.php:347
+msgid "You do not have permission to deactivate the given user."
+msgstr "Je hebt geen toestemming om de betreffende gebruiker te deactiveren."
+
+#: classes/controller/ajax.php:351 classes/controller/ajax.php:376
+msgid "The user does not exist."
+msgstr "De gebruiker bestaat niet."
+
+#: classes/controller/ajax.php:355
+msgid "You do not have permission to deactivate 2FA."
+msgstr "Je hebt geen toestemming om 2FA uit te schakelen."
+
+#: classes/controller/ajax.php:359 classes/controller/ajax.php:384
+msgid "The user specified does not have two-factor authentication active."
+msgstr ""
+"Voor de opgegeven gebruiker is tweefactorauthenticatie niet ingeschakeld."
+
+#: classes/controller/ajax.php:372
+msgid ""
+"You do not have permission to generate new recovery codes for the given user."
+msgstr ""
+"Je hebt geen toestemming om nieuwe herstelcodes voor de betreffende "
+"gebruiker aan te maken."
+
+#: classes/controller/ajax.php:380
+msgid "You do not have permission to generate new recovery codes."
+msgstr "Je hebt geen toestemming om nieuwe herstelcodes aan te maken."
+
+#. translators: Error message.
+#: classes/controller/ajax.php:401
+#, php-format
+msgid "An error occurred while saving the configuration: %s"
+msgstr "Er is een fout opgetreden tijdens het opslaan van de configuratie: %s"
+
+#: classes/controller/ajax.php:408
+#, php-format
+msgid "Errors occurred while saving the configuration: %s"
+msgstr "Er zijn fouten opgetreden bij het opslaan van de configuratie: %s"
+
+#: classes/controller/ajax.php:414
+msgid "Errors occurred while saving the configuration."
+msgstr "Er zijn fouten opgetreden bij het opslaan van de configuratie."
+
+#: classes/controller/ajax.php:431
+msgid "No configuration changes were provided to save."
+msgstr "Er waren geen configuratiewijzigingen om op te slaan."
+
+#: classes/controller/ajax.php:443
+msgid "The specified URL is invalid."
+msgstr "De opgegeven URL is ongeldig."
+
+#. translators: user count
+#: classes/controller/ajax.php:448
+#, php-format
+msgid ""
+"More than %d users exist for the selected role. This notification is not "
+"designed to handle large groups of users. In such instances, using a "
+"different solution for notifying users of upcoming 2FA requirements is "
+"recommended."
+msgstr ""
+"Er zijn meer dan %d gebruikers voor de geselecteerde rol. Deze melding is "
+"niet bedoeld voor grote groepen gebruikers. In dergelijke gevallen wordt "
+"aanbevolen om een andere oplossing te gebruiken om gebruikers op de hoogte "
+"te stellen van aanstaande 2FA-vereisten."
+
+#. translators: site url
+#: classes/controller/ajax.php:455
+#, php-format
+msgid "2FA will soon be required on %s"
+msgstr "2FA wordt binnenkort verplicht op %s"
+
+#. translators: 1. Date; 2. Configuration URL
+#: classes/controller/ajax.php:465
+#, php-format
+msgid ""
+"<html><body><p>You do not currently have two-factor authentication active on "
+"your account, which will be required beginning %1$s.</p><p><a "
+"href=\"%2$s\">Configure 2FA</a></p></body></html>"
+msgstr ""
+"<html><body><p>Tweefactorauthenticatie is momenteel niet ingeschakeld op uw "
+"account, maar dit is vanaf %1$s verplicht.</p><p><a href=\"%2$s\">2FA "
+"configureren</a></p></body></html>"
+
+#: classes/controller/ajax.php:479
+msgid "No users currently exist with the selected role."
+msgstr "Er zijn momenteel geen gebruikers met de geselecteerde rol."
+
+#: classes/controller/ajax.php:481
+msgid ""
+"All users with the selected role already have two-factor authentication "
+"activated or have been locked out."
+msgstr ""
+"Bij alle gebruikers met de geselecteerde rol is tweefactorauthenticatie al "
+"ingeschakeld of is de toegang geblokkeerd."
+
+#. translators: number of users
+#: classes/controller/ajax.php:485 classes/controller/ajax.php:490
+#, php-format
+msgid "A reminder to activate two-factor authentication was sent to %d user."
+msgid_plural ""
+"A reminder to activate two-factor authentication was sent to %d users."
+msgstr[0] ""
+"Er is een herinnering om tweefactorauthenticatie in te schakelen verzonden "
+"naar %d gebruiker."
+msgstr[1] ""
+"Er is een herinnering om tweefactorauthenticatie in te schakelen verzonden "
+"naar %d gebruikers."
+
+#. translators: number of users
+#: classes/controller/ajax.php:487
+#, php-format
+msgid ""
+"It failed sending to %d user. Failures typically occur because of a missing "
+"or invalid email address."
+msgid_plural ""
+"It failed sending to %d users. Failures typically occur because of a missing "
+"or invalid email address."
+msgstr[0] ""
+"Het verzenden naar %d gebruiker is mislukt. Fouten treden meestal op vanwege "
+"een ontbrekend of ongeldig e-mailadres."
+msgstr[1] ""
+"Het verzenden naar %d gebruikers is mislukt. Fouten treden meestal op "
+"vanwege een ontbrekend of ongeldig e-mailadres."
+
+#. translators: number of users
+#: classes/controller/ajax.php:492
+#, php-format
+msgid ""
+"A reminder to activate two-factor authentication failed sending to %d user."
+msgid_plural ""
+"A reminder to activate two-factor authentication failed sending to %d users."
+msgstr[0] ""
+"Er is een herinnering om tweefactorauthenticatie te activeren niet verzonden "
+"naar %d gebruiker."
+msgstr[1] ""
+"Een herinnering om tweefactorauthenticatie in te schakelen kon niet worden "
+"verzonden naar %d gebruikers."
+
+#: classes/controller/ajax.php:533 classes/controller/ajax.php:552
+msgid "Invalid user specified"
+msgstr "Ongeldige gebruiker opgegeven"
+
+#: classes/controller/ajax.php:536
+msgid "Invalid grace period override"
+msgstr "Ongeldige overschrijving van de respijtperiode"
+
+#: classes/controller/ajax.php:543
+msgid "Failed to reset grace period"
+msgstr "Het resetten van de respijtperiode is mislukt"
+
+#. translators: IP or range
+#: classes/controller/settings.php:225
+#, php-format
+msgid "The IP/range %s is invalid."
+msgstr "Het IP-adres/bereik %s is ongeldig."
+
+#: classes/controller/settings.php:231
+msgid "An invalid IP source was provided."
+msgstr "Er is een ongeldig IP-adres opgegeven."
+
+#: classes/controller/settings.php:237
+msgid "The grace period end time must be in the future."
+msgstr "De eindtijd van de respijtperiode moet in de toekomst liggen."
+
+#. translators: 1. Minimum number of days. 2. Maximum number of days.
+#: classes/controller/settings.php:244
+#, php-format
+msgid "The grace period day limit must be between %1$d and %2$d."
+msgstr "De limiet voor de uitstelperiode moet tussen %1$d en %2$d liggen."
+
+#: classes/controller/users.php:556
+msgid "Last Login"
+msgstr "Laatst ingelogd"
+
+#: classes/controller/users.php:566
+msgid "Not Allowed"
+msgstr "(Toegestaan: JPG, GIF, PNG)"
+
+#: classes/controller/users.php:573
+msgid "Inactive<small class=\"wfls-sub-status\">(Grace Period)</small>"
+msgstr "Inactief<small class=\"wfls-sub-status\">(uitstelperiode)</small>"
+
+#: classes/controller/users.php:575
+msgid ""
+"Locked Out<small class=\"wfls-sub-status\">(Grace Period Disabled)</small>"
+msgstr ""
+"Geblokkeerd<small class=\"wfls-sub-status\">(uitstelperiode uitgeschakeld)</"
+"small>"
+
+#: classes/controller/users.php:575
+msgid ""
+"Locked Out<small class=\"wfls-sub-status\">(Grace Period Exceeded)</small>"
+msgstr ""
+"Toegang geblokkeerd<small class=\"wfls-sub-status\">(respijtperiode "
+"verstreken)</small>"
+
+#. translators: Username
+#: classes/controller/users.php:654
+#, php-format
+msgid "Edit two-factor authentication for %s"
+msgstr "Tweefactorauthenticatie voor %s bewerken"
+
+#. translators: Username
+#: classes/controller/users.php:654
+msgid "2FA"
+msgstr "2FA"
+
+#: classes/controller/users.php:667 views/manage/deactivate.php:19
+#: views/settings/user-stats.php:27
+msgid "2FA Active"
+msgstr "2FA actief"
+
+#: classes/controller/users.php:668 views/settings/user-stats.php:28
+msgid "2FA Inactive"
+msgstr "2FA niet actief"
+
+#: classes/model/notice.php:49
+msgid "Dismiss"
+msgstr "Afwijzen"
+
+#: views/common/reset-grace-period.php:10
+msgid "Unable to Activate Grace Period"
+msgstr "De respijtperiode kan niet worden geactiveerd"
+
+#: views/common/reset-grace-period.php:10
+msgid "Unable to Reset Grace Period"
+msgstr "Kan de respijtperiode niet resetten"
+
+#: views/common/reset-grace-period.php:14
+msgid "Grace Period Override"
+msgstr "Overschrijving van de respijtperiode"
+
+#: views/common/reset-grace-period.php:16
+msgid "days"
+msgstr "dagen"
+
+#: views/common/reset-grace-period.php:20
+msgid "Activate Grace Period"
+msgstr "Uitstelperiode activeren"
+
+#: views/common/reset-grace-period.php:20
+msgid "Reset Grace Period"
+msgstr "De respijtperiode opnieuw instellen"
+
+#: views/common/reset-grace-period.php:51
+msgid ""
+"An unexpected error occurred while attempting to activate the grace period."
+msgstr ""
+"Er is een onverwachte fout opgetreden bij het activeren van de "
+"respijtperiode."
+
+#: views/common/reset-grace-period.php:51
+msgid ""
+"An unexpected error occurred while attempting to reset the grace period."
+msgstr ""
+"Er is een onverwachte fout opgetreden bij het opnieuw instellen van de "
+"respijtperiode."
+
+#: views/common/revoke-grace-period.php:6
+msgid "Unable to Revoke Grace Period"
+msgstr "De respijtperiode kan niet worden ingetrokken"
+
+#: views/common/revoke-grace-period.php:11
+msgid "Revoke Grace Period"
+msgstr "De respijtperiode intrekken"
+
+#: views/common/revoke-grace-period.php:40
+msgid ""
+"An unexpected error occurred while attempting to revoke the grace period."
+msgstr ""
+"Er is een onverwachte fout opgetreden bij het intrekken van de "
+"respijtperiode."
+
+#. translators: site name
+#: views/email/login-verification.php:12
+#, php-format
+msgid "Please verify a login attempt for your account on: %s"
+msgstr "Controleer alstublieft een inlogpoging voor uw account op: %s"
+
+#: views/email/login-verification.php:14
+msgid "Request Time:"
+msgstr "Tijdstip van aanvraag:"
+
+#: views/email/login-verification.php:15
+msgid "IP:"
+msgstr "IP:"
+
+#: views/email/login-verification.php:17
+msgid ""
+"The request was flagged as suspicious, and we need verification that you "
+"attempted to log in to allow it to proceed. This verification link <b>will "
+"be valid for 15 minutes</b> from the time it was sent. If you did not "
+"attempt this login, please change your password immediately."
+msgstr ""
+"Het verzoek is als verdacht gemarkeerd en we hebben bevestiging nodig dat u "
+"hebt geprobeerd in te loggen om het verzoek door te laten gaan. Deze "
+"verificatielink <b>is 15 minuten geldig vanaf</b> het moment dat deze is "
+"verzonden. Als u niet hebt geprobeerd in te loggen, wijzig dan onmiddellijk "
+"uw wachtwoord."
+
+#. translators: Verification URL
+#: views/email/login-verification.php:20
+#, php-format
+msgid ""
+"If you were attempting to log in to this site, <a href=\"%s\"><strong>Verify "
+"and Log In</strong></a>"
+msgstr ""
+"Als u probeerde in te loggen op deze site, <a href=\"%s\"><strong>verifieer "
+"dan en log in</strong></a>"
+
+#: views/manage/activate.php:18
+msgid "2. Enter Code from Authenticator App"
+msgstr "2. Voer de code uit de Authenticator-app in"
+
+#: views/manage/activate.php:23 views/manage/activate.php:59
+msgid "Download Recovery Codes"
+msgstr "Herstelcodes downloaden"
+
+#: views/manage/activate.php:23 views/page/settings.php:10
+msgid "Optional"
+msgstr "Optioneel"
+
+#. translators: 1. Count; 2. length
+#: views/manage/activate.php:24 views/manage/regenerate.php:76
+#, php-format
+msgid ""
+"Use one of these %1$d codes to log in if you lose access to your "
+"authenticator device. Codes are %2$d characters long plus optional spaces. "
+"Each one may be used only once."
+msgstr ""
+"Gebruik een van deze %1$d codes om in te loggen als u geen toegang meer hebt "
+"tot uw authenticatieapparaat. Codes bestaan uit %2$d tekens plus eventuele "
+"spaties. Elke code kan slechts één keer worden gebruikt."
+
+#. translators: 1. Site address; 2. Username
+#: views/manage/activate.php:27 views/manage/regenerate.php:78
+#, php-format
+msgid "Two-Factor Authentication Recovery Codes - %1$s (%2$s)"
+msgstr "Herstelcodes voor tweefactorauthenticatie - %1$s (%2$s)"
+
+#. translators: count
+#: views/manage/activate.php:28 views/manage/regenerate.php:79
+#, php-format
+msgid ""
+"Each line of %d letters and numbers is a single recovery code, with optional "
+"spaces for readability. To use a recovery code, after entering your username "
+"and password, enter the code like \"1234 5678 90AB CDEF\" at the 2FA prompt. "
+"If your site has a custom login prompt and does not show a 2FA prompt, you "
+"can use the single-step method by entering your password and the code "
+"together in the Password field, like \"mypassword1234 5678 90AB CDEF\". Your "
+"recovery codes are:"
+msgstr ""
+"Elke regel met %d letters en cijfers is een afzonderlijke herstelcode, met "
+"optionele spaties voor de leesbaarheid. Om een herstelcode te gebruiken, "
+"voert u na het invoeren van uw gebruikersnaam en wachtwoord de code in, "
+"bijvoorbeeld \"1234 5678 90AB CDEF\", bij de 2FA-prompt. Als uw site een "
+"aangepast inlogvenster heeft en geen 2FA-prompt toont, kunt u de "
+"éénstapsmethode gebruiken door uw wachtwoord en de code samen in het veld "
+"‘Wachtwoord’ in te voeren, bijvoorbeeld “mypassword1234 5678 90AB CDEF”. Uw "
+"herstelcodes zijn:"
+
+#: views/manage/activate.php:37 views/manage/activate.php:63
+#: views/manage/regenerate.php:87
+msgid "Download"
+msgstr "Download"
+
+#: views/manage/activate.php:41
+msgid ""
+"Enter the code from your authenticator app below to verify and activate two-"
+"factor authentication for this account."
+msgstr ""
+"Voer hieronder de code uit je authenticator-app in om de "
+"tweefactorauthenticatie voor dit account te verifiëren en te activeren."
+
+#: views/manage/activate.php:47
+msgid "For help on setting up an app, visit our help article."
+msgstr "Raadpleeg ons helpartikel voor hulp bij het instellen van een app."
+
+#: views/manage/activate.php:49
+msgid "Activate"
+msgstr "Activeren"
+
+#: views/manage/activate.php:60
+msgid ""
+"Reminder: If you lose access to your authenticator device, you can use "
+"recovery codes to log in. If you have not saved a copy of your recovery "
+"codes, we recommend downloading them now."
+msgstr ""
+"Herinnering: Als u geen toegang meer hebt tot uw authenticatieapparaat, kunt "
+"u herstelcodes gebruiken om in te loggen. Als u nog geen kopie van uw "
+"herstelcodes hebt opgeslagen, raden we u aan deze nu te downloaden."
+
+#: views/manage/activate.php:69
+msgid "Skip"
+msgstr "Overslaan"
+
+#: views/manage/activate.php:120 views/manage/activate.php:149
+msgid "Error Activating 2FA"
+msgstr "Fout bij het activeren van 2FA"
+
+#: views/manage/activate.php:149
+msgid ""
+"An error was encountered while trying to activate two-factor authentication. "
+"Please try again."
+msgstr ""
+"Er is een fout opgetreden bij het activeren van tweefactorauthenticatie. "
+"Probeer het nog eens."
+
+#: views/manage/code.php:13
+msgid "1. Scan Code or Enter Key"
+msgstr "1. Scan de code of voer de sleutel in"
+
+#: views/manage/code.php:18
+msgid ""
+"Scan the code below with your authenticator app to add this account. Some "
+"authenticator apps also allow you to type in the text version instead."
+msgstr ""
+"Scan de onderstaande code met je authenticator-app om dit account toe te "
+"voegen. Bij sommige authenticator-apps kun je de tekstversie ook gewoon "
+"invoeren."
+
+#: views/manage/deactivate.php:27
+msgid ""
+"Two-factor authentication is currently active on your account. You may "
+"deactivate it by clicking the button below."
+msgstr ""
+"Tweefactorauthenticatie is momenteel ingeschakeld voor uw account. U kunt "
+"deze functie uitschakelen door op de onderstaande knop te klikken."
+
+#. translators: Username
+#: views/manage/deactivate.php:29
+#, php-format
+msgid ""
+"Two-factor authentication is currently active on the account <strong>%s</"
+"strong>. You may deactivate it by clicking the button below."
+msgstr ""
+"Tweefactorauthenticatie is momenteel ingeschakeld voor account <strong>%s</"
+"strong>. U kunt deze uitschakelen door op de onderstaande knop te klikken."
+
+#: views/manage/deactivate.php:33 views/manage/deactivate.php:52
+msgid "Deactivate"
+msgstr "Deactiveren"
+
+#: views/manage/deactivate.php:42
+msgid "Deactivate 2FA"
+msgstr "2FA uitschakelen"
+
+#: views/manage/deactivate.php:43
+msgid "Are you sure you want to deactivate two-factor authentication?"
+msgstr "Weet je zeker dat je de tweefactorauthenticatie wilt uitschakelen?"
+
+#: views/manage/deactivate.php:46 views/manage/regenerate.php:33
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: views/manage/deactivate.php:84 views/manage/deactivate.php:91
+msgid "Error Deactivating 2FA"
+msgstr "Fout bij het uitschakelen van 2FA"
+
+#: views/manage/deactivate.php:91
+msgid ""
+"An error was encountered while trying to deactivate two-factor "
+"authentication. Please try again."
+msgstr ""
+"Er is een fout opgetreden bij het deactiveren van tweefactorauthenticatie. "
+"Probeer het nog eens."
+
+#. translators: Date
+#: views/manage/grace-period.php:34
+#, php-format
+msgid ""
+"Two-factor authentication will be required for your account beginning "
+"<strong>%s</strong>"
+msgstr ""
+"Vanaf <strong>%s</strong> is tweefactorauthenticatie vereist voor uw account"
+
+#. translators: 1. Username; 2. Date
+#: views/manage/grace-period.php:35
+#, php-format
+msgid ""
+"Two-factor authentication will be required for user <strong>%1$s</strong> "
+"beginning <strong>%2$s</strong>."
+msgstr ""
+"Vanaf <strong>%2$s</strong> is tweefactorauthenticatie vereist voor "
+"gebruiker <strong>%1$s</strong>."
+
+#: views/manage/regenerate.php:14
+msgid "Recovery Codes"
+msgstr "Herstelcodes"
+
+#. translators: count
+#: views/manage/regenerate.php:20
+msgid "Generate New Codes"
+msgstr "Nieuwe codes genereren"
+
+#: views/manage/regenerate.php:29
+msgid "Generate New Recovery Codes"
+msgstr "Nieuwe herstelcodes genereren"
+
+#: views/manage/regenerate.php:30
+msgid ""
+"Are you sure you want to generate new recovery codes? Any remaining unused "
+"codes will be disabled."
+msgstr ""
+"Weet u zeker dat u nieuwe herstelcodes wilt genereren? Eventuele resterende, "
+"ongebruikte codes worden dan uitgeschakeld."
+
+#: views/manage/regenerate.php:39
+msgid "Generate"
+msgstr "Genereer"
+
+#: views/manage/regenerate.php:72 views/manage/regenerate.php:105
+msgid "Error Generating New Codes"
+msgstr "Fout bij het genereren van nieuwe codes"
+
+#: views/manage/regenerate.php:89
+msgid "New Recovery Codes"
+msgstr "Nieuwe herstelcodes"
+
+#: views/manage/regenerate.php:105
+msgid ""
+"An error was encountered while trying to generate new recovery codes. Please "
+"try again."
+msgstr ""
+"Er is een fout opgetreden bij het genereren van nieuwe herstelcodes. Probeer "
+"het nog eens."
+
+#. translators: Support URL
+#: views/page/manage.php:29
+#, php-format
+msgid ""
+"Two-Factor Authentication, or 2FA, significantly improves login security for "
+"your website. 2FA Login Security works with a number of TOTP-based apps like "
+"Google Authenticator, FreeOTP, and Authy. For more details, <a href=\"%s\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">visit the plugin page</a>."
+msgstr ""
+"Two-Factor Authentication, or 2FA, significantly improves login security for "
+"your website. 2FA Login Security works with a number of TOTP-based apps like "
+"Google Authenticator, FreeOTP, and Authy. For more details, <a href=\"%s\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">visit the plugin page</a>."
+
+#. translators: 1. WordPress avatar tag; 2. WordPress username
+#: views/page/manage.php:44
+#, php-format
+msgid ""
+"Editing User:&nbsp;&nbsp;%1$s <span class=\"wfls-text-plain\">%2$s</span>"
+msgstr "Gebruiker bewerken:  %1$s <span class=\"wfls-text-plain\">%2$s</span>"
+
+#. translators: 1. WordPress avatar tag; 2. WordPress username
+#: views/page/manage.php:44
+msgid "(you)"
+msgstr "(Uzelf)"
+
+#: views/page/manage.php:147
+msgid "Server Time:"
+msgstr "Servertijd:"
+
+#: views/page/manage.php:148
+msgid "Browser Time:"
+msgstr "Browsertijd:"
+
+#: views/page/manage.php:154
+msgid "Corrected Time (NTP):"
+msgstr "Gecorrigeerde tijd (NTP):"
+
+#: views/page/manage.php:157
+msgid "Detected IP:"
+msgstr "Gedetecteerd IP-adres:"
+
+#: views/page/permission-denied.php:8
+msgid "Permission Denied"
+msgstr "Toegang geweigerd"
+
+#: views/page/permission-denied.php:9
+msgid "You do not have permission to manage 2FA settings for your account."
+msgstr ""
+"Je hebt geen toestemming om de 2FA-instellingen voor je account te beheren."
+
+#: views/page/role.php:7
+msgid "This page only shows users and roles on the main site of this network"
+msgstr ""
+"Op deze pagina worden alleen gebruikers en rollen op de hoofdsite van dit "
+"netwerk weergegeven"
+
+#. translators: Role name
+#: views/page/role.php:12
+#, php-format
+msgid "2FA is not required for the %s role"
+msgstr "2FA is niet vereist voor de rol %s"
+
+#. translators: 1. 2FA state; 2. Role name
+#: views/page/role.php:18
+#, php-format
+msgid "No users found in the %1$s state for the %2$s role"
+msgstr "Er zijn geen gebruikers gevonden in de status %1$s voor de rol %2$s"
+
+#. translators: page number
+#: views/page/role.php:20
+#, php-format
+msgid "Page %d is out of range"
+msgstr "Pagina %d valt buiten het bereik"
+
+#: views/page/role.php:37
+msgid "N/A"
+msgstr "N/A"
+
+#: views/page/role.php:48
+msgid "Page "
+msgstr "Pagina "
+
+#: views/page/settings.php:9
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+#: views/page/settings.php:11
+msgid "Required"
+msgstr "Verplicht"
+
+#: views/page/settings.php:30
+msgid "Settings updated."
+msgstr "Instellingen bijgewerkt."
+
+#: views/page/settings.php:35
+msgid ""
+"One or more settings were invalid. Please review your values and try again."
+msgstr ""
+"Een of meer instellingen waren ongeldig. Controleer uw waarden en probeer "
+"het opnieuw."
+
+#: views/page/settings.php:44 views/page/settings.php:156
+msgid "Save Settings"
+msgstr "Instellingen Opslaan"
+
+#: views/page/settings.php:65
+msgid "Remember Device"
+msgstr "Apparaat onthouden"
+
+#: views/page/settings.php:66
+msgid "Allow remembering device for trusted sessions"
+msgstr "Toestaan dat het apparaat wordt onthouden voor vertrouwde sessies"
+
+#: views/page/settings.php:69
+msgid "Remember Duration (days)"
+msgstr "Duur onthouden (dagen)"
+
+#: views/page/settings.php:73
+msgid "2FA Grace Period (days)"
+msgstr "2FA-uitstelperiode (dagen)"
+
+#: views/page/settings.php:77
+msgid "IP Source"
+msgstr "IP-bron"
+
+#: views/page/settings.php:81
+msgid "Automatic"
+msgstr "Automatisch"
+
+#: views/page/settings.php:89
+msgid "Trusted Proxies"
+msgstr "Betrouwbare proxyservers"
+
+#: views/page/settings.php:92
+msgid "One IP or CIDR/range per line."
+msgstr "Eén IP-adres of CIDR-blok per regel."
+
+#: views/page/settings.php:96
+msgid "Login History Columns"
+msgstr "Kolommen met inloggeschiedenis"
+
+#: views/page/settings.php:97
+msgid "Show login history columns in user tables"
+msgstr "Kolommen met inloggeschiedenis weergeven in gebruikerstabellen"
+
+#: views/page/settings.php:100
+msgid "Use NTP Clock Sync"
+msgstr "Gebruik NTP-kloksynchronisatie"
+
+#: views/page/settings.php:101
+msgid "Enable network time correction for TOTP verification"
+msgstr "Schakel netwerktijdcorrectie in voor TOTP-verificatie"
+
+#: views/page/settings.php:104
+msgid "Delete on Deactivation"
+msgstr "Verwijderen bij deactivering"
+
+#: views/page/settings.php:105
+msgid "Delete plugin data when deactivating"
+msgstr "Plugin-gegevens verwijderen bij het deactiveren"
+
+#: views/page/settings.php:110
+msgid "2FA Role Requirements"
+msgstr "Functie-eisen voor 2FA"
+
+#: views/page/settings.php:114 views/settings/user-stats.php:25
+msgid "Role"
+msgstr "Rol"
+
+#: views/page/settings.php:115
+msgid "2FA State"
+msgstr "2FA-status"
+
+#: views/settings/user-stats.php:13
+msgid "User Summary"
+msgstr "Gebruikersoverzicht"
+
+#: views/settings/user-stats.php:17
+msgid "Manage Users"
+msgstr "Gebruikers beheren"
+
+#: views/settings/user-stats.php:26
+msgid "Total Users"
+msgstr "Totaal aantal gebruikers"
+
+#: views/settings/user-stats.php:36
+msgid "Custom Capabilities / Multiple Roles"
+msgstr "Maatwerkmogelijkheden / Meerdere rollen"
+
+#: views/settings/user-stats.php:66
+msgid "View users"
+msgstr "Gebruikers bekijken"
+
+#: views/settings/user-stats.php:73
+msgid "Total"
+msgstr "Totaal"
+
+#: views/settings/user-stats.php:80
+msgid ""
+"* User counts currently only reflect the main site on multisite "
+"installations."
+msgstr ""
+"* Het aantal gebruikers heeft momenteel alleen betrekking op de hoofdsite "
+"bij multisite-installaties."
+
+#: views/settings/user-stats.php:88
+msgid ""
+"User counts are hidden by default on sites with large numbers of users in "
+"order to improve performance."
+msgstr ""
+"Op websites met een groot aantal gebruikers worden de gebruikersaantallen "
+"standaard verborgen om de prestaties te verbeteren."
+
+#: views/settings/user-stats.php:88
+msgid ""
+"User counts are currently disabled as the most recent attempt to count users "
+"failed to complete successfully."
+msgstr ""
+"Het tellen van gebruikers is momenteel uitgeschakeld, aangezien de meest "
+"recente poging om het aantal gebruikers te tellen niet succesvol is verlopen."
+
+#: views/settings/user-stats.php:93
+msgid "Show User Counts"
+msgstr "Aantal gebruikers weergeven"
+
+#: views/settings/user-stats.php:93
+msgid "Try Again"
+msgstr "Probeer opnieuw"
+
+#: views/user/grace-period-toggle.php:9
+msgid "2FA Grace Period"
+msgstr "Uitstelperiode voor 2FA"
+
+#: views/user/grace-period-toggle.php:12
+msgid "Allow a grace period for this user prior to requiring 2FA"
+msgstr "Geef deze gebruiker een respijtperiode voordat je 2FA verplicht stelt"
+
+#~ msgid "2FA Login Security Contributors"
+#~ msgstr "Bijdragers aan 2FA Login Security"
+
+#~ msgid ""
+#~ "Two-factor authentication is not currently enabled for this account type. "
+#~ "To enable it, visit the 2FA Settings page."
+#~ msgstr ""
+#~ "Tweefactorauthenticatie is momenteel niet ingeschakeld voor dit "
+#~ "accounttype. Ga naar de pagina ‘2FA-instellingen’ om deze functie in te "
+#~ "schakelen."

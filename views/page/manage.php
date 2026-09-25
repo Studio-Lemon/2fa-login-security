@@ -30,8 +30,6 @@ $lockedOut   = $requires2fa && ! $enabled;
 		array(
 			'a' => array(
 				'href'   => array(),
-				'target' => array(),
-				'rel'    => array(),
 			),
 		)
 	);
