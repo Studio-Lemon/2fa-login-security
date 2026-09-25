@@ -11,7 +11,7 @@
  * Requires PHP:                        8.1
  * Requires at least:               7.0
  * x-release-please-start-version
- * Version:                     2.0.0-beta.2
+ * Version:                     2.0.0-beta.3
  * Network:                     true
  * x-release-please-end
  *
@@ -29,7 +29,7 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
-define('TFA_LS_VERSION', '2.0.0-beta.2'); // x-release-please-version
+define('TFA_LS_VERSION', '2.0.0-beta.3'); // x-release-please-version
 
 define('TFA_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 

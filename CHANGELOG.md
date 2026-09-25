@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-beta.3](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.2...2.0.0-beta.3) (2026-09-25)
+
+
+### 🐛 Bug Fixes
+
+* update composer.json and composer.lock to include 10up/phpcs-composer and adjust PHP CodeSniffer ruleset ([d6f1957](https://github.com/Studio-Lemon/2fa-login-security/commit/d6f1957a481930341272328d0d75cd017bcc940a))
+
 ## [2.0.0-beta.2](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.1...2.0.0-beta.2) (2026-09-25)
 
 
