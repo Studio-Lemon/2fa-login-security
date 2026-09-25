@@ -11,6 +11,5 @@ jobs:
     uses: Studio-Lemon/workflows/.github/workflows/plugin-release.yml@main
     with:
       plugin_name: "2fa-login-security"
-      deploy_to_satispress: false
       remote_host: ${{ vars.REMOTE_HOST }}
     secrets: inherit
