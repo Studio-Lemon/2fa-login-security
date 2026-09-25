@@ -33,6 +33,31 @@ The fork is moving away from earlier upstream integrations and bundled extras. I
 3. Open the `Login Security` area in wp-admin.
 4. Review the settings, configure any role requirements, and activate 2FA for the accounts that need it.
 
+### Composer install
+
+Install the plugin from [Packagist](https://packagist.org/packages/studio-lemon/2fa-login-security) in your WordPress project's root directory:
+
+```bash
+composer require studio-lemon/2fa-login-security
+```
+
+Configure your project with [Composer Installers](https://github.com/composer/installers) so packages of type `wordpress-plugin` are placed in your WordPress plugins directory:
+
+```json
+{
+  "require": {
+    "composer/installers": "^2.3"
+  },
+  "extra": {
+    "installer-paths": {
+      "wp-content/plugins/{$name}/": ["type:wordpress-plugin"]
+    }
+  }
+}
+```
+
+After Composer installs the package, activate it from the WordPress Plugins screen.
+
 ### Multisite install
 
 1. Upload the plugin to the network's plugins directory.
