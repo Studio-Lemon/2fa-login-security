@@ -23,6 +23,9 @@
     "stan": "@php ./vendor/bin/phpstan analyse --memory-limit=1G",
     "stan:level": "@php ./vendor/bin/phpstan analyse --memory-limit=1G --level"
   },
+  "extra": {
+    "wordpress-install-dir": "vendor/.wordpress"
+  },
   "config": {
     "sort-packages": true,
     "allow-plugins": {
