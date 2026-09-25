@@ -25,7 +25,7 @@ use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 if (function_exists('wp_installing') && wp_installing()) {
 	return;
 }
-if (! defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
 	exit;
 }
 
@@ -33,7 +33,7 @@ define('TFA_LS_VERSION', '2.0.0-beta.2'); // x-release-please-version
 
 define('TFA_LS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-if (! defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
+if (!defined('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES')) {
 	define('TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES', 15);
 }
 
