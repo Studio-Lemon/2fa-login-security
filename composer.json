@@ -1,7 +1,7 @@
 {
   "name": "studio-lemon/2fa-login-security",
   "description": "Composer setup for 2FA Login Security tooling",
-  "type": "project",
+  "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "require": {},
   "require-dev": {
