@@ -13,10 +13,6 @@ namespace TFAuthLS;
  */
 class Controller_Support
 {
-
-
-
-
 	const ITEM_INDEX                     = 'index';
 	const ITEM_MODULE_LOGIN_SECURITY     = 'how-to';
 	const ITEM_MODULE_LOGIN_SECURITY_2FA = 'how-to-enable-two-factor-authentication';
