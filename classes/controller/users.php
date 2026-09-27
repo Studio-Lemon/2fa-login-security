@@ -955,45 +955,9 @@ SQL;
 		return intval($user_id);
 	}
 
-	/**
-	 * @return mixed[]
-	 */
-	private function load_verification_tokens($user): array
-	{
-		$stored_hashes = get_user_meta($user->ID, self::META_KEY_VERIFICATION_TOKENS, true);
-		$validHashes  = array();
-		if (is_array($stored_hashes)) {
-			foreach ($stored_hashes as $hash) {
-				$user_id = $this->load_verification_token($hash);
-				if ($user_id === $user->ID) {
-					$validHashes[] = $hash;
-				}
-			}
-		}
-		return $validHashes;
-	}
-
 	private function hash_verification_token($token)
 	{
 		return wp_hash($token);
-	}
-
-	public function generate_verification_token($user): string
-	{
-		$token  = Model_Crypto::random_bytes(self::VERIFICATION_TOKEN_BYTES);
-		$hash   = $this->hash_verification_token($token);
-		$tokens = $this->load_verification_tokens($user);
-		array_unshift($tokens, $hash);
-		$token_count = count($tokens);
-		while ($token_count > self::VERIFICATION_TOKEN_LIMIT) {
-			$excessHash = array_pop($tokens);
-			delete_transient($this->get_verification_token_transient_key($excessHash));
-			--$token_count;
-		}
-		$key = $this->get_verification_token_transient_key($hash);
-		set_transient($key, $user->ID, TFA_LS_EMAIL_VALIDITY_DURATION_MINUTES * 60);
-		update_user_meta($user->ID, self::META_KEY_VERIFICATION_TOKENS, $tokens);
-		return base64_encode($token);
 	}
 
 	public function validate_verification_token($token, $user = null): bool
