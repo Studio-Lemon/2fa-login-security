@@ -6,7 +6,7 @@
  * @package TFAuthLS
  */
 
-// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Methods.MethodDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy internal identifiers, WordPress return values, and atomic options-table locking are retained for compatibility.
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy internal identifiers, WordPress return values, and atomic options-table locking are retained for compatibility.
 
 namespace TFAuthLS;
 
@@ -89,11 +89,11 @@ class Model_TokenBucket
 	 * @param int $timeout Lock timeout in seconds.
 	 * @return bool Whether or not the lock was acquired.
 	 */
-	private function _lock($timeout = 30): bool
+	private function lock($timeout = 30): bool
 	{
 		if (self::BACKING_WP_OPTIONS == $this->_backing) {
 			$start = microtime(true);
-			while (! $this->_wp_options_create_lock($this->_identifier)) {
+			while (! $this->wp_options_create_lock($this->_identifier)) {
 				if (microtime(true) - $start > $timeout) {
 					return false;
 				}
@@ -121,10 +121,10 @@ class Model_TokenBucket
 	/**
 	 * Releases the bucket lock.
 	 */
-	private function _unlock(): void
+	private function unlock(): void
 	{
 		if (self::BACKING_WP_OPTIONS == $this->_backing) {
-			$this->_wp_options_release_lock($this->_identifier);
+			$this->wp_options_release_lock($this->_identifier);
 		} elseif (self::BACKING_REDIS == $this->_backing) {
 			if (null === $this->_redis) {
 				return;
@@ -140,7 +140,7 @@ class Model_TokenBucket
 	 * @param int|null $timeout Lock timeout in seconds.
 	 * @return bool
 	 */
-	private function _wp_options_create_lock(string $name, $timeout = null)
+	private function wp_options_create_lock(string $name, $timeout = null)
 	{
 		// Our own version of WP_Upgrader::create_lock
 		global $wpdb;
@@ -162,8 +162,8 @@ class Model_TokenBucket
 				return false;
 			}
 
-			$this->_wp_options_release_lock($name);
-			return $this->_wp_options_create_lock($name, $timeout);
+			$this->wp_options_release_lock($name);
+			return $this->wp_options_create_lock($name, $timeout);
 		}
 
 		return true;
@@ -175,7 +175,7 @@ class Model_TokenBucket
 	 * @param string $name Lock name.
 	 * @return bool
 	 */
-	private function _wp_options_release_lock(string $name)
+	private function wp_options_release_lock(string $name)
 	{
 		return delete_option('wfls_' . $name . '.lock');
 	}
@@ -188,7 +188,7 @@ class Model_TokenBucket
 	 */
 	public function consume($token_count = 1): bool
 	{
-		if (! $this->_lock()) {
+		if (! $this->lock()) {
 			return false;
 		}
 
@@ -197,34 +197,34 @@ class Model_TokenBucket
 		} elseif (self::BACKING_REDIS == $this->_backing) {
 			$record = $this->_redis->get('bucket:' . $this->_identifier);
 		} else {
-			$this->_unlock();
+			$this->unlock();
 			return false;
 		}
 
 		if (false === $record) {
 			if ($token_count > $this->_bucket_size) {
-				$this->_unlock();
+				$this->unlock();
 				return false;
 			}
 
-			$this->_bootstrap($this->_bucket_size - $token_count);
-			$this->_unlock();
+			$this->bootstrap($this->_bucket_size - $token_count);
+			$this->unlock();
 			return true;
 		}
 
-		$tokens = min($this->_seconds_to_tokens(microtime(true) - (float) $record), $this->_bucket_size);
+		$tokens = min($this->seconds_to_tokens(microtime(true) - (float) $record), $this->_bucket_size);
 		if ($token_count > $tokens) {
-			$this->_unlock();
+			$this->unlock();
 			return false;
 		}
 
 		if (self::BACKING_WP_OPTIONS === $this->_backing) {
-			set_transient('wflsbucket:' . $this->_identifier, (string) (microtime(true) - $this->_tokens_to_seconds($tokens - $token_count)), (int) ceil($this->_tokens_to_seconds($this->_bucket_size)));
+			set_transient('wflsbucket:' . $this->_identifier, (string) (microtime(true) - $this->tokens_to_seconds($tokens - $token_count)), (int) ceil($this->tokens_to_seconds($this->_bucket_size)));
 		} elseif (self::BACKING_REDIS === $this->_backing) {
-			$this->_redis->set('bucket:' . $this->_identifier, (string) (microtime(true) - $this->_tokens_to_seconds($tokens - $token_count)));
+			$this->_redis->set('bucket:' . $this->_identifier, (string) (microtime(true) - $this->tokens_to_seconds($tokens - $token_count)));
 		}
 
-		$this->_unlock();
+		$this->unlock();
 		return true;
 	}
 
@@ -235,7 +235,7 @@ class Model_TokenBucket
 	 */
 	public function reset(): ?bool
 	{
-		if (! $this->_lock()) {
+		if (! $this->lock()) {
 			return false;
 		}
 
@@ -245,7 +245,7 @@ class Model_TokenBucket
 			$this->_redis->del('bucket:' . $this->_identifier);
 		}
 
-		$this->_unlock();
+		$this->unlock();
 		return null;
 	}
 
@@ -254,11 +254,11 @@ class Model_TokenBucket
 	 *
 	 * @param int $initial_tokens Initial available token count.
 	 */
-	protected function _bootstrap($initial_tokens)
+	protected function bootstrap($initial_tokens)
 	{
-		$microtime = microtime(true) - $this->_tokens_to_seconds($initial_tokens);
+		$microtime = microtime(true) - $this->tokens_to_seconds($initial_tokens);
 		if (self::BACKING_WP_OPTIONS == $this->_backing) {
-			set_transient('wflsbucket:' . $this->_identifier, (string) $microtime, (int) ceil($this->_tokens_to_seconds($this->_bucket_size)));
+			set_transient('wflsbucket:' . $this->_identifier, (string) $microtime, (int) ceil($this->tokens_to_seconds($this->_bucket_size)));
 		} elseif (self::BACKING_REDIS == $this->_backing) {
 			$this->_redis->set('bucket:' . $this->_identifier, (string) $microtime);
 		}
@@ -270,7 +270,7 @@ class Model_TokenBucket
 	 * @param int|float $tokens Token count.
 	 * @return int|float
 	 */
-	protected function _tokens_to_seconds($tokens): int|float
+	protected function tokens_to_seconds($tokens): int|float
 	{
 		return $tokens / $this->_tokens_per_second;
 	}
@@ -281,7 +281,7 @@ class Model_TokenBucket
 	 * @param int|float $seconds Elapsed time in seconds.
 	 * @return int|float
 	 */
-	protected function _seconds_to_tokens($seconds): int|float
+	protected function seconds_to_tokens($seconds): int|float
 	{
 		return (int) $seconds * $this->_tokens_per_second;
 	}
