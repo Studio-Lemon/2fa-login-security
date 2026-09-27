@@ -56,7 +56,7 @@ class Model_Request
 			$source = Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE);
 		}
 
-		$record = $this->_ip($source, $trusted_proxies);
+		$record = $this->ip($source, $trusted_proxies);
 		if (is_array($record)) {
 			list($ip, $variable) = $record;
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
@@ -92,10 +92,10 @@ class Model_Request
 	 * @param bool $refresh_cache Whether to refresh the cached address.
 	 * @return string Detected IP address.
 	 */
-	public function ip($refresh_cache = false)
+	public function get_ip($refresh_cache = false)
 	{
 		if (null === $this->_cached_ip || $refresh_cache) {
-			$this->_cached_ip = $this->_ip(Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE), Controller_Settings::shared()->trusted_proxies());
+			$this->_cached_ip = $this->ip(Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE), Controller_Settings::shared()->trusted_proxies());
 		}
 
 		return $this->_cached_ip[0]; // Format is array(<text IP>, <field found in>)
@@ -110,7 +110,7 @@ class Model_Request
 	 */
 	public function ip_for_field($source, $trusted_proxies)
 	{
-		return $this->_ip($source, $trusted_proxies);
+		return $this->ip($source, $trusted_proxies);
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Model_Request
 	 * @param array|null  $trusted_proxies Trusted proxy ranges.
 	 * @return array|false Detected address and source header, or false.
 	 */
-	protected function _ip($source = null, $trusted_proxies = null)
+	protected function ip($source = null, $trusted_proxies = null)
 	{
 		if (null === $source) {
 			$source = Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE);

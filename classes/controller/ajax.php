@@ -354,7 +354,7 @@ class Controller_AJAX
 		if ($jwt && isset($jwt->payload['ip']) && isset($jwt->payload['score'])) {
 			$decrypted_ip    = Model_Symmetric::decrypt($jwt->payload['ip']);
 			$decrypted_score = Model_Symmetric::decrypt($jwt->payload['score']);
-			if ($decrypted_ip === false || $decrypted_score === false || Model_IP::inet_pton($decrypted_ip) !== Model_IP::inet_pton(Model_Request::current()->ip())) { // JWT IP and the current request's IP don't match, refuse the message
+			if ($decrypted_ip === false || $decrypted_score === false || Model_IP::inet_pton($decrypted_ip) !== Model_IP::inet_pton(Model_Request::current()->get_ip())) { // JWT IP and the current request's IP don't match, refuse the message
 				self::send_json(array('error' => wp_kses(__('<strong>ERROR</strong>: Unable to send message. Please refresh the page and try again.', '2fa-login-security'), array('strong' => array()))));
 			}
 

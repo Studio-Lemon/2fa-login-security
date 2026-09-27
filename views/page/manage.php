@@ -165,5 +165,5 @@ if (empty($tz)) {
 		}
 		?>
 		<?php esc_html_e('Detected IP:', '2fa-login-security'); ?> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
-																						?><?php echo \TFAuthLS\Text\Model_HTML::esc_html(\TFAuthLS\Model_Request::current()->ip()); ?></p>
+																						?><?php echo \TFAuthLS\Text\Model_HTML::esc_html(\TFAuthLS\Model_Request::current()->get_ip()); ?></p>
 <?php endif; ?>
