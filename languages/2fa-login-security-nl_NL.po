@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: 2FA Login Security 1.1.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/2fa-login-"
 "security\n"
-"POT-Creation-Date: 2026-09-27T12:05:31+00:00\n"
-"PO-Revision-Date: 2026-09-27 14:05+0200\n"
+"POT-Creation-Date: 2026-09-27T13:57:50+00:00\n"
+"PO-Revision-Date: 2026-09-27 15:59+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Domain: 2fa-login-security\n"
 
 #. Plugin Name of the plugin
-#: 2fa-login-security.php classes/controller/2fa-login-security.php:422
+#: 2fa-login-security.php classes/controller/2fa-login-security.php:425
 msgid "2FA Login Security"
 msgstr "2FA-inlogbeveiliging"
 
@@ -43,7 +43,7 @@ msgid "https://wordpress.org/plugins/2fa-login-security/"
 msgstr "https://wordpress.org/plugins/2fa-login-security/"
 
 #. translators: Configuration URL
-#: classes/controller/2fa-login-security.php:103
+#: classes/controller/2fa-login-security.php:105
 #, php-format
 msgid ""
 "XML-RPC authentication is disabled. Jetpack is currently active and requires "
@@ -53,22 +53,22 @@ msgstr ""
 "vereist XML-RPC-authenticatie om correct te werken. <a "
 "href=\"%s\">Instellingen beheren</a>"
 
-#: classes/controller/2fa-login-security.php:195
+#: classes/controller/2fa-login-security.php:198
 msgid "Message to Support"
 msgstr "Bericht aan de klantenservice"
 
-#: classes/controller/2fa-login-security.php:196
+#: classes/controller/2fa-login-security.php:199
 msgid "Send"
 msgstr "Verzenden"
 
-#: classes/controller/2fa-login-security.php:197
+#: classes/controller/2fa-login-security.php:200
 msgid ""
 "An error was encountered while trying to send the message. Please try again."
 msgstr ""
 "Er is een fout opgetreden bij het verzenden van het bericht. Probeer het nog "
 "eens."
 
-#: classes/controller/2fa-login-security.php:198
+#: classes/controller/2fa-login-security.php:201
 msgid ""
 "<strong>ERROR</strong>: An error was encountered while trying to send the "
 "message. Please try again."
@@ -76,14 +76,14 @@ msgstr ""
 "<strong>FOUT</strong>: Er is een fout opgetreden bij het verzenden van het "
 "bericht. Probeer het nog eens."
 
-#: classes/controller/2fa-login-security.php:199
+#: classes/controller/2fa-login-security.php:202
 msgid ""
 "Login failed with status code 403. Please contact the site administrator."
 msgstr ""
 "Het inloggen is mislukt met statuscode 403. Neem contact op met de beheerder "
 "van de website."
 
-#: classes/controller/2fa-login-security.php:200
+#: classes/controller/2fa-login-security.php:203
 msgid ""
 "<strong>ERROR</strong>: Login failed with status code 403. Please contact "
 "the site administrator."
@@ -91,14 +91,14 @@ msgstr ""
 "<strong>FOUT</strong>: Het inloggen is mislukt met statuscode 403. Neem "
 "contact op met de beheerder van de website."
 
-#: classes/controller/2fa-login-security.php:201
+#: classes/controller/2fa-login-security.php:204
 msgid ""
 "Login failed with status code 503. Please contact the site administrator."
 msgstr ""
 "Het inloggen is mislukt met statuscode 503. Neem contact op met de beheerder "
 "van de website."
 
-#: classes/controller/2fa-login-security.php:202
+#: classes/controller/2fa-login-security.php:205
 msgid ""
 "<strong>ERROR</strong>: Login failed with status code 503. Please contact "
 "the site administrator."
@@ -106,11 +106,11 @@ msgstr ""
 "<strong>FOUT</strong>: Inloggen is mislukt met statuscode 503. Neem contact "
 "op met de beheerder van de website."
 
-#: classes/controller/2fa-login-security.php:203
+#: classes/controller/2fa-login-security.php:206
 msgid "2FA Code"
 msgstr "2FA code"
 
-#: classes/controller/2fa-login-security.php:204
+#: classes/controller/2fa-login-security.php:207
 msgid ""
 "Your 2FA Code can be found within the authenticator app you used when first "
 "activating two-factor authentication. You may also use one of your recovery "
@@ -120,15 +120,15 @@ msgstr ""
 "tweefactorauthenticatie voor het eerst activeerde. Je kunt ook een van je "
 "herstelcodes gebruiken."
 
-#: classes/controller/2fa-login-security.php:205
+#: classes/controller/2fa-login-security.php:208
 msgid "Remember for 30 days"
 msgstr "Onthoud dit 30 dagen lang"
 
-#: classes/controller/2fa-login-security.php:206
+#: classes/controller/2fa-login-security.php:209
 msgid "Log In"
 msgstr "Inloggen"
 
-#: classes/controller/2fa-login-security.php:207
+#: classes/controller/2fa-login-security.php:210
 msgid ""
 "<strong>ERROR</strong>: An error was encountered while trying to "
 "authenticate. Please try again."
@@ -136,7 +136,7 @@ msgstr ""
 "<strong>FOUT</strong>: Er is een fout opgetreden tijdens het authenticeren. "
 "Probeer het nog eens."
 
-#: classes/controller/2fa-login-security.php:208
+#: classes/controller/2fa-login-security.php:211
 msgid ""
 "The 2FA code can be found in the authenticator app you used when first "
 "activating two-factor authentication. You may also use one of your recovery "
@@ -146,16 +146,16 @@ msgstr ""
 "tweefactorauthenticatie voor het eerst activeerde. Je kunt ook een van je "
 "herstelcodes gebruiken."
 
-#: classes/controller/2fa-login-security.php:241
-#: classes/controller/2fa-login-security.php:272
+#: classes/controller/2fa-login-security.php:244
+#: classes/controller/2fa-login-security.php:275
 msgid "Close"
 msgstr "Sluiten"
 
-#: classes/controller/2fa-login-security.php:260
+#: classes/controller/2fa-login-security.php:263
 msgid "Reload"
 msgstr "Ververs"
 
-#: classes/controller/2fa-login-security.php:287
+#: classes/controller/2fa-login-security.php:290
 msgid ""
 "You have unsaved changes to your options. If you leave this page, those "
 "changes will be lost."
@@ -163,40 +163,40 @@ msgstr ""
 "Er zijn nog niet-opgeslagen wijzigingen in uw instellingen. Als u deze "
 "pagina verlaat, gaan deze wijzigingen verloren."
 
-#: classes/controller/2fa-login-security.php:339 classes/controller/ajax.php:76
+#: classes/controller/2fa-login-security.php:342 classes/controller/ajax.php:76
 #: classes/controller/ajax.php:94
 msgid "You do not have permission to change options."
 msgstr "Je hebt geen toestemming om de instellingen te wijzigen."
 
-#: classes/controller/2fa-login-security.php:343
+#: classes/controller/2fa-login-security.php:346
 msgid ""
 "Your browser sent an invalid security token. Please reload and try again."
 msgstr ""
 "Je browser heeft een ongeldig beveiligingstoken verzonden. Laad de pagina "
 "opnieuw en probeer het nog eens."
 
-#: classes/controller/2fa-login-security.php:425
+#: classes/controller/2fa-login-security.php:428
 #: classes/controller/users.php:565
 msgid "2FA Status"
 msgstr "2FA-status"
 
-#: classes/controller/2fa-login-security.php:428
-#: classes/controller/2fa-login-security.php:703
+#: classes/controller/2fa-login-security.php:431
+#: classes/controller/2fa-login-security.php:707
 #: views/manage/grace-period.php:33
 msgid "Locked Out"
 msgstr "Buiten gesloten"
 
-#: classes/controller/2fa-login-security.php:428
+#: classes/controller/2fa-login-security.php:431
 #: classes/controller/users.php:584
 msgid "Active"
 msgstr "Actief"
 
-#: classes/controller/2fa-login-security.php:428
+#: classes/controller/2fa-login-security.php:431
 #: classes/controller/users.php:590
 msgid "Inactive"
 msgstr "Inactief"
 
-#: classes/controller/2fa-login-security.php:431
+#: classes/controller/2fa-login-security.php:434
 #: views/manage/grace-period.php:61
 msgid ""
 "Two-factor authentication is required for your account, but has not been "
@@ -205,7 +205,7 @@ msgstr ""
 "Tweefactorauthenticatie is vereist voor uw account, maar is nog niet "
 "ingesteld."
 
-#: classes/controller/2fa-login-security.php:431
+#: classes/controller/2fa-login-security.php:434
 #: views/manage/grace-period.php:62
 msgid ""
 "Two-factor authentication is required for this account, but has not been "
@@ -214,20 +214,20 @@ msgstr ""
 "Voor dit account is tweefactorauthenticatie vereist, maar deze is nog niet "
 "ingesteld."
 
-#: classes/controller/2fa-login-security.php:432
+#: classes/controller/2fa-login-security.php:435
 msgid "2FA is active."
 msgstr "2FA is ingeschakeld."
 
-#: classes/controller/2fa-login-security.php:432
+#: classes/controller/2fa-login-security.php:435
 msgid "2FA is inactive."
 msgstr "2FA is uitgeschakeld."
 
-#: classes/controller/2fa-login-security.php:434
+#: classes/controller/2fa-login-security.php:437
 msgid "Learn More"
 msgstr "Leer meer"
 
 #. translators: Date
-#: classes/controller/2fa-login-security.php:441
+#: classes/controller/2fa-login-security.php:444
 #, php-format
 msgid ""
 "Two-factor authentication must be activated for your account prior to %s to "
@@ -237,26 +237,26 @@ msgstr ""
 "te voorkomen dat u de toegang verliest."
 
 #. translators: Date
-#: classes/controller/2fa-login-security.php:442
+#: classes/controller/2fa-login-security.php:445
 #, php-format
 msgid ""
 "Two-factor authentication must be activated for this account prior to %s."
 msgstr ""
 "Tweefactorauthenticatie moet voor dit account worden geactiveerd vóór %s."
 
-#: classes/controller/2fa-login-security.php:451
+#: classes/controller/2fa-login-security.php:454
 msgid "Manage 2FA"
 msgstr "2FA beheren"
 
-#: classes/controller/2fa-login-security.php:451
+#: classes/controller/2fa-login-security.php:454
 msgid "Activate 2FA"
 msgstr "2FA inschakelen"
 
-#: classes/controller/2fa-login-security.php:478
+#: classes/controller/2fa-login-security.php:481
 msgid "Manage 2FA Settings"
 msgstr "2FA-instellingen beheren"
 
-#: classes/controller/2fa-login-security.php:555
+#: classes/controller/2fa-login-security.php:558
 msgid ""
 "<strong>CODE INVALID</strong>: The 2FA code provided is either expired or "
 "invalid. Please try again."
@@ -264,7 +264,7 @@ msgstr ""
 "<strong>ONGELDIGE CODE</strong>: De opgegeven 2FA-code is verlopen of "
 "ongeldig. Probeer het nog eens."
 
-#: classes/controller/2fa-login-security.php:563
+#: classes/controller/2fa-login-security.php:566
 msgid ""
 "<strong>CODE REQUIRED</strong>: Please enter your 2FA code immediately after "
 "your password in the same field."
@@ -272,14 +272,14 @@ msgstr ""
 "<strong>CODE VEREIST</strong>: Voer uw 2FA-code direct na uw wachtwoord in "
 "hetzelfde veld in."
 
-#: classes/controller/2fa-login-security.php:565
+#: classes/controller/2fa-login-security.php:568
 msgid ""
 "<strong>CODE REQUIRED</strong>: Please provide your 2FA code when prompted."
 msgstr ""
 "<strong>CODE VEREIST</strong>: Voer uw 2FA-code in wanneer daarom wordt "
 "gevraagd."
 
-#: classes/controller/2fa-login-security.php:568
+#: classes/controller/2fa-login-security.php:571
 msgid ""
 "<strong>LOGIN BLOCKED</strong>: 2FA is required to be active on your "
 "account. Please contact the site administrator."
@@ -288,7 +288,7 @@ msgstr ""
 "ingeschakeld. Neem contact op met de beheerder van de site."
 
 #. translators: 1. Date; 2. Configuration URL
-#: classes/controller/2fa-login-security.php:571
+#: classes/controller/2fa-login-security.php:574
 #, php-format
 msgid ""
 "You do not currently have two-factor authentication active on your account, "
@@ -297,41 +297,41 @@ msgstr ""
 "Tweefactorauthenticatie is momenteel niet ingeschakeld voor uw account, maar "
 "dit is vanaf %1$s verplicht. <a href=\"%2$s\">Configureer 2FA</a>"
 
-#: classes/controller/2fa-login-security.php:622
+#: classes/controller/2fa-login-security.php:626
 msgid "Email verification succeeded. Please continue logging in."
 msgstr "De e-mailverificatie is gelukt. Ga verder met inloggen."
 
-#: classes/controller/2fa-login-security.php:624
+#: classes/controller/2fa-login-security.php:628
 msgid "Email verification invalid or expired. Please try again."
 msgstr "De e-mailverificatie is ongeldig of verlopen. Probeer het nog eens."
 
-#: classes/controller/2fa-login-security.php:661
-#: classes/controller/2fa-login-security.php:662
+#: classes/controller/2fa-login-security.php:665
+#: classes/controller/2fa-login-security.php:666
 msgid "Login Security"
 msgstr "Login beveiliging"
 
-#: classes/controller/2fa-login-security.php:695 views/page/settings.php:128
+#: classes/controller/2fa-login-security.php:699 views/page/settings.php:131
 #: views/settings/user-stats.php:39
 msgid "Super Administrator"
 msgstr "Superbeheerder"
 
-#: classes/controller/2fa-login-security.php:699
+#: classes/controller/2fa-login-security.php:703
 #: views/manage/grace-period.php:33
 msgid "Grace Period"
 msgstr "Uitstelperiode"
 
 #. translators: User count
-#: classes/controller/2fa-login-security.php:719
+#: classes/controller/2fa-login-security.php:723
 #, php-format
 msgid "Users without 2FA active (%s)"
 msgstr "Gebruikers zonder actieve 2FA (%s)"
 
-#: classes/controller/2fa-login-security.php:739
-#: classes/controller/2fa-login-security.php:740
+#: classes/controller/2fa-login-security.php:743
+#: classes/controller/2fa-login-security.php:744
 msgid "Two-Factor Authentication"
 msgstr "Twee-staps authenticatie"
 
-#: classes/controller/2fa-login-security.php:740
+#: classes/controller/2fa-login-security.php:744
 msgid ""
 "Learn more<span class=\"wfls-hidden-xs\"> about Two-Factor Authentication</"
 "span>"
@@ -339,15 +339,15 @@ msgstr ""
 "Meer informatie<span class=\"wfls-hidden-xs\"> over tweefactorauthenticatie</"
 "span>"
 
-#: classes/controller/2fa-login-security.php:752
+#: classes/controller/2fa-login-security.php:756
 msgid "Settings"
 msgstr "Instellingen"
 
-#: classes/controller/2fa-login-security.php:753
+#: classes/controller/2fa-login-security.php:757
 msgid "Login Security Settings"
 msgstr "Beveiligingsinstellingen voor aanmelding"
 
-#: classes/controller/2fa-login-security.php:753
+#: classes/controller/2fa-login-security.php:757
 msgid "Learn more<span class=\"wfls-hidden-xs\"> about Login Security</span>"
 msgstr ""
 "Meer informatie<span class=\"wfls-hidden-xs\"> over inlogbeveiliging</span>"
@@ -673,21 +673,21 @@ msgid "Failed to reset grace period"
 msgstr "Het resetten van de respijtperiode is mislukt"
 
 #. translators: IP or range
-#: classes/controller/settings.php:311
+#: classes/controller/settings.php:313
 #, php-format
 msgid "The IP/range %s is invalid."
 msgstr "Het IP-adres/bereik %s is ongeldig."
 
-#: classes/controller/settings.php:317
+#: classes/controller/settings.php:319
 msgid "An invalid IP source was provided."
 msgstr "Er is een ongeldig IP-adres opgegeven."
 
-#: classes/controller/settings.php:323
+#: classes/controller/settings.php:325
 msgid "The grace period end time must be in the future."
 msgstr "De eindtijd van de respijtperiode moet in de toekomst liggen."
 
 #. translators: 1. Minimum number of days. 2. Maximum number of days.
-#: classes/controller/settings.php:330
+#: classes/controller/settings.php:332
 #, php-format
 msgid "The grace period day limit must be between %1$d and %2$d."
 msgstr "De limiet voor de uitstelperiode moet tussen %1$d en %2$d liggen."
@@ -738,7 +738,7 @@ msgstr "2FA actief"
 msgid "2FA Inactive"
 msgstr "2FA niet actief"
 
-#: classes/model/notice.php:98
+#: classes/model/notice.php:100
 msgid "Dismiss"
 msgstr "Afwijzen"
 
@@ -840,7 +840,7 @@ msgstr "2. Voer de code uit de Authenticator-app in"
 msgid "Download Recovery Codes"
 msgstr "Herstelcodes downloaden"
 
-#: views/manage/activate.php:38 views/page/settings.php:16
+#: views/manage/activate.php:38 views/page/settings.php:19
 msgid "Optional"
 msgstr "Optioneel"
 
@@ -1050,7 +1050,7 @@ msgstr ""
 "het nog eens."
 
 #. translators: Support URL
-#: views/page/manage.php:38
+#: views/page/manage.php:39
 #, php-format
 msgid ""
 "Two-Factor Authentication, or 2FA, significantly improves login security for "
@@ -1058,36 +1058,37 @@ msgid ""
 "Google Authenticator, FreeOTP, and Authy. For more details, <a href=\"%s\" "
 "target=\"_blank\" rel=\"noopener noreferrer\">visit the plugin page</a>."
 msgstr ""
-"Two-Factor Authentication, or 2FA, significantly improves login security for "
-"your website. 2FA Login Security works with a number of TOTP-based apps like "
-"Google Authenticator, FreeOTP, and Authy. For more details, <a href=\"%s\" "
-"target=\"_blank\" rel=\"noopener noreferrer\">visit the plugin page</a>."
+"Tweefactorauthenticatie, of 2FA, verhoogt de inlogbeveiliging van je website "
+"aanzienlijk. 2FA Login Security werkt met een aantal op TOTP gebaseerde "
+"apps, zoals Google Authenticator, FreeOTP en Authy. <a href=\"%s\" "
+"target=\"_blank\" rel=\"noopener noreferrer\">Ga voor meer informatie naar "
+"de plugin pagina</a>."
 
 #. translators: 1. WordPress avatar tag; 2. WordPress username
-#: views/page/manage.php:53
+#: views/page/manage.php:49
 #, php-format
 msgid ""
 "Editing User:&nbsp;&nbsp;%1$s <span class=\"wfls-text-plain\">%2$s</span>"
 msgstr "Gebruiker bewerken:  %1$s <span class=\"wfls-text-plain\">%2$s</span>"
 
 #. translators: 1. WordPress avatar tag; 2. WordPress username
-#: views/page/manage.php:53
+#: views/page/manage.php:49
 msgid "(you)"
 msgstr "(Uzelf)"
 
-#: views/page/manage.php:159
+#: views/page/manage.php:152
 msgid "Server Time:"
 msgstr "Servertijd:"
 
-#: views/page/manage.php:160
+#: views/page/manage.php:153
 msgid "Browser Time:"
 msgstr "Browsertijd:"
 
-#: views/page/manage.php:166
+#: views/page/manage.php:159
 msgid "Corrected Time (NTP):"
 msgstr "Gecorrigeerde tijd (NTP):"
 
-#: views/page/manage.php:169
+#: views/page/manage.php:162
 msgid "Detected IP:"
 msgstr "Gedetecteerd IP-adres:"
 
@@ -1132,94 +1133,94 @@ msgstr "N/A"
 msgid "Page "
 msgstr "Pagina "
 
-#: views/page/settings.php:15
+#: views/page/settings.php:18
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
-#: views/page/settings.php:17
+#: views/page/settings.php:20
 msgid "Required"
 msgstr "Verplicht"
 
-#: views/page/settings.php:36
+#: views/page/settings.php:39
 msgid "Settings updated."
 msgstr "Instellingen bijgewerkt."
 
-#: views/page/settings.php:41
+#: views/page/settings.php:44
 msgid ""
 "One or more settings were invalid. Please review your values and try again."
 msgstr ""
 "Een of meer instellingen waren ongeldig. Controleer uw waarden en probeer "
 "het opnieuw."
 
-#: views/page/settings.php:50 views/page/settings.php:163
+#: views/page/settings.php:53 views/page/settings.php:166
 msgid "Save Settings"
 msgstr "Instellingen Opslaan"
 
-#: views/page/settings.php:72
+#: views/page/settings.php:75
 msgid "Remember Device"
 msgstr "Apparaat onthouden"
 
-#: views/page/settings.php:73
+#: views/page/settings.php:76
 msgid "Allow remembering device for trusted sessions"
 msgstr "Toestaan dat het apparaat wordt onthouden voor vertrouwde sessies"
 
-#: views/page/settings.php:76
+#: views/page/settings.php:79
 msgid "Remember Duration (days)"
 msgstr "Duur onthouden (dagen)"
 
-#: views/page/settings.php:80
+#: views/page/settings.php:83
 msgid "2FA Grace Period (days)"
 msgstr "2FA-uitstelperiode (dagen)"
 
-#: views/page/settings.php:84
+#: views/page/settings.php:87
 msgid "IP Source"
 msgstr "IP-bron"
 
-#: views/page/settings.php:88
+#: views/page/settings.php:91
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: views/page/settings.php:96
+#: views/page/settings.php:99
 msgid "Trusted Proxies"
 msgstr "Betrouwbare proxyservers"
 
-#: views/page/settings.php:99
+#: views/page/settings.php:102
 msgid "One IP or CIDR/range per line."
 msgstr "Eén IP-adres of CIDR-blok per regel."
 
-#: views/page/settings.php:103
+#: views/page/settings.php:106
 msgid "Login History Columns"
 msgstr "Kolommen met inloggeschiedenis"
 
-#: views/page/settings.php:104
+#: views/page/settings.php:107
 msgid "Show login history columns in user tables"
 msgstr "Kolommen met inloggeschiedenis weergeven in gebruikerstabellen"
 
-#: views/page/settings.php:107
+#: views/page/settings.php:110
 msgid "Use NTP Clock Sync"
 msgstr "Gebruik NTP-kloksynchronisatie"
 
-#: views/page/settings.php:108
+#: views/page/settings.php:111
 msgid "Enable network time correction for TOTP verification"
 msgstr "Schakel netwerktijdcorrectie in voor TOTP-verificatie"
 
-#: views/page/settings.php:111
+#: views/page/settings.php:114
 msgid "Delete on Deactivation"
 msgstr "Verwijderen bij deactivering"
 
-#: views/page/settings.php:112
+#: views/page/settings.php:115
 msgid "Delete plugin data when deactivating"
 msgstr "Plugin-gegevens verwijderen bij het deactiveren"
 
-#: views/page/settings.php:117
+#: views/page/settings.php:120
 msgid "2FA Role Requirements"
 msgstr "Rolvereisten voor 2FA"
 
-#: views/page/settings.php:121 views/settings/user-stats.php:29
+#: views/page/settings.php:124 views/settings/user-stats.php:29
 msgid "Role"
 msgstr "Rol"
 
-#: views/page/settings.php:122
+#: views/page/settings.php:125
 msgid "2FA State"
 msgstr "2FA-status"
 
