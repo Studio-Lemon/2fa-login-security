@@ -6,7 +6,7 @@
  * @package TFAuthLS\Settings
  */
 
-// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Methods.MethodDeclaration.Underscore, Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound, Universal.Operators.StrictComparisons.LooseNotEqual, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy method names and named parameters plus the settings cache's direct database persistence are retained for compatibility.
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound, Universal.Operators.StrictComparisons.LooseNotEqual, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy method names and named parameters plus the settings cache's direct database persistence are retained for compatibility.
 
 namespace TFAuthLS\Settings;
 
@@ -43,7 +43,7 @@ class Model_DB extends Model_Settings
 		global $wpdb;
 		$table = Controller_DB::shared()->settings;
 		if (! $allow_overwrite) {
-			if ($this->_has_cached($key)) {
+			if ($this->has_cached($key)) {
 				return;
 			}
 
@@ -56,7 +56,7 @@ class Model_DB extends Model_Settings
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The table name is internal and values are prepared.
 		if (false !== $wpdb->query($wpdb->prepare("INSERT INTO `{$table}` (`name`, `value`, `autoload`) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `autoload` = VALUES(`autoload`)", $key, $value, $autoload)) && self::AUTOLOAD_NO != $autoload) {
-			$this->_update_cached($key, $value);
+			$this->update_cached($key, $value);
 			do_action('wfls_settings_set', $key, $value);
 		}
 	}
@@ -104,8 +104,8 @@ class Model_DB extends Model_Settings
 		$result    = array();
 		$remaining = array();
 		foreach ($keys_defaults as $key => $default) {
-			if ($this->_has_cached($key)) {
-				$result[$key] = $this->_cached_value($key);
+			if ($this->has_cached($key)) {
+				$result[$key] = $this->cached_value($key);
 			} else {
 				$remaining[$key] = $default;
 			}
@@ -125,7 +125,7 @@ class Model_DB extends Model_Settings
 				$result[$name] = $value;
 				unset($remaining[$name]);
 				if (self::AUTOLOAD_NO != $r['autoload']) {
-					$this->_update_cached($name, $value);
+					$this->update_cached($name, $value);
 				}
 			}
 		}
@@ -145,7 +145,7 @@ class Model_DB extends Model_Settings
 		$table = Controller_DB::shared()->settings;
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The table name is internal and the value is prepared.
 		$wpdb->query($wpdb->prepare("DELETE FROM `{$table}` WHERE `name` = %s", $key));
-		$this->_remove_cached($key);
+		$this->remove_cached($key);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class Model_DB extends Model_Settings
 	 *
 	 * @return array Cached settings.
 	 */
-	private function _cached()
+	private function cached()
 	{
 		global $wpdb;
 
@@ -181,9 +181,9 @@ class Model_DB extends Model_Settings
 	 * @param mixed  $value Setting value.
 	 * @return void
 	 */
-	private function _update_cached($key, $value): void
+	private function update_cached($key, $value): void
 	{
-		$settings         = $this->_cached();
+		$settings         = $this->cached();
 		$settings[$key] = $value;
 		self::$_cache     = $settings;
 	}
@@ -194,9 +194,9 @@ class Model_DB extends Model_Settings
 	 * @param string $key Setting key.
 	 * @return void
 	 */
-	private function _remove_cached($key): void
+	private function remove_cached($key): void
 	{
-		$settings = $this->_cached();
+		$settings = $this->cached();
 		if (isset($settings[$key])) {
 			unset($settings[$key]);
 			self::$_cache = $settings;
@@ -209,11 +209,11 @@ class Model_DB extends Model_Settings
 	 * @param string $key Setting key.
 	 * @return mixed Setting value.
 	 */
-	private function _cached_value($key)
+	private function cached_value($key)
 	{
 		global $wpdb;
 
-		$settings = $this->_cached();
+		$settings = $this->cached();
 		if (isset($settings[$key])) {
 			return $settings[$key];
 		}
@@ -227,15 +227,16 @@ class Model_DB extends Model_Settings
 		}
 		return $value;
 	}
+
 	/**
 	 * Determines whether a setting is cached.
 	 *
 	 * @param string $key Setting key.
 	 * @return bool Whether the setting is cached.
 	 */
-	public function _has_cached($key): bool
+	private function has_cached($key): bool
 	{
-		$settings = $this->_cached();
+		$settings = $this->cached();
 		return isset($settings[$key]);
 	}
 }
