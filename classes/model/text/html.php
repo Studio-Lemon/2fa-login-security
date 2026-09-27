@@ -1,9 +1,12 @@
 <?php
+
 /**
  * HTML-safe text model.
  *
  * @package LS2FA\Text
  */
+
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore -- Legacy private property names are retained for compatibility.
 
 namespace TFAuthLS\Text;
 
@@ -12,7 +15,8 @@ namespace TFAuthLS\Text;
  *
  * @package LS2FA\Text
  */
-class Model_HTML {
+class Model_HTML
+{
 
 
 
@@ -29,7 +33,8 @@ class Model_HTML {
 	 * @param mixed $content Text to escape.
 	 * @return string Escaped HTML text.
 	 */
-	public static function esc_html( $content ) {
+	public static function esc_html($content)
+	{
 		if ($content instanceof Model_HTML) {
 			return (string) $content;
 		}
@@ -41,7 +46,8 @@ class Model_HTML {
 	 *
 	 * @param string $html HTML-safe text.
 	 */
-	public function __construct( $html ) {
+	public function __construct($html)
+	{
 		$this->_html = $html;
 	}
 
@@ -50,7 +56,8 @@ class Model_HTML {
 	 *
 	 * @return string HTML-safe text.
 	 */
-	public function __toString(): string {
+	public function __toString(): string
+	{
 		return $this->_html;
 	}
 }

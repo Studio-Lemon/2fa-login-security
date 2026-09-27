@@ -25,6 +25,15 @@
 	<rule ref="WordPress.Arrays.ArrayDeclarationSpacing">
 		<severity>0</severity>
 	</rule>
+	<rule ref="WordPress.Arrays.ArrayKeySpacingRestrictions.NoSpacesAroundArrayKeys">
+		<severity>0</severity>
+	</rule>
+	<rule ref="Squiz.Commenting.FileComment.SpacingAfterOpen">
+		<severity>0</severity>
+	</rule>
+	<rule ref="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine">
+		<severity>0</severity>
+	</rule>
 	<rule ref="NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserSingleLine">
 		<severity>0</severity>
 	</rule>

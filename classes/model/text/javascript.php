@@ -1,9 +1,12 @@
 <?php
+
 /**
  * JavaScript-safe text model.
  *
  * @package LS2FA\Text
  */
+
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore -- Legacy private property names are retained for compatibility.
 
 namespace TFAuthLS\Text;
 
@@ -12,7 +15,8 @@ namespace TFAuthLS\Text;
  *
  * @package LS2FA\Text
  */
-class Model_JavaScript {
+class Model_JavaScript
+{
 
 
 

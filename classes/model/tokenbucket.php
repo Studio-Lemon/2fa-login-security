@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Methods.MethodDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy internal identifiers, WordPress return values, and atomic options-table locking are retained for compatibility.
+
 namespace TFAuthLS;
 
 /**

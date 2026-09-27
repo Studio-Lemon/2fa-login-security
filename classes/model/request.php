@@ -1,16 +1,20 @@
 <?php
+
 /**
  * Request and client IP helpers.
  *
  * @package TFAuthLS
  */
 
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Methods.MethodDeclaration.Underscore -- Legacy private cache and helper names are retained for compatibility.
+
 namespace TFAuthLS;
 
 /**
  * Determines the client IP address from the current request.
  */
-class Model_Request {
+class Model_Request
+{
 
 
 
@@ -56,9 +60,9 @@ class Model_Request {
 		if (is_array($record)) {
 			list($ip, $variable) = $record;
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-			if (isset($_SERVER[ $variable ]) && strpos($_SERVER[ $variable ], ',') !== false) {
+			if (isset($_SERVER[$variable]) && strpos($_SERVER[$variable], ',') !== false) {
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-				$items  = preg_replace('/[\s,]/', '', explode(',', $_SERVER[ $variable ]));
+				$items  = preg_replace('/[\s,]/', '', explode(',', $_SERVER[$variable]));
 				$output = array();
 				foreach ($items as $i) {
 					$output[] = $ip === $i ? array(
@@ -138,29 +142,29 @@ class Model_Request {
 	protected function _possible_ips($source = null): array
 	{
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-		$default_i_p = isset($_SERVER[ self::IP_SOURCE_REMOTE_ADDR ]) ? array( $_SERVER[ self::IP_SOURCE_REMOTE_ADDR ], self::IP_SOURCE_REMOTE_ADDR ) : array( '127.0.0.1', self::IP_SOURCE_REMOTE_ADDR );
+		$default_i_p = isset($_SERVER[self::IP_SOURCE_REMOTE_ADDR]) ? array($_SERVER[self::IP_SOURCE_REMOTE_ADDR], self::IP_SOURCE_REMOTE_ADDR) : array('127.0.0.1', self::IP_SOURCE_REMOTE_ADDR);
 
 		if ($source) {
 			if (self::IP_SOURCE_REMOTE_ADDR === $source) {
-				return array( $default_i_p );
+				return array($default_i_p);
 			}
 			return array(
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-				array( (isset($_SERVER[ $source ]) ? $_SERVER[ $source ] : ''), $source ),
+				array((isset($_SERVER[$source]) ? $_SERVER[$source] : ''), $source),
 				$default_i_p,
 			);
 		}
 
-		$check = array( $default_i_p );
+		$check = array($default_i_p);
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-		if (isset($_SERVER[ self::IP_SOURCE_X_FORWARDED_FOR ])) {
+		if (isset($_SERVER[self::IP_SOURCE_X_FORWARDED_FOR])) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-			$check[] = array( $_SERVER[ self::IP_SOURCE_X_FORWARDED_FOR ], self::IP_SOURCE_X_FORWARDED_FOR );
+			$check[] = array($_SERVER[self::IP_SOURCE_X_FORWARDED_FOR], self::IP_SOURCE_X_FORWARDED_FOR);
 		}
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-		if (isset($_SERVER[ self::IP_SOURCE_X_REAL_IP ])) {
+		if (isset($_SERVER[self::IP_SOURCE_X_REAL_IP])) {
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
-			$check[] = array( $_SERVER[ self::IP_SOURCE_X_REAL_IP ], self::IP_SOURCE_X_REAL_IP );
+			$check[] = array($_SERVER[self::IP_SOURCE_X_REAL_IP], self::IP_SOURCE_X_REAL_IP);
 		}
 		return $check;
 	}
@@ -202,9 +206,9 @@ class Model_Request {
 						}
 
 						if (filter_var($j, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-							$privates[] = array( $j, $var );
+							$privates[] = array($j, $var);
 						} else {
-							return array( $j, $var );
+							return array($j, $var);
 						}
 					}
 				}
@@ -212,7 +216,7 @@ class Model_Request {
 			}
 
 			$skip_to_next = false;
-			$separators   = array( ',', ' ', "\t" );
+			$separators   = array(',', ' ', "\t");
 			foreach ($separators as $char) { // A list of IPs separated by <separator>: 192.0.2.15,192.0.2.35,192.0.2.254
 				if (strpos($value, $char) !== false) {
 					$sp = explode($char, $value);
@@ -242,9 +246,9 @@ class Model_Request {
 							}
 
 							if (filter_var($j, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-								$privates[] = array( $j, $var );
+								$privates[] = array($j, $var);
 							} else {
-								return array( $j, $var );
+								return array($j, $var);
 							}
 						}
 					}
@@ -267,9 +271,9 @@ class Model_Request {
 				}
 
 				if (filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-					$privates[] = array( $value, $var );
+					$privates[] = array($value, $var);
 				} else {
-					return array( $value, $var );
+					return array($value, $var);
 				}
 			}
 		}

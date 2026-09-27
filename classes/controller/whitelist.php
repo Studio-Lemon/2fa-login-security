@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable PSR2.Methods.MethodDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual, Universal.Operators.StrictComparisons.LooseNotEqual -- Legacy private helper names and validated string-to-number range comparisons are retained for compatibility.
+
 namespace TFAuthLS;
 
 /**

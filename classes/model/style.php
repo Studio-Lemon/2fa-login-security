@@ -49,11 +49,11 @@ class Model_Style extends Model_Asset
 		$url      = esc_url($this->getSourceUrl());
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- This is the intentional inline fallback for a non-enqueued asset.
 		$link_tag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$url}\">";
-?>
+		?>
 		<script type="text/javascript">
 			jQuery('head').append(<?php echo wp_json_encode($link_tag); ?>);
 		</script>
-<?php
+		<?php
 		// phpcs:enable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
 	}
 

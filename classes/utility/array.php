@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound, Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound -- Legacy public utility parameter names are retained for named-parameter compatibility.
+
 namespace TFAuthLS;
 
 /**
@@ -75,7 +77,7 @@ class Utility_Array
 		$matches = array_filter(
 			$array,
 			function ($k) use ($keys): bool {
-				return in_array($k, $keys);
+				return in_array($k, $keys, true);
 			},
 			ARRAY_FILTER_USE_KEY
 		);

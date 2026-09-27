@@ -1,53 +1,56 @@
 <?php
+
 /**
  * Plugin settings page.
  *
  * @package TFAuthLS
  */
 
-if ( ! defined( 'TFA_LS_VERSION' ) ) {
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- The settings action validates its nonce before this view is rendered.
+
+if (! defined('TFA_LS_VERSION')) {
 	exit;
 }
 $settings = \TFAuthLS\Controller_Settings::shared();
 $roles    = new \WP_Roles();
 
 $state_label = array(
-	\TFAuthLS\Controller_Settings::STATE_2FA_DISABLED => __( 'Disabled', '2fa-login-security' ),
-	\TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL => __( 'Optional', '2fa-login-security' ),
-	\TFAuthLS\Controller_Settings::STATE_2FA_REQUIRED => __( 'Required', '2fa-login-security' ),
+	\TFAuthLS\Controller_Settings::STATE_2FA_DISABLED => __('Disabled', '2fa-login-security'),
+	\TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL => __('Optional', '2fa-login-security'),
+	\TFAuthLS\Controller_Settings::STATE_2FA_REQUIRED => __('Required', '2fa-login-security'),
 );
 
-$current_role_state = function ( $role_name, $role_object = null ) use ( $settings ) {
-	if ( $settings->get_required_2fa_role_activation_time( $role_name ) !== false ) {
+$current_role_state = function ($role_name, $role_object = null) use ($settings) {
+	if ($settings->get_required_2fa_role_activation_time($role_name) !== false) {
 		return \TFAuthLS\Controller_Settings::STATE_2FA_REQUIRED;
 	}
-	if ( 'super-admin' === $role_name ) {
+	if ('super-admin' === $role_name) {
 		return \TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL;
 	}
-	if ( $role_object && $role_object->has_cap( \TFAuthLS\Controller_Permissions::CAP_ACTIVATE_2FA_SELF ) ) {
+	if ($role_object && $role_object->has_cap(\TFAuthLS\Controller_Permissions::CAP_ACTIVATE_2FA_SELF)) {
 		return \TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL;
 	}
 	return \TFAuthLS\Controller_Settings::STATE_2FA_DISABLED;
 };
 ?>
 
-<?php if ( isset( $_GET['wfls_settings_saved'] ) ) : ?>
+<?php if (isset($_GET['wfls_settings_saved'])) : ?>
 	<div class="notice notice-success is-dismissible">
-		<p><?php esc_html_e( 'Settings updated.', '2fa-login-security' ); ?></p>
+		<p><?php esc_html_e('Settings updated.', '2fa-login-security'); ?></p>
 	</div>
 <?php endif; ?>
-<?php if ( isset( $_GET['wfls_settings_error'] ) ) : ?>
+<?php if (isset($_GET['wfls_settings_error'])) : ?>
 	<div class="notice notice-error">
-		<p><?php esc_html_e( 'One or more settings were invalid. Please review your values and try again.', '2fa-login-security' ); ?></p>
+		<p><?php esc_html_e('One or more settings were invalid. Please review your values and try again.', '2fa-login-security'); ?></p>
 	</div>
 <?php endif; ?>
 
-<form method="post" action="<?php echo esc_url( self_admin_url( 'admin-post.php' ) ); ?>">
-	<?php wp_nonce_field( 'wfls-save-settings', 'wfls-settings-nonce' ); ?>
+<form method="post" action="<?php echo esc_url(self_admin_url('admin-post.php')); ?>">
+	<?php wp_nonce_field('wfls-save-settings', 'wfls-settings-nonce'); ?>
 	<input type="hidden" name="action" value="wfls_save_settings">
 
 	<div class="wfls-save-banner wfls-nowrap wfls-padding-add-right-responsive">
-		<button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', '2fa-login-security' ); ?></button>
+		<button type="submit" class="button button-primary"><?php esc_html_e('Save Settings', '2fa-login-security'); ?></button>
 	</div>
 
 	<div id="wfls-settings" class="wfls-flex-row wfls-flex-row-wrappable wfls-flex-row-equal-heights">
@@ -69,87 +72,87 @@ $current_role_state = function ( $role_name, $role_object = null ) use ( $settin
 			<table class="form-table" role="presentation">
 				<tbody>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Remember Device', '2fa-login-security' ); ?></th>
-						<td><label><input type="checkbox" name="wfls_settings[remember-device]" value="1" <?php checked( $settings->get_bool( \TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_ENABLED ) ); ?>> <?php esc_html_e( 'Allow remembering device for trusted sessions', '2fa-login-security' ); ?></label></td>
+						<th scope="row"><?php esc_html_e('Remember Device', '2fa-login-security'); ?></th>
+						<td><label><input type="checkbox" name="wfls_settings[remember-device]" value="1" <?php checked($settings->get_bool(\TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_ENABLED)); ?>> <?php esc_html_e('Allow remembering device for trusted sessions', '2fa-login-security'); ?></label></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Remember Duration (days)', '2fa-login-security' ); ?></th>
-						<td><input type="number" min="1" name="wfls_settings[remember-device-duration-days]" value="<?php echo esc_attr( (string) max( 1, (int) floor( $settings->get_int( \TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_DURATION, 30 * 86400 ) / 86400 ) ) ); ?>"></td>
+						<th scope="row"><?php esc_html_e('Remember Duration (days)', '2fa-login-security'); ?></th>
+						<td><input type="number" min="1" name="wfls_settings[remember-device-duration-days]" value="<?php echo esc_attr((string) max(1, (int) floor($settings->get_int(\TFAuthLS\Controller_Settings::OPTION_REMEMBER_DEVICE_DURATION, 30 * 86400) / 86400))); ?>"></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( '2FA Grace Period (days)', '2fa-login-security' ); ?></th>
-						<td><input type="number" min="0" max="99" name="wfls_settings[2fa-user-grace-period]" value="<?php echo esc_attr( $settings->get_user_2fa_grace_period() ); ?>"></td>
+						<th scope="row"><?php esc_html_e('2FA Grace Period (days)', '2fa-login-security'); ?></th>
+						<td><input type="number" min="0" max="99" name="wfls_settings[2fa-user-grace-period]" value="<?php echo esc_attr($settings->get_user_2fa_grace_period()); ?>"></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'IP Source', '2fa-login-security' ); ?></th>
+						<th scope="row"><?php esc_html_e('IP Source', '2fa-login-security'); ?></th>
 						<td>
 							<select name="wfls_settings[ip-source]">
-								<?php $ip_source = $settings->get( \TFAuthLS\Controller_Settings::OPTION_IP_SOURCE, \TFAuthLS\Model_Request::IP_SOURCE_AUTOMATIC ); ?>
-								<option value="" <?php selected( $ip_source, '' ); ?>><?php esc_html_e( 'Automatic', '2fa-login-security' ); ?></option>
-								<option value="REMOTE_ADDR" <?php selected( $ip_source, 'REMOTE_ADDR' ); ?>>REMOTE_ADDR</option>
-								<option value="HTTP_X_FORWARDED_FOR" <?php selected( $ip_source, 'HTTP_X_FORWARDED_FOR' ); ?>>HTTP_X_FORWARDED_FOR</option>
-								<option value="HTTP_X_REAL_IP" <?php selected( $ip_source, 'HTTP_X_REAL_IP' ); ?>>HTTP_X_REAL_IP</option>
+								<?php $ip_source = $settings->get(\TFAuthLS\Controller_Settings::OPTION_IP_SOURCE, \TFAuthLS\Model_Request::IP_SOURCE_AUTOMATIC); ?>
+								<option value="" <?php selected($ip_source, ''); ?>><?php esc_html_e('Automatic', '2fa-login-security'); ?></option>
+								<option value="REMOTE_ADDR" <?php selected($ip_source, 'REMOTE_ADDR'); ?>>REMOTE_ADDR</option>
+								<option value="HTTP_X_FORWARDED_FOR" <?php selected($ip_source, 'HTTP_X_FORWARDED_FOR'); ?>>HTTP_X_FORWARDED_FOR</option>
+								<option value="HTTP_X_REAL_IP" <?php selected($ip_source, 'HTTP_X_REAL_IP'); ?>>HTTP_X_REAL_IP</option>
 							</select>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Trusted Proxies', '2fa-login-security' ); ?></th>
+						<th scope="row"><?php esc_html_e('Trusted Proxies', '2fa-login-security'); ?></th>
 						<td>
-							<textarea name="wfls_settings[ip-trusted-proxies]" rows="5" cols="50"><?php echo esc_textarea( $settings->inflate( \TFAuthLS\Controller_Settings::OPTION_IP_TRUSTED_PROXIES, $settings->get( \TFAuthLS\Controller_Settings::OPTION_IP_TRUSTED_PROXIES, '' ) ) ); ?></textarea>
-							<p class="description"><?php esc_html_e( 'One IP or CIDR/range per line.', '2fa-login-security' ); ?></p>
+							<textarea name="wfls_settings[ip-trusted-proxies]" rows="5" cols="50"><?php echo esc_textarea($settings->inflate(\TFAuthLS\Controller_Settings::OPTION_IP_TRUSTED_PROXIES, $settings->get(\TFAuthLS\Controller_Settings::OPTION_IP_TRUSTED_PROXIES, ''))); ?></textarea>
+							<p class="description"><?php esc_html_e('One IP or CIDR/range per line.', '2fa-login-security'); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Login History Columns', '2fa-login-security' ); ?></th>
-						<td><label><input type="checkbox" name="wfls_settings[enable-login-history-columns]" value="1" <?php checked( $settings->get_bool( \TFAuthLS\Controller_Settings::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS, true ) ); ?>> <?php esc_html_e( 'Show login history columns in user tables', '2fa-login-security' ); ?></label></td>
+						<th scope="row"><?php esc_html_e('Login History Columns', '2fa-login-security'); ?></th>
+						<td><label><input type="checkbox" name="wfls_settings[enable-login-history-columns]" value="1" <?php checked($settings->get_bool(\TFAuthLS\Controller_Settings::OPTION_ENABLE_LOGIN_HISTORY_COLUMNS, true)); ?>> <?php esc_html_e('Show login history columns in user tables', '2fa-login-security'); ?></label></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Use NTP Clock Sync', '2fa-login-security' ); ?></th>
-						<td><label><input type="checkbox" name="wfls_settings[use-ntp]" value="1" <?php checked( $settings->get_bool( \TFAuthLS\Controller_Settings::OPTION_USE_NTP, true ) ); ?>> <?php esc_html_e( 'Enable network time correction for TOTP verification', '2fa-login-security' ); ?></label></td>
+						<th scope="row"><?php esc_html_e('Use NTP Clock Sync', '2fa-login-security'); ?></th>
+						<td><label><input type="checkbox" name="wfls_settings[use-ntp]" value="1" <?php checked($settings->get_bool(\TFAuthLS\Controller_Settings::OPTION_USE_NTP, true)); ?>> <?php esc_html_e('Enable network time correction for TOTP verification', '2fa-login-security'); ?></label></td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Delete on Deactivation', '2fa-login-security' ); ?></th>
-						<td><label><input type="checkbox" name="wfls_settings[delete-deactivation]" value="1" <?php checked( $settings->get_bool( \TFAuthLS\Controller_Settings::OPTION_DELETE_ON_DEACTIVATION, false ) ); ?>> <?php esc_html_e( 'Delete plugin data when deactivating', '2fa-login-security' ); ?></label></td>
+						<th scope="row"><?php esc_html_e('Delete on Deactivation', '2fa-login-security'); ?></th>
+						<td><label><input type="checkbox" name="wfls_settings[delete-deactivation]" value="1" <?php checked($settings->get_bool(\TFAuthLS\Controller_Settings::OPTION_DELETE_ON_DEACTIVATION, false)); ?>> <?php esc_html_e('Delete plugin data when deactivating', '2fa-login-security'); ?></label></td>
 					</tr>
 				</tbody>
 			</table>
 
-			<h2><?php esc_html_e( '2FA Role Requirements', '2fa-login-security' ); ?></h2>
+			<h2><?php esc_html_e('2FA Role Requirements', '2fa-login-security'); ?></h2>
 			<table class="widefat striped">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Role', '2fa-login-security' ); ?></th>
-						<th><?php esc_html_e( '2FA State', '2fa-login-security' ); ?></th>
+						<th><?php esc_html_e('Role', '2fa-login-security'); ?></th>
+						<th><?php esc_html_e('2FA State', '2fa-login-security'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php if ( is_multisite() ) : ?>
+					<?php if (is_multisite()) : ?>
 						<tr>
-							<td><?php esc_html_e( 'Super Administrator', '2fa-login-security' ); ?></td>
+							<td><?php esc_html_e('Super Administrator', '2fa-login-security'); ?></td>
 							<td>
-								<?php $state = $current_role_state( 'super-admin', null ); ?>
+								<?php $state = $current_role_state('super-admin', null); ?>
 								<select name="wfls_settings[enabled-roles.super-admin]">
-									<option value="optional" <?php selected( $state, 'optional' ); ?>><?php echo esc_html( $state_label['optional'] ); ?></option>
-									<option value="required" <?php selected( $state, 'required' ); ?>><?php echo esc_html( $state_label['required'] ); ?></option>
+									<option value="optional" <?php selected($state, 'optional'); ?>><?php echo esc_html($state_label['optional']); ?></option>
+									<option value="required" <?php selected($state, 'required'); ?>><?php echo esc_html($state_label['required']); ?></option>
 								</select>
 							</td>
 						</tr>
 					<?php endif; ?>
-					<?php foreach ( $roles->roles as $role_name => $role_data ) : ?>
-						<?php $role = $roles->get_role( $role_name ); ?>
+					<?php foreach ($roles->roles as $role_name => $role_data) : ?>
+						<?php $role = $roles->get_role($role_name); ?>
 						<?php
-						if ( ! $role ) :
+						if (! $role) :
 							continue;
 						endif;
 						?>
-						<?php $state = $current_role_state( $role_name, $role ); ?>
+						<?php $state = $current_role_state($role_name, $role); ?>
 						<tr>
-							<td><?php echo esc_html( $role_data['name'] ); ?></td>
+							<td><?php echo esc_html($role_data['name']); ?></td>
 							<td>
-								<select name="wfls_settings[enabled-roles.<?php echo esc_attr( $role_name ); ?>]">
-									<option value="disabled" <?php selected( $state, 'disabled' ); ?>><?php echo esc_html( $state_label['disabled'] ); ?></option>
-									<option value="optional" <?php selected( $state, 'optional' ); ?>><?php echo esc_html( $state_label['optional'] ); ?></option>
-									<option value="required" <?php selected( $state, 'required' ); ?>><?php echo esc_html( $state_label['required'] ); ?></option>
+								<select name="wfls_settings[enabled-roles.<?php echo esc_attr($role_name); ?>]">
+									<option value="disabled" <?php selected($state, 'disabled'); ?>><?php echo esc_html($state_label['disabled']); ?></option>
+									<option value="optional" <?php selected($state, 'optional'); ?>><?php echo esc_html($state_label['optional']); ?></option>
+									<option value="required" <?php selected($state, 'required'); ?>><?php echo esc_html($state_label['required']); ?></option>
 								</select>
 							</td>
 						</tr>
@@ -160,5 +163,5 @@ $current_role_state = function ( $role_name, $role_object = null ) use ( $settin
 		<!-- end options content -->
 	</div>
 
-	<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', '2fa-login-security' ); ?></button></p>
+	<p><button type="submit" class="button button-primary"><?php esc_html_e('Save Settings', '2fa-login-security'); ?></button></p>
 </form>

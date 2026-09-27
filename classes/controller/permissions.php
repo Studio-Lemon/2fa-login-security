@@ -40,14 +40,14 @@ class Controller_Permissions
 
 	public function install(): void
 	{
-		$this->_on_role_change();
+		$this->on_role_change();
 		if (is_multisite()) {
 			// Super Admin automatically gets all capabilities, so we don't need to explicitly add them
-			$this->_add_cap_multisite('administrator', self::CAP_ACTIVATE_2FA_SELF, $this->get_primary_sites());
+			$this->add_cap_multisite('administrator', self::CAP_ACTIVATE_2FA_SELF, $this->get_primary_sites());
 		} else {
-			$this->_add_cap('administrator', self::CAP_ACTIVATE_2FA_SELF);
-			$this->_add_cap('administrator', self::CAP_ACTIVATE_2FA_OTHERS);
-			$this->_add_cap('administrator', self::CAP_MANAGE_SETTINGS);
+			$this->add_cap('administrator', self::CAP_ACTIVATE_2FA_SELF);
+			$this->add_cap('administrator', self::CAP_ACTIVATE_2FA_OTHERS);
+			$this->add_cap('administrator', self::CAP_MANAGE_SETTINGS);
 		}
 	}
 
@@ -63,6 +63,7 @@ class Controller_Permissions
 		}
 	}
 
+	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress cron callback.
 	public static function _init_actions(): void
 	{
 		add_action('TFA_LS_role_sync_cron', array(self::shared(), '_role_sync_cron'));
@@ -91,6 +92,7 @@ class Controller_Permissions
 	 * @param $path
 	 * @param $network_id
 	 */
+	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress action callback.
 	public function _wpmu_new_blog($site_id, $user_id, $domain, $path, $network_id): void
 	{
 		$this->sync_roles($network_id, $site_id);
@@ -101,6 +103,7 @@ class Controller_Permissions
 	 *
 	 * @param $new_site
 	 */
+	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress action callback.
 	public function _wp_initialize_site($new_site): void
 	{
 		$this->sync_roles($new_site->site_id, $new_site->blog_id);
@@ -116,6 +119,7 @@ class Controller_Permissions
 	 *
 	 * Multisite only.
 	 */
+	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress action callback.
 	public function _validate_role_sync_cron(): void
 	{
 		if (! wp_next_scheduled('TFA_LS_role_sync_cron')) {
@@ -131,11 +135,12 @@ class Controller_Permissions
 	/**
 	 * Handles syncing the roles/permissions for the current blog when the cron fires.
 	 */
+	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress cron callback.
 	public function _role_sync_cron(): void
 	{
 		$last_role_change = (int) get_site_option(self::SETTING_LAST_ROLE_CHANGE, 0);
 		if (0 === $last_role_change) {
-			$this->_on_role_change();
+			$this->on_role_change();
 		}
 
 		if ($last_role_change >= get_option(self::SETTING_LAST_ROLE_SYNC, 0)) {
@@ -146,7 +151,7 @@ class Controller_Permissions
 		}
 	}
 
-	private function _on_role_change(): void
+	private function on_role_change(): void
 	{
 		update_site_option(self::SETTING_LAST_ROLE_CHANGE, time());
 	}
@@ -161,6 +166,7 @@ class Controller_Permissions
 			$network = get_network($network_id); // TODO: Support multi-network throughout plugin
 			return (int) $network->blog_id;
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy WordPress versions require this multisite network lookup.
 		return (int) $wpdb->get_var($wpdb->prepare("SELECT blogs.blog_id FROM {$wpdb->site} sites JOIN {$wpdb->blogs} blogs ON blogs.site_id=sites.id AND blogs.path=sites.path WHERE sites.id=%d", $network_id));
 	}
 
@@ -178,6 +184,7 @@ class Controller_Permissions
 				get_networks()
 			);
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy WordPress versions require this multisite network lookup.
 		return $wpdb->get_col("SELECT blogs.blog_id FROM {$wpdb->site} sites JOIN {$wpdb->blogs} blogs ON blogs.site_id=sites.id AND blogs.path=sites.path");
 	}
 
@@ -193,8 +200,10 @@ class Controller_Permissions
 	{
 		global $wpdb;
 		if (0 === $from && 0 === $count) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Retrieves the current network's active site IDs.
 			return $wpdb->get_col("SELECT `blog_id` FROM `{$wpdb->blogs}` WHERE `deleted` = 0 ORDER BY blog_id ");
 		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Retrieves the current network's active site IDs.
 		return $wpdb->get_col($wpdb->prepare("SELECT `blog_id` FROM `{$wpdb->blogs}` WHERE `deleted` = 0 AND blog_id > %d ORDER BY blog_id LIMIT %d", $from, $count));
 	}
 
@@ -209,10 +218,10 @@ class Controller_Permissions
 		if (array_key_exists($network_id, $this->network_roles)) {
 			$current_roles = $this->network_roles[$network_id];
 		} else {
-			$current_roles                      = $this->_wp_roles($this->get_primary_site_id($network_id));
+			$current_roles                      = $this->wp_roles($this->get_primary_site_id($network_id));
 			$this->network_roles[$network_id] = $current_roles;
 		}
-		$new_site_roles = $this->_wp_roles($site_id);
+		$new_site_roles = $this->wp_roles($site_id);
 		$capabilities   = array(
 			self::CAP_ACTIVATE_2FA_SELF,
 			self::CAP_ACTIVATE_2FA_OTHERS,
@@ -225,9 +234,9 @@ class Controller_Permissions
 			$role = $current_roles->get_role($role_name);
 			foreach ($capabilities as $cap) {
 				if ($role->has_cap($cap)) {
-					$this->_add_cap_multisite($role_name, $cap, array($site_id));
+					$this->add_cap_multisite($role_name, $cap, array($site_id));
 				} else {
-					$this->_remove_cap_multisite($role_name, $cap, array($site_id));
+					$this->remove_cap_multisite($role_name, $cap, array($site_id));
 				}
 			}
 		}
@@ -235,23 +244,23 @@ class Controller_Permissions
 
 	public function allow_2fa_self($role_name)
 	{
-		$this->_on_role_change();
+		$this->on_role_change();
 		if (is_multisite()) {
-			return $this->_add_cap_multisite($role_name, self::CAP_ACTIVATE_2FA_SELF, $this->get_primary_sites());
+			return $this->add_cap_multisite($role_name, self::CAP_ACTIVATE_2FA_SELF, $this->get_primary_sites());
 		}
-		return $this->_add_cap($role_name, self::CAP_ACTIVATE_2FA_SELF);
+		return $this->add_cap($role_name, self::CAP_ACTIVATE_2FA_SELF);
 	}
 
 	public function disallow_2fa_self($role_name)
 	{
-		$this->_on_role_change();
+		$this->on_role_change();
 		if (is_multisite()) {
-			return $this->_remove_cap_multisite($role_name, self::CAP_ACTIVATE_2FA_SELF, $this->get_primary_sites());
+			return $this->remove_cap_multisite($role_name, self::CAP_ACTIVATE_2FA_SELF, $this->get_primary_sites());
 		}
-		if ('administrator' == $role_name) {
+		if ('administrator' === $role_name) {
 			return true;
 		}
-		return $this->_remove_cap($role_name, self::CAP_ACTIVATE_2FA_SELF);
+		return $this->remove_cap($role_name, self::CAP_ACTIVATE_2FA_SELF);
 	}
 
 	public function can_manage_settings($user = false)
@@ -277,7 +286,7 @@ class Controller_Permissions
 		return false;
 	}
 
-	private function _wp_roles($site_id = null)
+	private function wp_roles($site_id = null)
 	{
 		require ABSPATH . 'wp-includes/version.php';
 		/** @var string $wp_version */
@@ -296,27 +305,28 @@ class Controller_Permissions
 		return $wp_roles;
 	}
 
-	private function _add_cap_multisite($role_name, string $cap, $blog_ids = null)
+	private function add_cap_multisite($role_name, string $cap, $blog_ids = null)
 	{
 		if ('super-admin' === $role_name) {
 			return true;
 		}
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Retrieves active sites before applying a network-wide role capability change.
 		$blogs = null === $blog_ids ? $wpdb->get_col("SELECT `blog_id` FROM `{$wpdb->blogs}` WHERE `deleted` = 0") : $blog_ids;
 		$added = false;
 		foreach ($blogs as $id) {
-			$wp_roles = $this->_wp_roles($id);
+			$wp_roles = $this->wp_roles($id);
 			switch_to_blog($id);
-			$added = $this->_add_cap($role_name, $cap, $wp_roles) || $added;
+			$added = $this->add_cap($role_name, $cap, $wp_roles) || $added;
 			restore_current_blog();
 		}
 		return $added;
 	}
 
-	private function _add_cap($role_name, string $cap, $wp_roles = null): bool
+	private function add_cap($role_name, string $cap, $wp_roles = null): bool
 	{
 		if (null === $wp_roles) {
-			$wp_roles = $this->_wp_roles();
+			$wp_roles = $this->wp_roles();
 		}
 		$role = $wp_roles->get_role($role_name);
 		if (null === $role) {
@@ -327,27 +337,28 @@ class Controller_Permissions
 		return true;
 	}
 
-	private function _remove_cap_multisite($role_name, string $cap, $blog_ids = null)
+	private function remove_cap_multisite($role_name, string $cap, $blog_ids = null)
 	{
 		if ('super-admin' === $role_name) {
 			return false;
 		}
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Retrieves active sites before removing a network-wide role capability.
 		$blogs   = null === $blog_ids ? $wpdb->get_col("SELECT `blog_id` FROM `{$wpdb->blogs}` WHERE `deleted` = 0") : $blog_ids;
 		$removed = false;
 		foreach ($blogs as $id) {
-			$wp_roles = $this->_wp_roles($id);
+			$wp_roles = $this->wp_roles($id);
 			switch_to_blog($id);
-			$removed = $this->_remove_cap($role_name, $cap, $wp_roles) || $removed;
+			$removed = $this->remove_cap($role_name, $cap, $wp_roles) || $removed;
 			restore_current_blog();
 		}
 		return $removed;
 	}
 
-	private function _remove_cap($role_name, string $cap, $wp_roles = null): bool
+	private function remove_cap($role_name, string $cap, $wp_roles = null): bool
 	{
 		if (null === $wp_roles) {
-			$wp_roles = $this->_wp_roles();
+			$wp_roles = $this->wp_roles();
 		}
 		$role = $wp_roles->get_role($role_name);
 		if (null === $role) {
@@ -364,7 +375,7 @@ class Controller_Permissions
 	 *
 	 * @param array $includeSites An array of multisite blog IDs to load.
 	 */
-	private function _load_multisite_roles($includeSites): void
+	private function load_multisite_roles($includeSites): void
 	{
 		global $wpdb;
 
@@ -383,7 +394,7 @@ class Controller_Permissions
 		$chunks  = array_chunk($queries, 50);
 		$options = array();
 		foreach ($chunks as $c) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query fragments contain only WordPress-generated table names and a static suffix.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Query fragments contain only WordPress-generated table names and a static suffix.
 			$rows = $wpdb->get_results(implode(' UNION ', $c), OBJECT_K);
 			foreach ($rows as $row) {
 				$options[$row->option_name] = $row->option_value;
@@ -409,7 +420,7 @@ class Controller_Permissions
 			$this->multisite_roles = array();
 		}
 
-		$this->_load_multisite_roles($includeSites);
+		$this->load_multisite_roles($includeSites);
 		return $this->multisite_roles;
 	}
 
@@ -466,7 +477,7 @@ class Controller_Permissions
 	public function does_user_have_multisite_capability($user, $capability): bool
 	{
 		$userRoles = $this->get_multisite_roles_for_user($user);
-		if (in_array('super-admin', $userRoles)) {
+		if (in_array('super-admin', $userRoles, true)) {
 			return true;
 		}
 

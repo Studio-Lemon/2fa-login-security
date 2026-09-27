@@ -1,9 +1,12 @@
 <?php
+
 /**
  * Serialization helpers.
  *
  * @package TFAuthLS
  */
+
+// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.NoSilencedErrors.Discouraged -- This validated compatibility utility intentionally handles PHP-serialized legacy data and catches malformed input.
 
 namespace TFAuthLS;
 
@@ -12,7 +15,8 @@ use RuntimeException;
 /**
  * Provides validated PHP deserialization.
  */
-class Utility_Serialization {
+class Utility_Serialization
+{
 
 
 

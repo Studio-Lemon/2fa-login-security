@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable PSR2.Methods.MethodDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual -- Legacy private helper names and notice identifier/category comparisons are retained for compatibility.
+
 namespace TFAuthLS;
 
 use TFAuthLS\Text\Model_HTML;

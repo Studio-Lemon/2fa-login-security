@@ -6,6 +6,8 @@
  * @package TFAuthLS\Settings
  */
 
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Methods.MethodDeclaration.Underscore, Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound, Universal.Operators.StrictComparisons.LooseNotEqual, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Legacy method names and named parameters plus the settings cache's direct database persistence are retained for compatibility.
+
 namespace TFAuthLS\Settings;
 
 use TFAuthLS\Controller_DB;

@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode, WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.PHP.NoSilencedErrors.Discouraged -- Base64 is part of the encrypted payload format and OpenSSL failures are deliberately handled.
+
 namespace TFAuthLS\Crypto;
 
 use TFAuthLS\Model_Crypto;

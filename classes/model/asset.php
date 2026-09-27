@@ -136,7 +136,7 @@ abstract class Model_Asset
 	 */
 	public static function js(string $file)
 	{
-		return self::_pluginBaseURL() . 'js/' . $file;
+		return self::plugin_base_url() . 'js/' . $file;
 	}
 
 	/**
@@ -147,7 +147,7 @@ abstract class Model_Asset
 	 */
 	public static function css(string $file)
 	{
-		return self::_pluginBaseURL() . 'css/' . $file;
+		return self::plugin_base_url() . 'css/' . $file;
 	}
 
 	/**
@@ -158,7 +158,7 @@ abstract class Model_Asset
 	 */
 	public static function img(string $file)
 	{
-		return self::_pluginBaseURL() . 'img/' . $file;
+		return self::plugin_base_url() . 'img/' . $file;
 	}
 
 	/**
@@ -166,7 +166,7 @@ abstract class Model_Asset
 	 *
 	 * @return string
 	 */
-	protected static function _pluginBaseURL()
+	protected static function plugin_base_url()
 	{
 		return plugins_url('', TFA_LS_FCPATH) . '/';
 	}

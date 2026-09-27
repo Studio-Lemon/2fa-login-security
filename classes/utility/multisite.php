@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- The legacy multisite fallback query must read the site table directly.
+
 namespace TFAuthLS;
 
 /**

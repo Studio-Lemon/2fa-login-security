@@ -17,6 +17,7 @@ use TFAuthLS\View\Model_Title;
 
 class Controller_TFAuthLS
 {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Remaining request reads are sanitized routing or login-hook values; state changes verify their nonce in the target handler.
 
 
 
@@ -48,6 +49,7 @@ class Controller_TFAuthLS
 		Controller_Users::shared()->init();
 		Controller_Time::shared()->init();
 		Controller_Permissions::shared()->init();
+		// phpcs:disable PSR2.Methods.MethodDeclaration.Underscore -- Remaining underscore-prefixed public methods are registered WordPress callbacks with legacy names.
 	}
 
 	protected function _init_actions()
@@ -57,7 +59,7 @@ class Controller_TFAuthLS
 
 		$versionInOptions = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, self::VERSION_KEY, false) : get_option(self::VERSION_KEY, false));
 		if (! $versionInOptions || version_compare(TFA_LS_VERSION, $versionInOptions, '>')) { // Either there is no version in options or the version in options is greater and we need to run the upgrade
-			$this->_install();
+			$this->install();
 		}
 
 		add_action('admin_init', array($this, '_admin_init'));
@@ -139,6 +141,7 @@ class Controller_TFAuthLS
 		$_runInstallCalled = true;
 
 		if (function_exists('ignore_user_abort')) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Installation must continue when the client disconnects.
 			@ignore_user_abort(true);
 		}
 
@@ -201,7 +204,7 @@ class Controller_TFAuthLS
 						'Login failed with status code 503. Please contact the site administrator.' => __('Login failed with status code 503. Please contact the site administrator.', '2fa-login-security'),
 						'<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.' => wp_kses(__('<strong>ERROR</strong>: Login failed with status code 503. Please contact the site administrator.', '2fa-login-security'), array('strong' => array())),
 						'2FA Code'             => __('2FA Code', '2fa-login-security'),
-						'Your 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.'             => __('Your 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.', '2fa-login-security'),
+						'Your 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.' => __('Your 2FA Code can be found within the authenticator app you used when first activating two-factor authentication. You may also use one of your recovery codes.', '2fa-login-security'),
 						'Remember for 30 days' => __('Remember for 30 days', '2fa-login-security'),
 						'Log In'               => __('Log In', '2fa-login-security'),
 						'<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again.' => wp_kses(__('<strong>ERROR</strong>: An error was encountered while trying to authenticate. Please try again.', '2fa-login-security'), array('strong' => array())),
@@ -319,8 +322,8 @@ class Controller_TFAuthLS
 			$this->enqueue_2fa_management_assets();
 		}
 
-		if (Controller_Notices::shared()->has_notice(wp_get_current_user()) || in_array($hookSuffix, array('user-edit.php', 'user-new.php', 'profile.php'))) {
-			wp_enqueue_script('2fa-ls-admin-global', Model_Asset::js('admin-global.js'), array('jquery'), TFA_LS_VERSION);
+		if (Controller_Notices::shared()->has_notice(wp_get_current_user()) || in_array($hookSuffix, array('user-edit.php', 'user-new.php', 'profile.php'), true)) {
+			wp_enqueue_script('2fa-ls-admin-global', Model_Asset::js('admin-global.js'), array('jquery'), TFA_LS_VERSION, true);
 
 			wp_localize_script(
 				'2fa-ls-admin-global',
@@ -395,21 +398,21 @@ class Controller_TFAuthLS
 
 	public function _edit_user_profile($user): void
 	{
-		if (get_current_user_id() == $user->ID || ! current_user_can(Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS)) {
+		if (get_current_user_id() === $user->ID || ! current_user_can(Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS)) {
 			$manageURL = admin_url('admin.php?page=WFLS');
 		} else {
 			$manageURL = admin_url('admin.php?page=WFLS&user=' . ((int) $user->ID));
 		}
 
 		if (is_multisite() && is_super_admin()) {
-			if (get_current_user_id() == $user->ID) {
+			if (get_current_user_id() === $user->ID) {
 				$manageURL = network_admin_url('admin.php?page=WFLS');
 			} else {
 				$manageURL = network_admin_url('admin.php?page=WFLS&user=' . ((int) $user->ID));
 			}
 		}
 		$user_allowed_2fa     = Controller_Users::shared()->can_activate_2fa($user);
-		$viewer_is_user       = get_current_user_id() == $user->ID;
+		$viewer_is_user       = get_current_user_id() === $user->ID;
 		$viewer_can_manage_2fa = current_user_can(Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS);
 		$in_grace_period      = false;
 		$required_at          = null;
@@ -613,6 +616,7 @@ class Controller_TFAuthLS
 	 * @param string    $redirect_to
 	 * @return \WP_Error
 	 */
+	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- WordPress requires the redirect parameter in this filter signature.
 	public function _wp_login_errors($errors, $redirect_to)
 	{
 		$has_errors                     = (method_exists($errors, 'has_errors') ? $errors->has_errors() : ! empty($errors->errors)); // has_errors was added in WP 5.1

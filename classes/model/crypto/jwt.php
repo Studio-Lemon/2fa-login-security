@@ -1,9 +1,12 @@
 <?php
+
 /**
  * JSON Web Token model.
  *
  * @package LS2FA\Crypto
  */
+
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore, WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode, WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.PHP.NoSilencedErrors.Discouraged -- JWT's encoded wire format, legacy private property names, and guarded cryptographic calls are retained for compatibility.
 
 namespace TFAuthLS\Crypto;
 
@@ -17,7 +20,8 @@ use TFAuthLS\Model_Crypto;
  * @property array $payload
  * @property int $expiration
  */
-class Model_JWT {
+class Model_JWT
+{
 
 
 

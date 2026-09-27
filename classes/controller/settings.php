@@ -56,12 +56,13 @@ class Controller_Settings
 	const STATE_2FA_OPTIONAL = 'optional';
 	const STATE_2FA_REQUIRED = 'required';
 
+	// phpcs:disable Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound -- Preserves public named-argument compatibility.
 	/**
 	 * Settings storage backend.
 	 *
 	 * @var Model_Settings
 	 */
-	protected $_settings_storage;
+	protected $settings_storage;
 
 	/**
 	 * Returns the singleton Controller_Settings.
@@ -87,15 +88,15 @@ class Controller_Settings
 		if (! $settings_storage) {
 			$settings_storage = new Model_DB();
 		}
-		$this->_settings_storage = $settings_storage;
-		$this->_migrate_admin_2fa_requirements_to_roles();
+		$this->settings_storage = $settings_storage;
+		$this->migrate_admin_2fa_requirements_to_roles();
 	}
 
 	/**
 	 * Returns a key/value array of all defaults. The value is the storage-ready value (e.g., a JSON string for array
 	 * settings).
 	 */
-	protected function _defaults(): array
+	protected function defaults(): array
 	{
 		return array(
 			self::OPTION_IP_SOURCE                        => Model_Request::IP_SOURCE_AUTOMATIC,
@@ -125,7 +126,7 @@ class Controller_Settings
 	 */
 	public function set_defaults(): void
 	{
-		$defaults = $this->_defaults();
+		$defaults = $this->defaults();
 		$defaults = array_column(
 			array_map(
 				function ($k, $v): array {
@@ -144,7 +145,7 @@ class Controller_Settings
 			'v',
 			'k'
 		);
-		$this->_settings_storage->set_multiple($defaults);
+		$this->settings_storage->set_multiple($defaults);
 	}
 
 	/**
@@ -174,7 +175,7 @@ class Controller_Settings
 		}
 		$changes = $this->clean_multiple($changes);
 		$changes = $this->preprocess_multiple($changes);
-		$this->_settings_storage->set_multiple($changes);
+		$this->settings_storage->set_multiple($changes);
 		return true;
 	}
 
@@ -187,7 +188,7 @@ class Controller_Settings
 	 */
 	public function get($key, $default = false)
 	{
-		return $this->_settings_storage->get($key, $default);
+		return $this->settings_storage->get($key, $default);
 	}
 
 	/**
@@ -239,6 +240,7 @@ class Controller_Settings
 		$value = is_string($value) ? json_decode($value, true) : null;
 		return is_array($value) ? $value : $default;
 	}
+	// phpcs:enable Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound
 
 	/**
 	 * Removes a setting value.
@@ -247,7 +249,7 @@ class Controller_Settings
 	 */
 	public function remove($key): void
 	{
-		$this->_settings_storage->remove($key);
+		$this->settings_storage->remove($key);
 	}
 
 	/**
@@ -257,7 +259,7 @@ class Controller_Settings
 	 */
 	public function all()
 	{
-		$result = $this->_settings_storage->get_multiple($this->_defaults());
+		$result = $this->settings_storage->get_multiple($this->defaults());
 		foreach ($result as $key => &$value) {
 			$value = $this->inflate($key, $value);
 		}
@@ -402,11 +404,11 @@ class Controller_Settings
 				);
 				$cleaned = array();
 				foreach ($parsed as $item) {
-					$cleaned[] = $this->_sanitize_ip_range($item);
+					$cleaned[] = $this->sanitize_ip_range($item);
 				}
 				return implode("\n", $cleaned);
 			case self::OPTION_REQUIRE_2FA_GRACE_PERIOD:
-				$dt = $this->_parse_local_time($value);
+				$dt = $this->parse_local_time($value);
 				return $dt->format('U');
 		}
 		return $value;
@@ -761,7 +763,7 @@ class Controller_Settings
 	 *
 	 * @param string $timestring Time string to parse.
 	 */
-	protected function _parse_local_time($timestring): \DateTime
+	protected function parse_local_time($timestring): \DateTime
 	{
 		new \DateTimeZone('UTC');
 		$tz = get_option('timezone_string');
@@ -778,7 +780,7 @@ class Controller_Settings
 	 *
 	 * @param string $range IP range to sanitize.
 	 */
-	protected function _sanitize_ip_range($range): string
+	protected function sanitize_ip_range($range): string
 	{
 		$range = preg_replace('/\s/', '', $range); // Strip whitespace
 		$range = preg_replace('/[\\x{2013}-\\x{2015}]/u', '-', $range); // Non-hyphen dashes to hyphen
@@ -797,7 +799,7 @@ class Controller_Settings
 	/**
 	 * Migrates the legacy administrator 2FA requirement to individual roles.
 	 */
-	private function _migrate_admin_2fa_requirements_to_roles(): void
+	private function migrate_admin_2fa_requirements_to_roles(): void
 	{
 		if (! $this->get_bool(self::OPTION_REQUIRE_2FA_ADMIN)) {
 			return;

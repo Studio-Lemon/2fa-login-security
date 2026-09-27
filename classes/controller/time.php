@@ -145,6 +145,7 @@ class Controller_Time
 		$packet .= str_repeat("\x0", 39);
 
 		foreach ($servers as $s) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fsockopen -- The NTP client intentionally probes UDP hosts and handles connection failures by trying the next server.
 			$socket = @fsockopen('udp://' . $s, 123, $err_no, $err_str, 1);
 			if ($socket) {
 				stream_set_timeout($socket, 1);
@@ -153,19 +154,22 @@ class Controller_Time
 				$fractional       = sprintf('%010d', round(($remote_originate - ((int) $remote_originate)) * 0x100000000));
 				$packed           = pack('N', $seconds_n_t_p) . pack('N', $fractional);
 
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- NTP uses a direct UDP socket rather than the WordPress filesystem abstraction.
 				if (@fwrite($socket, $packet . $packed)) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- NTP uses a direct UDP socket rather than the WordPress filesystem abstraction.
 					$response          = fread($socket, 48);
 					$local_transmitted = microtime(true);
 				}
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing the UDP socket cannot use the WordPress filesystem abstraction.
 				@fclose($socket);
 
-				if (isset($response) && 48 == Model_Crypto::strlen($response)) {
+				if (isset($response) && 48 === Model_Crypto::strlen($response)) {
 					break;
 				}
 			}
 		}
 
-		if (isset($response, $local_transmitted) && 48 == Model_Crypto::strlen($response)) {
+		if (isset($response, $local_transmitted) && 48 === Model_Crypto::strlen($response)) {
 			$longs = unpack('N12', $response);
 
 			$remote_originate_seconds   = sprintf('%u', $longs[7]) - self::NTP_EPOCH_CONVERT;

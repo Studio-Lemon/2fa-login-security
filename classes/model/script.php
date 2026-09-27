@@ -62,9 +62,9 @@ class Model_Script extends Model_Asset
 			return;
 		}
 		// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript -- This is the intentional inline fallback for a non-enqueued asset.
-?>
+		?>
 		<script type="text/javascript" src="<?php echo esc_url($this->getSourceUrl()); ?>"></script>
-<?php
+		<?php
 		// phpcs:enable WordPress.WP.EnqueuedResources.NonEnqueuedScript
 	}
 

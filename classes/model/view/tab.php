@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore -- Legacy protected property names are retained for compatibility.
+
 namespace TFAuthLS\View;
 
 /**

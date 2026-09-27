@@ -6,6 +6,8 @@
  * @package TFAuthLS
  */
 
+// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, PSR2.Methods.MethodDeclaration.Underscore, Squiz.PHP.CommentedOutCode.Found, Universal.NamingConventions.NoReservedKeywordParameterNames.functionFound, Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound, WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.rand_mt_rand -- Legacy compatibility helpers retain their signatures, method names, fallback behavior, and guarded PHP calls.
+
 namespace TFAuthLS;
 
 /**

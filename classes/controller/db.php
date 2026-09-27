@@ -94,11 +94,11 @@ class Controller_DB
 	 */
 	public function install(): void
 	{
-		$this->_create_schema();
+		$this->create_schema();
 
 		global $wpdb;
 		$table = $this->secrets;
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from a fixed plugin constant.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Direct update is required to invalidate stored verification times; table name is generated from a fixed plugin constant.
 		$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `vtime` = LEAST(`vtime`, %d)", Controller_Time::time()));
 	}
 
@@ -110,7 +110,7 @@ class Controller_DB
 		$tables = array(self::TABLE_2FA_SECRETS, self::TABLE_SETTINGS, self::TABLE_ROLE_COUNTS);
 		foreach ($tables as $table) {
 			global $wpdb;
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is generated from a fixed plugin constant.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- Schema removal is required during uninstall; table name is generated from a fixed plugin constant.
 			$wpdb->query('DROP TABLE IF EXISTS `' . self::network_table($table) . '`');
 		}
 	}
@@ -134,7 +134,7 @@ class Controller_DB
 			}
 			return false;
 		}
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Identifiers and definitions are selected from plugin-controlled schema values.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- Schema creation requires direct DDL; identifiers and definitions are plugin-controlled.
 		return $wpdb->query('CREATE ' . ($temporary ? 'TEMPORARY ' : '') . 'TABLE IF NOT EXISTS `' . self::network_table($name) . '` ' . $definition) !== false;
 	}
 
@@ -193,7 +193,7 @@ SQL;
 	/**
 	 * Creates the plugin database schema.
 	 */
-	protected function _create_schema()
+	protected function create_schema()
 	{
 		$tables = array(
 			self::TABLE_2FA_SECRETS => '(
@@ -245,7 +245,7 @@ SQL;
 	public function query($query): void
 	{
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- This internal helper is called with plugin-generated maintenance SQL only.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- This internal helper is called with plugin-generated maintenance SQL only.
 		if ($wpdb->query($query) === false) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are not rendered as HTML.
 			throw new RuntimeException("Failed to execute query: {$query}");

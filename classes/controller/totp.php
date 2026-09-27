@@ -52,6 +52,7 @@ class Controller_TOTP
 
 		global $wpdb;
 		$table = Controller_DB::shared()->secrets;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- 2FA credentials must be stored atomically in the plugin table.
 		$wpdb->query(
 			$wpdb->prepare(
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from a fixed plugin constant.
@@ -95,7 +96,7 @@ class Controller_TOTP
 	{
 		global $wpdb;
 		$table  = Controller_DB::shared()->secrets;
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from a fixed plugin constant.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- A transactional credential lookup uses a fixed plugin table name.
 		$record = $wpdb->get_row($wpdb->prepare("SELECT * FROM `{$table}` WHERE `user_id` = %d FOR UPDATE", $user->ID), ARRAY_A);
 		if (! $record) {
 			return null;
@@ -110,9 +111,10 @@ class Controller_TOTP
 				if ($update) {
 					unset($recovery_codes[$index]);
 					$updated_recovery_codes = implode('', $recovery_codes);
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from a fixed plugin constant.
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Transactional credential updates use a fixed plugin table name.
 					$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `recovery` = X%s WHERE `id` = %d", $updated_recovery_codes, $record['id']));
 				}
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Commits the credential transaction opened by the locking query.
 				$wpdb->query('COMMIT');
 				return true;
 			}
@@ -123,14 +125,16 @@ class Controller_TOTP
 			$matches = $this->check_code($secret, $code, (int) floor($record['vtime'] / self::TIME_WINDOW_LENGTH));
 			if (false !== $matches) {
 				if ($update) {
-					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is generated from a fixed plugin constant.
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Transactional credential updates use a fixed plugin table name.
 					$wpdb->query($wpdb->prepare("UPDATE `{$table}` SET `vtime` = %d WHERE `id` = %d", $matches, $record['id']));
 				}
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Commits the credential transaction opened by the locking query.
 				$wpdb->query('COMMIT');
 				return true;
 			}
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Rolls back the credential transaction opened by the locking query.
 		$wpdb->query('ROLLBACK');
 		return false;
 	}
@@ -168,7 +172,7 @@ class Controller_TOTP
 				continue;
 			}
 
-			$expected_code = $this->_generate_totp($secret, dechex($w));
+			$expected_code = $this->generate_totp($secret, dechex($w));
 			if (hash_equals($expected_code, $code)) {
 				return $w * self::TIME_WINDOW_LENGTH;
 			}
@@ -185,7 +189,7 @@ class Controller_TOTP
 	 * @param int    $digits Number of digits.
 	 * @return string The TOTP value.
 	 */
-	private function _generate_totp($key, string $time, $digits = 6): string
+	private function generate_totp($key, string $time, $digits = 6): string
 	{
 		$time = Model_Compat::hex2bin(str_pad($time, 16, '0', STR_PAD_LEFT));
 		$key  = Model_Compat::hex2bin($key);
