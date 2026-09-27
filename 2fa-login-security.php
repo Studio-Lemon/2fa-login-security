@@ -4,7 +4,7 @@
  * Plugin Name:                 2FA Login Security
  * Plugin URI:                  https://github.com/Studio-Lemon/2fa-login-security
  * Description:                 2FA Login Security for WordPress
- * Author:                      Erik van der Bas, Studio Lemon
+ * Author:                      Studio Lemon
  * Author URI:                  https://github.com/Studio-Lemon/2fa-login-security
  * Text Domain:                 2fa-login-security
  * Domain Path:                 /languages
