@@ -79,8 +79,7 @@ class Controller_TOTP
 		 *
 		 * @param \WP_User $user The user.
 		 */
-		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Preserves the published hook name.
-		do_action('TFA_LS_2fa_activated', $user);
+		do_action('tfa_ls_2fa_activated', $user);
 	}
 
 	/**
