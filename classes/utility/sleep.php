@@ -1,8 +1,17 @@
 <?php
+/**
+ * Sleep helpers.
+ *
+ * @package TFAuthLS
+ */
 
 namespace TFAuthLS;
 
+/**
+ * Provides sleep helpers with fractional-second support.
+ */
 class Utility_Sleep {
+
 
 
 	/**
@@ -10,16 +19,17 @@ class Utility_Sleep {
 	 * as only supporting partial seconds (i.e., anything sub-1 second) while `sleep` only supports whole number
 	 * seconds. For durations above 1 second with a fractional amount, we end up calling both.
 	 *
-	 * @param int|float $seconds
+	 * @param int|float $seconds Duration to sleep, in seconds.
 	 */
-	public static function sleep( $seconds ): void {
-		if ( $seconds >= 1 ) {
-			sleep( (int) $seconds );
+	public static function sleep($seconds): void
+	{
+		if ($seconds >= 1) {
+			sleep( (int) $seconds);
 			$seconds -= (int) $seconds;
 		}
 
-		if ( $seconds > 0 ) {
-			usleep( (int) ( 1000000 * $seconds ) );
+		if ($seconds > 0) {
+			usleep( (int) (1000000 * $seconds));
 		}
 	}
 }

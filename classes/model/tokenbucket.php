@@ -1,8 +1,18 @@
 <?php
 
+/**
+ * Token bucket rate limiter.
+ *
+ * @package TFAuthLS
+ */
+
 namespace TFAuthLS;
 
-class Model_TokenBucket {
+/**
+ * Limits repeated operations using Redis or WordPress options storage.
+ */
+class Model_TokenBucket
+{
 
 
 	/* Constants to map from tokens per unit to tokens per second */
@@ -19,166 +29,218 @@ class Model_TokenBucket {
 	const BACKING_REDIS      = 'redis';
 	const BACKING_WP_OPTIONS = 'wpoptions';
 
+	/**
+	 * Bucket identifier.
+	 *
+	 * @var string
+	 */
 	private $_identifier;
-	private $_bucketSize;
-	private $_tokensPerSecond;
-
+	/**
+	 * Bucket capacity.
+	 *
+	 * @var int
+	 */
+	private $_bucket_size;
+	/**
+	 * Token refill rate.
+	 *
+	 * @var float
+	 */
+	private $_tokens_per_second;
+	/**
+	 * Storage backend.
+	 *
+	 * @var string
+	 */
 	private $_backing;
+	/**
+	 * Redis connection.
+	 *
+	 * @var \Redis|null
+	 */
 	private ?\Redis $_redis = null;
 
 	/**
 	 * Model_TokenBucket constructor.
 	 *
 	 * @param string $identifier The identifier for the bucket record in the database
-	 * @param int    $bucketSize The maximum capacity of the bucket.
-	 * @param double $tokensPerSecond The number of tokens per second added to the bucket.
+	 * @param int    $bucket_size The maximum capacity of the bucket.
+	 * @param float  $tokens_per_second The number of tokens per second added to the bucket.
 	 * @param string $backing The backing storage to use.
 	 */
-	public function __construct( $identifier, $bucketSize, $tokensPerSecond, $backing = self::BACKING_WP_OPTIONS ) {
+	public function __construct($identifier, $bucket_size, $tokens_per_second, $backing = self::BACKING_WP_OPTIONS)
+	{
 		$this->_identifier      = $identifier;
-		$this->_bucketSize      = $bucketSize;
-		$this->_tokensPerSecond = $tokensPerSecond;
+		$this->_bucket_size      = $bucket_size;
+		$this->_tokens_per_second = $tokens_per_second;
 		$this->_backing         = $backing;
 
-		if ( $backing == self::BACKING_REDIS ) {
+		if (self::BACKING_REDIS == $backing) {
 			$this->_redis = new \Redis();
-			$this->_redis->pconnect( '127.0.0.1' );
+			$this->_redis->pconnect('127.0.0.1');
 		}
 	}
 
 	/**
 	 * Attempts to acquire a lock for the bucket.
 	 *
-	 * @param int $timeout
+	 * @param int $timeout Lock timeout in seconds.
 	 * @return bool Whether or not the lock was acquired.
 	 */
-	private function _lock( $timeout = 30 ): bool {
-		if ( $this->_backing == self::BACKING_WP_OPTIONS ) {
-			$start = microtime( true );
-			while ( ! $this->_wp_options_create_lock( $this->_identifier ) ) {
-				if ( microtime( true ) - $start > $timeout ) {
+	private function _lock($timeout = 30): bool
+	{
+		if (self::BACKING_WP_OPTIONS == $this->_backing) {
+			$start = microtime(true);
+			while (! $this->_wp_options_create_lock($this->_identifier)) {
+				if (microtime(true) - $start > $timeout) {
 					return false;
 				}
-				usleep( 5000 ); // 5 ms
+				usleep(5000); // 5 ms
 			}
 			return true;
 		}
-		if ( $this->_backing == self::BACKING_REDIS ) {
-			if ( null === $this->_redis ) {
+		if (self::BACKING_REDIS == $this->_backing) {
+			if (null === $this->_redis) {
 				return false;
 			}
-			$start = microtime( true );
-			while ( ! $this->_redis->setnx( 'lock:' . $this->_identifier, '1' ) ) {
-				if ( microtime( true ) - $start > $timeout ) {
+			$start = microtime(true);
+			while (! $this->_redis->setnx('lock:' . $this->_identifier, '1')) {
+				if (microtime(true) - $start > $timeout) {
 					return false;
 				}
-				usleep( 5000 ); // 5 ms
+				usleep(5000); // 5 ms
 			}
-			$this->_redis->expire( 'lock:' . $this->_identifier, 30 );
+			$this->_redis->expire('lock:' . $this->_identifier, 30);
 			return true;
 		}
 		return false;
 	}
 
-	private function _unlock(): void {
-		if ( $this->_backing == self::BACKING_WP_OPTIONS ) {
-			$this->_wp_options_release_lock( $this->_identifier );
-		} elseif ( $this->_backing == self::BACKING_REDIS ) {
-			if ( null === $this->_redis ) {
+	/**
+	 * Releases the bucket lock.
+	 */
+	private function _unlock(): void
+	{
+		if (self::BACKING_WP_OPTIONS == $this->_backing) {
+			$this->_wp_options_release_lock($this->_identifier);
+		} elseif (self::BACKING_REDIS == $this->_backing) {
+			if (null === $this->_redis) {
 				return;
 			}
-			$this->_redis->del( 'lock:' . $this->_identifier );
+			$this->_redis->del('lock:' . $this->_identifier);
 		}
 	}
 
-	private function _wp_options_create_lock( string $name, $timeout = null ) {
+	/**
+	 * Creates a WordPress-options lock.
+	 *
+	 * @param string   $name Lock name.
+	 * @param int|null $timeout Lock timeout in seconds.
+	 * @return bool
+	 */
+	private function _wp_options_create_lock(string $name, $timeout = null)
+	{
 		// Our own version of WP_Upgrader::create_lock
 		global $wpdb;
 
-		if ( ! $timeout ) {
+		if (! $timeout) {
 			$timeout = 3600;
 		}
 
 		$lock_option = 'wfls_' . $name . '.lock';
-		$lock_result = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO `{$wpdb->options}` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no')", $lock_option, time() ) );
+		$lock_result = $wpdb->query($wpdb->prepare("INSERT IGNORE INTO `{$wpdb->options}` (`option_name`, `option_value`, `autoload`) VALUES (%s, %s, 'no')", $lock_option, time()));
 
-		if ( ! $lock_result ) {
-			$lock_result = get_option( $lock_option );
-			if ( ! $lock_result ) {
+		if (! $lock_result) {
+			$lock_result = get_option($lock_option);
+			if (! $lock_result) {
 				return false;
 			}
 
-			if ( $lock_result > ( time() - $timeout ) ) {
+			if ($lock_result > (time() - $timeout)) {
 				return false;
 			}
 
-			$this->_wp_options_release_lock( $name );
-			return $this->_wp_options_create_lock( $name, $timeout );
+			$this->_wp_options_release_lock($name);
+			return $this->_wp_options_create_lock($name, $timeout);
 		}
 
 		return true;
 	}
 
-	private function _wp_options_release_lock( string $name ) {
-		return delete_option( 'wfls_' . $name . '.lock' );
+	/**
+	 * Releases a WordPress-options lock.
+	 *
+	 * @param string $name Lock name.
+	 * @return bool
+	 */
+	private function _wp_options_release_lock(string $name)
+	{
+		return delete_option('wfls_' . $name . '.lock');
 	}
 
 	/**
 	 * Atomically checks the available token count, creating the initial record if needed, and updates the available token count if the requested number of tokens is available.
 	 *
-	 * @param int $tokenCount
+	 * @param int $token_count Number of tokens to consume.
 	 * @return bool Whether or not there were enough tokens to satisfy the request.
 	 */
-	public function consume( $tokenCount = 1 ): bool {
-		if ( ! $this->_lock() ) {
+	public function consume($token_count = 1): bool
+	{
+		if (! $this->_lock()) {
 			return false;
 		}
 
-		if ( $this->_backing == self::BACKING_WP_OPTIONS ) {
-			$record = get_transient( 'wflsbucket:' . $this->_identifier );
-		} elseif ( $this->_backing == self::BACKING_REDIS ) {
-			$record = $this->_redis->get( 'bucket:' . $this->_identifier );
+		if (self::BACKING_WP_OPTIONS == $this->_backing) {
+			$record = get_transient('wflsbucket:' . $this->_identifier);
+		} elseif (self::BACKING_REDIS == $this->_backing) {
+			$record = $this->_redis->get('bucket:' . $this->_identifier);
 		} else {
 			$this->_unlock();
 			return false;
 		}
 
-		if ( $record === false ) {
-			if ( $tokenCount > $this->_bucketSize ) {
+		if (false === $record) {
+			if ($token_count > $this->_bucket_size) {
 				$this->_unlock();
 				return false;
 			}
 
-			$this->_bootstrap( $this->_bucketSize - $tokenCount );
+			$this->_bootstrap($this->_bucket_size - $token_count);
 			$this->_unlock();
 			return true;
 		}
 
-		$tokens = min( $this->_secondsToTokens( microtime( true ) - (float) $record ), $this->_bucketSize );
-		if ( $tokenCount > $tokens ) {
+		$tokens = min($this->_seconds_to_tokens(microtime(true) - (float) $record), $this->_bucket_size);
+		if ($token_count > $tokens) {
 			$this->_unlock();
 			return false;
 		}
 
-		if ( $this->_backing === self::BACKING_WP_OPTIONS ) {
-			set_transient( 'wflsbucket:' . $this->_identifier, (string) ( microtime( true ) - $this->_tokensToSeconds( $tokens - $tokenCount ) ), (int) ceil( $this->_tokensToSeconds( $this->_bucketSize ) ) );
-		} elseif ( $this->_backing === self::BACKING_REDIS ) {
-			$this->_redis->set( 'bucket:' . $this->_identifier, (string) ( microtime( true ) - $this->_tokensToSeconds( $tokens - $tokenCount ) ) );
+		if (self::BACKING_WP_OPTIONS === $this->_backing) {
+			set_transient('wflsbucket:' . $this->_identifier, (string) (microtime(true) - $this->_tokens_to_seconds($tokens - $token_count)), (int) ceil($this->_tokens_to_seconds($this->_bucket_size)));
+		} elseif (self::BACKING_REDIS === $this->_backing) {
+			$this->_redis->set('bucket:' . $this->_identifier, (string) (microtime(true) - $this->_tokens_to_seconds($tokens - $token_count)));
 		}
 
 		$this->_unlock();
 		return true;
 	}
 
-	public function reset(): ?bool {
-		if ( ! $this->_lock() ) {
+	/**
+	 * Resets the bucket state.
+	 *
+	 * @return bool|null
+	 */
+	public function reset(): ?bool
+	{
+		if (! $this->_lock()) {
 			return false;
 		}
 
-		if ( $this->_backing == self::BACKING_WP_OPTIONS ) {
-			delete_transient( 'wflsbucket:' . $this->_identifier );
-		} elseif ( $this->_backing == self::BACKING_REDIS ) {
-			$this->_redis->del( 'bucket:' . $this->_identifier );
+		if (self::BACKING_WP_OPTIONS == $this->_backing) {
+			delete_transient('wflsbucket:' . $this->_identifier);
+		} elseif (self::BACKING_REDIS == $this->_backing) {
+			$this->_redis->del('bucket:' . $this->_identifier);
 		}
 
 		$this->_unlock();
@@ -188,22 +250,37 @@ class Model_TokenBucket {
 	/**
 	 * Creates an initial record with the given number of tokens.
 	 *
-	 * @param int $initialTokens
+	 * @param int $initial_tokens Initial available token count.
 	 */
-	protected function _bootstrap( $initialTokens ) {
-		$microtime = microtime( true ) - $this->_tokensToSeconds( $initialTokens );
-		if ( $this->_backing == self::BACKING_WP_OPTIONS ) {
-			set_transient( 'wflsbucket:' . $this->_identifier, (string) $microtime, (int) ceil( $this->_tokensToSeconds( $this->_bucketSize ) ) );
-		} elseif ( $this->_backing == self::BACKING_REDIS ) {
-			$this->_redis->set( 'bucket:' . $this->_identifier, (string) $microtime );
+	protected function _bootstrap($initial_tokens)
+	{
+		$microtime = microtime(true) - $this->_tokens_to_seconds($initial_tokens);
+		if (self::BACKING_WP_OPTIONS == $this->_backing) {
+			set_transient('wflsbucket:' . $this->_identifier, (string) $microtime, (int) ceil($this->_tokens_to_seconds($this->_bucket_size)));
+		} elseif (self::BACKING_REDIS == $this->_backing) {
+			$this->_redis->set('bucket:' . $this->_identifier, (string) $microtime);
 		}
 	}
 
-	protected function _tokensToSeconds( $tokens ): int|float {
-		return $tokens / $this->_tokensPerSecond;
+	/**
+	 * Converts token count to refill time in seconds.
+	 *
+	 * @param int|float $tokens Token count.
+	 * @return int|float
+	 */
+	protected function _tokens_to_seconds($tokens): int|float
+	{
+		return $tokens / $this->_tokens_per_second;
 	}
 
-	protected function _secondsToTokens( $seconds ): int|float {
-		return (int) $seconds * $this->_tokensPerSecond;
+	/**
+	 * Converts elapsed seconds to available tokens.
+	 *
+	 * @param int|float $seconds Elapsed time in seconds.
+	 * @return int|float
+	 */
+	protected function _seconds_to_tokens($seconds): int|float
+	{
+		return (int) $seconds * $this->_tokens_per_second;
 	}
 }

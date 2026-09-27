@@ -1,20 +1,26 @@
 <?php
-if ( ! defined( 'TFA_LS_VERSION' ) ) {
+/**
+ * Grace-period revocation template.
+ *
+ * @package TFAuthLS
+ */
+
+if (! defined('TFA_LS_VERSION')) {
 	exit;
 }
 
-$errorMessage = __( 'Unable to Revoke Grace Period', '2fa-login-security' );
+$error_message = __('Unable to Revoke Grace Period', '2fa-login-security');
 ?>
 <div class="wfls-add-top wfls-add-bottom wfls-grace-period-container">
 	<div class="wfls-grace-period-button-container">
 		<button class="wfls-btn wfls-btn-default" id="wfls-revoke-grace-period">
-			<?php esc_html_e( 'Revoke Grace Period', '2fa-login-security' ); ?>
+			<?php esc_html_e('Revoke Grace Period', '2fa-login-security'); ?>
 		</button>
 
 	</div>
 </div>
 <div>
-	<p id="wfls-revoke-grace-period-failed" style="display: none"><strong><?php echo esc_html( $errorMessage ); ?></strong></p>
+	<p id="wfls-revoke-grace-period-failed" style="display: none"><strong><?php echo esc_html($error_message); ?></strong></p>
 </div>
 <script type="application/javascript">
 	(function($) {
@@ -22,7 +28,7 @@ $errorMessage = __( 'Unable to Revoke Grace Period', '2fa-login-security' );
 			var failureMessage = $('#wfls-revoke-grace-period-failed');
 			var button = $('#wfls-revoke-grace-period');
 
-			function revoke2faGracePeriod(userId, success, failure) {
+			function revoke2fain_grace_period(userId, success, failure) {
 				var ajaxContext = (typeof WFLS === 'undefined' ? GWFLS : WFLS);
 				ajaxContext.ajax(
 					'TFA_LS_revoke_2fa_grace_period', {
@@ -36,8 +42,8 @@ $errorMessage = __( 'Unable to Revoke Grace Period', '2fa-login-security' );
 			function handleError() {
 				if (typeof WFLS === 'object') {
 					WFLS.standaloneModal(
-						<?php echo json_encode( $errorMessage ); ?>,
-						<?php echo json_encode( __( 'An unexpected error occurred while attempting to revoke the grace period.', '2fa-login-security' ) ); ?>
+						<?php echo wp_json_encode($error_message); ?>,
+						<?php echo wp_json_encode(__('An unexpected error occurred while attempting to revoke the grace period.', '2fa-login-security')); ?>
 					);
 				} else {
 					failureMessage.show();
@@ -49,7 +55,7 @@ $errorMessage = __( 'Unable to Revoke Grace Period', '2fa-login-security' );
 				e.stopPropagation();
 				button.prop('disabled', true);
 				failureMessage.hide();
-				revoke2faGracePeriod(
+				revoke2fain_grace_period(
 					<?php echo (int) $user->ID; ?>,
 					function(data) {
 						if ('error' in data) {

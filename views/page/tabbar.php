@@ -1,8 +1,17 @@
 <?php
-if ( ! defined( 'TFA_LS_VERSION' ) ) {
+/**
+ * Page tab bar template.
+ *
+ * @package TFAuthLS
+ */
+
+if (! defined('TFA_LS_VERSION')) {
 	exit;
 }
+
 /**
+ * Tab bar template variables.
+ *
  * @var array $tabs An array of Tab instances. Required.
  */
 ?>
@@ -10,14 +19,14 @@ if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	<div class="wfls-col-xs-12">
 		<div class="wp-header-end"></div>
 		<ul class="wfls-page-tabs">
-			<?php foreach ( $tabs as $t ) : ?>
+			<?php foreach ($tabs as $t) : ?>
 				<?php
 				$a = $t->a;
-				if ( ! preg_match( '/^https?:\/\//i', $a ) ) {
-					$a = '#top#' . urlencode( $a );
+				if (! preg_match('/^https?:\/\//i', $a)) {
+					$a = '#top#' . rawurlencode($a);
 				}
 				?>
-				<li class="wfls-tab" id="wfls-tab-<?php echo esc_attr( $t->id ); ?>" data-target="<?php echo esc_attr( $t->id ); ?>" data-page-title="<?php echo esc_attr( $t->pageTitle ); ?>"><a href="<?php echo esc_url( $a ); ?>"><?php echo esc_html( $t->tabTitle ); ?></a></li>
+				<li class="wfls-tab" id="wfls-tab-<?php echo esc_attr($t->id); ?>" data-target="<?php echo esc_attr($t->id); ?>" data-page-title="<?php echo esc_attr($t->pageTitle); ?>"><a href="<?php echo esc_url($a); ?>"><?php echo esc_html($t->tabTitle); ?></a></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>

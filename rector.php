@@ -1,19 +1,25 @@
 <?php
 
+/**
+ * Rector configuration.
+ *
+ * @package TFAuthLS
+ */
+
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
 
-return static function ( RectorConfig $rectorConfig ): void {
-	$rectorConfig->paths(
+return static function (RectorConfig $rector_config): void {
+	$rector_config->paths(
 		array(
 			__DIR__ . '/2fa-login-security.php',
 			__DIR__ . '/classes',
 		)
 	);
 
-	$rectorConfig->skip(
+	$rector_config->skip(
 		array(
 			__DIR__ . '/vendor',
 			__DIR__ . '/node_modules',
@@ -24,7 +30,7 @@ return static function ( RectorConfig $rectorConfig ): void {
 		)
 	);
 
-	$rectorConfig->sets(
+	$rector_config->sets(
 		array(
 			SetList::CODE_QUALITY,
 			SetList::DEAD_CODE,

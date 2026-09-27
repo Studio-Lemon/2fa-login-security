@@ -1,52 +1,101 @@
 <?php
 
+/**
+ * Admin notice model.
+ *
+ * @package TFAuthLS
+ */
+
 namespace TFAuthLS;
 
-class Model_Notice {
+/**
+ * Represents a dismissible plugin admin notice.
+ */
+class Model_Notice
+{
 
 	const SEVERITY_CRITICAL = 'critical';
 	const SEVERITY_WARNING  = 'warning';
 	const SEVERITY_INFO     = 'info';
 
+	/**
+	 * Notice identifier.
+	 *
+	 * @var string
+	 */
 	private $_id;
+	/**
+	 * Notice severity.
+	 *
+	 * @var string
+	 */
 	private $_severity;
-	private $_messageHTML;
+	/**
+	 * Notice message markup.
+	 *
+	 * @var string
+	 */
+	private $_message_html;
+	/**
+	 * Notice category.
+	 *
+	 * @var string
+	 */
 	private $_category;
+	/**
+	 * Notice action buttons.
+	 *
+	 * @var array
+	 */
 	private $_buttons;
 
-	public function __construct( $id, $severity, $messageHTML, $category, $buttons = array() ) {
-		$this->_id          = $id;
-		$this->_severity    = $severity;
-		$this->_messageHTML = $messageHTML;
-		$this->_category    = $category;
-		$this->_buttons     = $buttons;
+	/**
+	 * Creates a notice.
+	 *
+	 * @param string $id           Notice identifier.
+	 * @param string $severity     Notice severity.
+	 * @param string $message_html Notice message markup.
+	 * @param string $category     Notice category.
+	 * @param array  $buttons      Notice action buttons.
+	 */
+	public function __construct($id, $severity, $message_html, $category, $buttons = array())
+	{
+		$this->_id           = $id;
+		$this->_severity     = $severity;
+		$this->_message_html = $message_html;
+		$this->_category     = $category;
+		$this->_buttons      = $buttons;
 	}
 
-	public function display_notice(): void {
-		$severityClass = 'notice-info';
-		if ( $this->_severity == self::SEVERITY_CRITICAL ) {
-			$severityClass = 'notice-error';
-		} elseif ( $this->_severity == self::SEVERITY_WARNING ) {
-			$severityClass = 'notice-warning';
+	/**
+	 * Renders the notice.
+	 */
+	public function display_notice(): void
+	{
+		$severity_class = 'notice-info';
+		if (self::SEVERITY_CRITICAL === $this->_severity) {
+			$severity_class = 'notice-error';
+		} elseif (self::SEVERITY_WARNING === $this->_severity) {
+			$severity_class = 'notice-warning';
 		}
 
-		if ( ! preg_match( '/^<p>/', $this->_messageHTML ) ) {
-			$this->_messageHTML = '<p>' . $this->_messageHTML . '</p>';
+		if (! preg_match('/^<p>/', $this->_message_html)) {
+			$this->_message_html = '<p>' . $this->_message_html . '</p>';
 		}
 
-		echo '<div class="wfls-notice notice ' . $severityClass . '" data-notice-id="' . esc_attr( $this->_id ) . '" data-notice-type="' . esc_attr( $this->_category ) . '">' .
-			$this->_messageHTML .
+		echo '<div class="wfls-notice notice ' . esc_attr($severity_class) . '" data-notice-id="' . esc_attr($this->_id) . '" data-notice-type="' . esc_attr($this->_category) . '">' .
+			wp_kses_post($this->_message_html) .
 			'<p>' .
-			implode(
+			wp_kses_post(implode(
 				'',
 				array_map(
-					function ( array $b ): string {
-						return sprintf( '<a class="wfls-btn wfls-btn-default wfls-btn-sm" href="%1$s">%2$s</a>&nbsp;', esc_url( $b['href'] ), esc_html( $b['label'] ) );
+					function (array $b): string {
+						return sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm" href="%1$s">%2$s</a>&nbsp;', esc_url($b['href']), esc_html($b['label']));
 					},
 					$this->_buttons
 				)
-			) .
-			sprintf( '<a class="wfls-btn wfls-btn-default wfls-btn-sm wfls-dismiss-link" href="#" onclick="GWFLS.dismiss_notice(\'%s\'); return false;">' . __( 'Dismiss', '2fa-login-security' ) . '</a>', esc_attr( $this->_id ) ) .
+			)) .
+			sprintf('<a class="wfls-btn wfls-btn-default wfls-btn-sm wfls-dismiss-link" href="#" onclick="GWFLS.dismiss_notice(\'%s\'); return false;">' . __('Dismiss', '2fa-login-security') . '</a>', esc_attr($this->_id)) .
 			'</p>' .
 			'</div>';
 	}

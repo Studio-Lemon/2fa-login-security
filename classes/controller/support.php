@@ -1,8 +1,20 @@
 <?php
 
+/**
+ * Support URL helpers.
+ *
+ * @package TFAuthLS
+ */
+
 namespace TFAuthLS;
 
-class Controller_Support {
+/**
+ * Provides URLs for plugin support resources.
+ */
+class Controller_Support
+{
+
+
 
 
 	const ITEM_INDEX                     = 'index';
@@ -10,28 +22,48 @@ class Controller_Support {
 	const ITEM_MODULE_LOGIN_SECURITY_2FA = 'how-to-enable-two-factor-authentication';
 
 
-	public static function supportURLs(): array {
-		$ref       = new \ReflectionClass( static::class );
+	/**
+	 * Returns all configured support URLs.
+	 *
+	 * @return string[]
+	 */
+	public static function support_urls(): array
+	{
+		$ref       = new \ReflectionClass(static::class);
 		$constants = $ref->getConstants();
 
 		$items = array();
-		foreach ( $constants as $name => $value ) {
-			if ( strpos( $name, 'ITEM_' ) === 0 ) {
-				$name           = strtolower( substr( $name, 5 ) );
-				$items[ $name ] = static::supportURL( $value );
+		foreach ($constants as $name => $value) {
+			if (strpos($name, 'ITEM_') === 0) {
+				$name           = strtolower(substr($name, 5));
+				$items[$name] = static::support_url($value);
 			}
 		}
 
 		return $items;
 	}
 
-	public static function esc_supportURL( $item = self::ITEM_INDEX ) {
-		return esc_url( self::supportURL( $item ) );
+	/**
+	 * Returns an escaped support URL.
+	 *
+	 * @param string $item Support resource identifier.
+	 * @return string
+	 */
+	public static function esc_support_url($item = self::ITEM_INDEX)
+	{
+		return esc_url(self::support_url($item));
 	}
 
-	public static function supportURL( string $item = self::ITEM_INDEX ): string {
+	/**
+	 * Returns a support URL.
+	 *
+	 * @param string $item Support resource identifier.
+	 * @return string
+	 */
+	public static function support_url(string $item = self::ITEM_INDEX): string
+	{
 		$base = 'https://github.com/Studio-Lemon/2fa-login-security';
-		switch ( $item ) {
+		switch ($item) {
 			case self::ITEM_INDEX:
 				return $base;
 

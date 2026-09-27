@@ -52,7 +52,11 @@ $update_checker = PucFactory::buildUpdateChecker(
 $update_checker->setBranch('master');
 $vcs_api = $update_checker->getVcsApi();
 
-/** @var \YahnisElsts\PluginUpdateChecker\v5p6\Vcs\GitHubApi $vcs_api */
+/**
+ * GitHub API client used to configure release asset downloads.
+ *
+ * @var \YahnisElsts\PluginUpdateChecker\v5p6\Vcs\GitHubApi $vcs_api
+ */
 $vcs_api->enableReleaseAssets('/2fa-login-security\.zip/', 2);
 
 require_once __DIR__ . '/classes/utility/array.php';

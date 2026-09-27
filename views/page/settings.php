@@ -1,24 +1,30 @@
 <?php
+/**
+ * Plugin settings page.
+ *
+ * @package TFAuthLS
+ */
+
 if ( ! defined( 'TFA_LS_VERSION' ) ) {
 	exit;
 }
 $settings = \TFAuthLS\Controller_Settings::shared();
 $roles    = new \WP_Roles();
 
-$stateLabel = array(
+$state_label = array(
 	\TFAuthLS\Controller_Settings::STATE_2FA_DISABLED => __( 'Disabled', '2fa-login-security' ),
 	\TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL => __( 'Optional', '2fa-login-security' ),
 	\TFAuthLS\Controller_Settings::STATE_2FA_REQUIRED => __( 'Required', '2fa-login-security' ),
 );
 
-$currentRoleState = function ( $roleName, $roleObject = null ) use ( $settings ) {
-	if ( $settings->get_required_2fa_role_activation_time( $roleName ) !== false ) {
+$current_role_state = function ( $role_name, $role_object = null ) use ( $settings ) {
+	if ( $settings->get_required_2fa_role_activation_time( $role_name ) !== false ) {
 		return \TFAuthLS\Controller_Settings::STATE_2FA_REQUIRED;
 	}
-	if ( $roleName === 'super-admin' ) {
+	if ( 'super-admin' === $role_name ) {
 		return \TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL;
 	}
-	if ( $roleObject && $roleObject->has_cap( \TFAuthLS\Controller_Permissions::CAP_ACTIVATE_2FA_SELF ) ) {
+	if ( $role_object && $role_object->has_cap( \TFAuthLS\Controller_Permissions::CAP_ACTIVATE_2FA_SELF ) ) {
 		return \TFAuthLS\Controller_Settings::STATE_2FA_OPTIONAL;
 	}
 	return \TFAuthLS\Controller_Settings::STATE_2FA_DISABLED;
@@ -47,13 +53,14 @@ $currentRoleState = function ( $roleName, $roleObject = null ) use ( $settings )
 	<div id="wfls-settings" class="wfls-flex-row wfls-flex-row-wrappable wfls-flex-row-equal-heights">
 		<!-- begin status content -->
 		<div id="wfls-user-stats" class="wfls-flex-row wfls-flex-row-equal-heights wfls-flex-item-xs-100">
-			<?php
+			<?php // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo \TFAuthLS\Model_View::create(
 				'settings/user-stats',
 				array(
 					'counts' => \TFAuthLS\Controller_Users::shared()->get_detailed_user_counts_if_enabled(),
 				)
 			)->render();
+			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
 		</div>
 		<!-- end status content -->
@@ -77,11 +84,11 @@ $currentRoleState = function ( $roleName, $roleObject = null ) use ( $settings )
 						<th scope="row"><?php esc_html_e( 'IP Source', '2fa-login-security' ); ?></th>
 						<td>
 							<select name="wfls_settings[ip-source]">
-								<?php $ipSource = $settings->get( \TFAuthLS\Controller_Settings::OPTION_IP_SOURCE, \TFAuthLS\Model_Request::IP_SOURCE_AUTOMATIC ); ?>
-								<option value="" <?php selected( $ipSource, '' ); ?>><?php esc_html_e( 'Automatic', '2fa-login-security' ); ?></option>
-								<option value="REMOTE_ADDR" <?php selected( $ipSource, 'REMOTE_ADDR' ); ?>>REMOTE_ADDR</option>
-								<option value="HTTP_X_FORWARDED_FOR" <?php selected( $ipSource, 'HTTP_X_FORWARDED_FOR' ); ?>>HTTP_X_FORWARDED_FOR</option>
-								<option value="HTTP_X_REAL_IP" <?php selected( $ipSource, 'HTTP_X_REAL_IP' ); ?>>HTTP_X_REAL_IP</option>
+								<?php $ip_source = $settings->get( \TFAuthLS\Controller_Settings::OPTION_IP_SOURCE, \TFAuthLS\Model_Request::IP_SOURCE_AUTOMATIC ); ?>
+								<option value="" <?php selected( $ip_source, '' ); ?>><?php esc_html_e( 'Automatic', '2fa-login-security' ); ?></option>
+								<option value="REMOTE_ADDR" <?php selected( $ip_source, 'REMOTE_ADDR' ); ?>>REMOTE_ADDR</option>
+								<option value="HTTP_X_FORWARDED_FOR" <?php selected( $ip_source, 'HTTP_X_FORWARDED_FOR' ); ?>>HTTP_X_FORWARDED_FOR</option>
+								<option value="HTTP_X_REAL_IP" <?php selected( $ip_source, 'HTTP_X_REAL_IP' ); ?>>HTTP_X_REAL_IP</option>
 							</select>
 						</td>
 					</tr>
@@ -120,29 +127,29 @@ $currentRoleState = function ( $roleName, $roleObject = null ) use ( $settings )
 						<tr>
 							<td><?php esc_html_e( 'Super Administrator', '2fa-login-security' ); ?></td>
 							<td>
-								<?php $state = $currentRoleState( 'super-admin', null ); ?>
+								<?php $state = $current_role_state( 'super-admin', null ); ?>
 								<select name="wfls_settings[enabled-roles.super-admin]">
-									<option value="optional" <?php selected( $state, 'optional' ); ?>><?php echo esc_html( $stateLabel['optional'] ); ?></option>
-									<option value="required" <?php selected( $state, 'required' ); ?>><?php echo esc_html( $stateLabel['required'] ); ?></option>
+									<option value="optional" <?php selected( $state, 'optional' ); ?>><?php echo esc_html( $state_label['optional'] ); ?></option>
+									<option value="required" <?php selected( $state, 'required' ); ?>><?php echo esc_html( $state_label['required'] ); ?></option>
 								</select>
 							</td>
 						</tr>
 					<?php endif; ?>
-					<?php foreach ( $roles->roles as $roleName => $roleData ) : ?>
-						<?php $role = $roles->get_role( $roleName ); ?>
+					<?php foreach ( $roles->roles as $role_name => $role_data ) : ?>
+						<?php $role = $roles->get_role( $role_name ); ?>
 						<?php
 						if ( ! $role ) :
 							continue;
 						endif;
 						?>
-						<?php $state = $currentRoleState( $roleName, $role ); ?>
+						<?php $state = $current_role_state( $role_name, $role ); ?>
 						<tr>
-							<td><?php echo esc_html( $roleData['name'] ); ?></td>
+							<td><?php echo esc_html( $role_data['name'] ); ?></td>
 							<td>
-								<select name="wfls_settings[enabled-roles.<?php echo esc_attr( $roleName ); ?>]">
-									<option value="disabled" <?php selected( $state, 'disabled' ); ?>><?php echo esc_html( $stateLabel['disabled'] ); ?></option>
-									<option value="optional" <?php selected( $state, 'optional' ); ?>><?php echo esc_html( $stateLabel['optional'] ); ?></option>
-									<option value="required" <?php selected( $state, 'required' ); ?>><?php echo esc_html( $stateLabel['required'] ); ?></option>
+								<select name="wfls_settings[enabled-roles.<?php echo esc_attr( $role_name ); ?>]">
+									<option value="disabled" <?php selected( $state, 'disabled' ); ?>><?php echo esc_html( $state_label['disabled'] ); ?></option>
+									<option value="optional" <?php selected( $state, 'optional' ); ?>><?php echo esc_html( $state_label['optional'] ); ?></option>
+									<option value="required" <?php selected( $state, 'required' ); ?>><?php echo esc_html( $state_label['required'] ); ?></option>
 								</select>
 							</td>
 						</tr>

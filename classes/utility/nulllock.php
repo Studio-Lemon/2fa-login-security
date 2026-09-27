@@ -1,4 +1,9 @@
 <?php
+/**
+ * No-op lock implementation.
+ *
+ * @package TFAuthLS
+ */
 
 namespace TFAuthLS;
 
@@ -8,11 +13,22 @@ namespace TFAuthLS;
 class Utility_NullLock implements Utility_Lock {
 
 
-	public function acquire( $delay = self::DEFAULT_DELAY ): void {
+
+	/**
+	 * Performs no lock acquisition.
+	 *
+	 * @param int $delay Delay between acquisition attempts, in microseconds.
+	 */
+	public function acquire($delay = self::DEFAULT_DELAY): void
+	{
 		// Do nothing
 	}
 
-	public function release(): void {
+	/**
+	 * Performs no lock release.
+	 */
+	public function release(): void
+	{
 		// Do nothing
 	}
 }

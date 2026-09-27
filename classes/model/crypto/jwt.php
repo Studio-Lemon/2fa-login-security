@@ -1,4 +1,9 @@
 <?php
+/**
+ * JSON Web Token model.
+ *
+ * @package LS2FA\Crypto
+ */
 
 namespace TFAuthLS\Crypto;
 
@@ -15,88 +20,127 @@ use TFAuthLS\Model_Crypto;
 class Model_JWT {
 
 
+
+
+	/**
+	 * Decoded JWT payload.
+	 *
+	 * @var array
+	 */
 	private $_payload;
+
+	/**
+	 * JWT expiration timestamp.
+	 *
+	 * @var bool|int
+	 */
 	private $_expiration;
 
 	/**
 	 * Decodes and returns the payload of a JWT. This also validates the signature and expiration. Currently assumes HS256 JWTs.
 	 *
-	 * @param string $token
+	 * @param string $token Token to decode.
 	 * @return Model_JWT|false The decoded JWT or false if the token is invalid or fails validation.
 	 */
-	public static function decode_jwt( $token ): false|\TFAuthLS\Crypto\Model_JWT {
-		$components = explode( '.', $token );
-		if ( count( $components ) != 3 ) {
+	public static function decode_jwt($token): false|\TFAuthLS\Crypto\Model_JWT
+	{
+		$components = explode('.', $token);
+		if (3 !== count($components)) {
 			return false;
 		}
 
-		$key           = Model_Crypto::shared_hash_secret();
-		$body          = $components[0] . '.' . $components[1];
-		$signature     = hash_hmac( 'sha256', $body, $key, true );
-		$testSignature = self::base64url_decode( $components[2] );
-		if ( ! hash_equals( $signature, $testSignature ) ) {
+		$key            = Model_Crypto::shared_hash_secret();
+		$body           = $components[0] . '.' . $components[1];
+		$signature      = hash_hmac('sha256', $body, $key, true);
+		$test_signature = self::base64url_decode($components[2]);
+		if (! hash_equals($signature, $test_signature)) {
 			return false;
 		}
 
-		$json       = self::base64url_decode( $components[1] );
-		$payload    = @json_decode( $json, true );
+		$json       = self::base64url_decode($components[1]);
+		$payload    = @json_decode($json, true);
 		$expiration = false;
-		if ( ! is_array( $payload ) ) {
+		if (! is_array($payload)) {
 			return false;
 		}
-		if ( isset( $payload['_exp'] ) ) {
+		if (isset($payload['_exp'])) {
 			$expiration = $payload['_exp'];
-			if ( $payload['_exp'] < Controller_Time::time() ) {
+			if ($payload['_exp'] < Controller_Time::time()) {
 				return false;
 			}
-			unset( $payload['_exp'] );
+			unset($payload['_exp']);
 		}
 
-		return new self( $payload, $expiration );
+		return new self($payload, $expiration);
 	}
 
 	/**
 	 * Model_JWT constructor.
 	 *
-	 * @param array    $payload
-	 * @param bool|int $expiration
+	 * @param array    $payload JWT payload.
+	 * @param bool|int $expiration JWT expiration timestamp.
 	 */
-	public function __construct( $payload, $expiration = false ) {
+	public function __construct($payload, $expiration = false)
+	{
 		$this->_payload    = $payload;
 		$this->_expiration = $expiration;
 	}
 
-	public function __toString(): string {
+	/**
+	 * Returns the encoded JSON Web Token.
+	 *
+	 * @return string Encoded JSON Web Token.
+	 */
+	public function __toString(): string
+	{
 		$payload = $this->_payload;
-		if ( $this->_expiration !== false ) {
+		if (false !== $this->_expiration) {
 			$payload['_exp'] = $this->_expiration;
 		}
 		$key       = Model_Crypto::shared_hash_secret();
 		$header    = '{"alg":"HS256","typ":"JWT"}';
-		$body      = self::base64url_encode( $header ) . '.' . self::base64url_encode( json_encode( $payload ) );
-		$signature = hash_hmac( 'sha256', $body, $key, true );
-		return $body . '.' . self::base64url_encode( $signature );
+		$body      = self::base64url_encode($header) . '.' . self::base64url_encode(wp_json_encode($payload));
+		$signature = hash_hmac('sha256', $body, $key, true);
+		return $body . '.' . self::base64url_encode($signature);
 	}
 
-	public function __isset( string $key ) {
-		switch ( $key ) {
+	/**
+	 * Determines whether a JWT property is available.
+	 *
+	 * @param string $key Property name.
+	 * @return bool Whether the property is available.
+	 * @throws \OutOfBoundsException When the property name is invalid.
+	 */
+	public function __isset(string $key)
+	{
+		switch ($key) {
 			case 'payload':
 			case 'expiration':
 				return true;
 		}
 
-		throw new \OutOfBoundsException( 'Invalid key: ' . $key );
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are not rendered output.
+		throw new \OutOfBoundsException('Invalid key: ' . $key);
 	}
 
-	public function __get( string $key ) {
-		switch ( $key ) {
+	/**
+	 * Gets a JWT property.
+	 *
+	 * @param string $key Property name.
+	 * @return array|bool|int JWT property value.
+	 * @throws \OutOfBoundsException When the property name is invalid.
+	 */
+	public function __get(string $key)
+	{
+		switch ($key) {
 			case 'payload':
 				return $this->_payload;
 			case 'expiration':
 				return $this->_expiration;
 		}
 
-		throw new \OutOfBoundsException( 'Invalid key: ' . $key );
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are not rendered output.
+		throw new \OutOfBoundsException('Invalid key: ' . $key);
 	}
 
 	/**
@@ -107,31 +151,48 @@ class Model_JWT {
 	 * Base64URL-encodes the given payload. This is identical to base64_encode except it substitutes characters
 	 * not safe for use in URLs.
 	 *
-	 * @param string $payload
-	 * @return string
+	 * @param string $payload Payload to encode.
+	 * @return string Base64URL-encoded payload.
 	 */
-	public static function base64url_encode( $payload ) {
-		return self::base64url_convert_to( base64_encode( $payload ) );
+	public static function base64url_encode($payload)
+	{
+		return self::base64url_convert_to(base64_encode($payload));
 	}
 
-	public static function base64url_convert_to( $base64 ): string {
-		$intermediate = rtrim( $base64, '=' );
-		$intermediate = str_replace( '+', '-', $intermediate );
-		return str_replace( '/', '_', $intermediate );
+	/**
+	 * Converts Base64 text to its URL-safe representation.
+	 *
+	 * @param string $base64 Base64 text to convert.
+	 * @return string URL-safe Base64 text.
+	 */
+	public static function base64url_convert_to($base64): string
+	{
+		$intermediate = rtrim($base64, '=');
+		$intermediate = str_replace('+', '-', $intermediate);
+		return str_replace('/', '_', $intermediate);
 	}
 
 	/**
 	 * Base64URL-decodes the given payload. This is identical to base64_encode except it allows for the characters
 	 * substituted by base64url_encode.
 	 *
-	 * @param string $payload
+	 * @param string $payload Payload to decode.
+	 * @return string Decoded payload.
 	 */
-	public static function base64url_decode( $payload ): string {
-		return base64_decode( self::base64url_convert_from( $payload ) );
+	public static function base64url_decode($payload): string
+	{
+		return base64_decode(self::base64url_convert_from($payload));
 	}
 
-	public static function base64url_convert_from( $base64url ): array|string {
-		$intermediate = str_replace( '_', '/', $base64url );
-		return str_replace( '-', '+', $intermediate );
+	/**
+	 * Converts URL-safe Base64 text to its standard representation.
+	 *
+	 * @param string $base64url URL-safe Base64 text to convert.
+	 * @return string Standard Base64 text.
+	 */
+	public static function base64url_convert_from($base64url): array|string
+	{
+		$intermediate = str_replace('_', '/', $base64url);
+		return str_replace('-', '+', $intermediate);
 	}
 }

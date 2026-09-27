@@ -1,4 +1,11 @@
 <?php
+/**
+ * Plugin page template.
+ *
+ * @package TFAuthLS
+ */
+
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 
 use TFAuthLS\Utility_URL;
 
@@ -7,6 +14,8 @@ if ( ! defined( 'TFA_LS_VERSION' ) ) {
 }
 
 /**
+ * Page template variables.
+ *
  * @var array $sections The content tabs, each element is an array of the syntax array('tab' => Model_Tab instance, 'title' => Title instance, 'content' => HTML content). Required.
  */
 ?>

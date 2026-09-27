@@ -1,29 +1,49 @@
 <?php
+/**
+ * Serialization helpers.
+ *
+ * @package TFAuthLS
+ */
 
 namespace TFAuthLS;
 
 use RuntimeException;
 
+/**
+ * Provides validated PHP deserialization.
+ */
 class Utility_Serialization {
 
 
-	public static function unserialize( $data, $options = array(), $validator = null ) {
-		static $serializedFalse;
-		if ( $serializedFalse === null ) {
-			$serializedFalse = serialize( false );
+
+
+	/**
+	 * Deserializes validated PHP-serialized data.
+	 *
+	 * @param string        $data Serialized data.
+	 * @param array         $options Options passed to unserialize().
+	 * @param callable|null $validator Optional value validator.
+	 * @return mixed Unserialized value.
+	 * @throws RuntimeException When the data is invalid or fails validation.
+	 */
+	public static function unserialize($data, $options = array(), $validator = null)
+	{
+		static $serialized_false;
+		if (null === $serialized_false) {
+			$serialized_false = serialize(false);
 		}
-		if ( $data === $serializedFalse ) {
+		if ($serialized_false === $data) {
 			return false;
 		}
-		if ( ! is_serialized( $data ) ) {
-			throw new RuntimeException( 'Input data is not serialized' );
+		if (! is_serialized($data)) {
+			throw new RuntimeException('Input data is not serialized');
 		}
-		$unserialized = version_compare( PHP_VERSION, '5.6', '<=' ) ? @unserialize( $data ) : @unserialize( $data, $options );
-		if ( $unserialized === false ) {
-			throw new RuntimeException( 'Deserialization failed' );
+		$unserialized = version_compare(PHP_VERSION, '5.6', '<=') ? @unserialize($data) : @unserialize($data, $options);
+		if (false === $unserialized) {
+			throw new RuntimeException('Deserialization failed');
 		}
-		if ( $validator !== null && ! $validator( $unserialized ) ) {
-			throw new RuntimeException( 'Validation of unserialized data failed' );
+		if (null !== $validator && ! $validator($unserialized)) {
+			throw new RuntimeException('Validation of unserialized data failed');
 		}
 		return $unserialized;
 	}

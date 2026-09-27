@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * View tab model.
+ *
+ * @package TFAuthLS
+ */
+
 namespace TFAuthLS\View;
 
 /**
@@ -12,37 +18,82 @@ namespace TFAuthLS\View;
  * @property string $pageTitle
  * @property bool $active
  */
-class Model_Tab {
+class Model_Tab
+{
 
 
+	/**
+	 * Tab identifier.
+	 *
+	 * @var string
+	 */
 	protected $_id;
+	/**
+	 * Tab URL or anchor.
+	 *
+	 * @var string
+	 */
 	protected $_a;
-	protected $_tabTitle;
-	protected $_pageTitle;
+	/**
+	 * Visible tab title.
+	 *
+	 * @var string
+	 */
+	protected $_tab_title;
+	/**
+	 * Page title.
+	 *
+	 * @var string
+	 */
+	protected $_page_title;
+	/**
+	 * Whether the tab is active.
+	 *
+	 * @var bool
+	 */
 	protected $_active;
 
-	public function __construct( $id, $a, $tabTitle, $pageTitle, $active = false ) {
+	/**
+	 * Creates a tab model.
+	 *
+	 * @param string $id Tab ID.
+	 * @param string $a Tab URL or anchor.
+	 * @param string $tab_title Visible tab title.
+	 * @param string $page_title Page title.
+	 * @param bool   $active Whether the tab is active.
+	 */
+	public function __construct($id, $a, $tab_title, $page_title, $active = false)
+	{
 		$this->_id        = $id;
 		$this->_a         = $a;
-		$this->_tabTitle  = $tabTitle;
-		$this->_pageTitle = $pageTitle;
+		$this->_tab_title  = $tab_title;
+		$this->_page_title = $page_title;
 		$this->_active    = $active;
 	}
 
-	public function __get( string $name ) {
-		switch ( $name ) {
+	/**
+	 * Returns a public tab property.
+	 *
+	 * @param string $name Property name.
+	 * @return mixed Property value.
+	 * @throws \OutOfBoundsException When the property is unknown.
+	 */
+	public function __get(string $name)
+	{
+		switch ($name) {
 			case 'id':
 				return $this->_id;
 			case 'a':
 				return $this->_a;
 			case 'tabTitle':
-				return $this->_tabTitle;
+				return $this->_tab_title;
 			case 'pageTitle':
-				return $this->_pageTitle;
+				return $this->_page_title;
 			case 'active':
 				return $this->_active;
 		}
 
-		throw new \OutOfBoundsException( 'Invalid key: ' . $name );
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are not rendered as HTML.
+		throw new \OutOfBoundsException('Invalid key: ' . $name);
 	}
 }
