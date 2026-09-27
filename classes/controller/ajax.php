@@ -240,11 +240,6 @@ class Controller_AJAX
 			);
 		}
 
-		$legacy_2fa_active = Controller_TFAuthLS::shared()->legacy_2fa_active();
-		if ($legacy_2fa_active) { // Legacy 2FA is active, pass it on to the authenticate filter
-			self::send_json(array('login' => 1));
-		}
-
 		do_action_ref_array('wp_authenticate', array(&$username, &$password));
 
 		define('TFA_LS_AUTHENTICATION_CHECK', true); // Prevents our auth filter from recursing
