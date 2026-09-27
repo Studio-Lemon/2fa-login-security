@@ -39,75 +39,54 @@ class Controller_TFAuthLS
 
 	public function init(): void
 	{
-		$this->_init_actions();
+		$this->init_actions();
 		Controller_AJAX::shared()->init();
 		Controller_Users::shared()->init();
 		Controller_Time::shared()->init();
 		Controller_Permissions::shared()->init();
-		// phpcs:disable PSR2.Methods.MethodDeclaration.Underscore -- Remaining underscore-prefixed public methods are registered WordPress callbacks with legacy names.
 	}
 
-	protected function _init_actions()
+	protected function init_actions()
 	{
-		register_activation_hook(TFA_LS_FCPATH, [$this, '_install_plugin']);
-		register_deactivation_hook(TFA_LS_FCPATH, [$this, '_uninstall_plugin']);
+		register_activation_hook(TFA_LS_FCPATH, $this->install_plugin(...));
+		register_deactivation_hook(TFA_LS_FCPATH, $this->uninstall_plugin(...));
 
 		$versionInOptions = ((is_multisite() && function_exists('get_network_option')) ? get_network_option(null, self::VERSION_KEY, false) : get_option(self::VERSION_KEY, false));
 		if (! $versionInOptions || version_compare(TFA_LS_VERSION, $versionInOptions, '>')) { // Either there is no version in options or the version in options is greater and we need to run the upgrade
 			$this->install();
 		}
 
-		add_action('admin_init', [$this, '_admin_init']);
-		add_action('login_enqueue_scripts', [$this, '_login_enqueue_scripts']);
-		add_filter('authenticate', [$this, '_authenticate'], 25, 3);
-		add_action('set_logged_in_cookie', [$this, '_set_logged_in_cookie'], 25, 4);
-		add_action('wp_login', [$this, '_record_login'], 999, 1);
-		add_action('register_post', [$this, '_register_post'], 25, 3);
-		add_filter('wp_login_errors', [$this, '_wp_login_errors'], 25, 2);
-		add_action('user_new_form', [$this, '_user_new_form']);
-		add_action('user_register', [$this, '_user_register']);
+		add_action('login_enqueue_scripts', $this->login_enqueue_scripts(...));
+		add_filter('authenticate', $this->authenticate(...), 25, 3);
+		add_action('set_logged_in_cookie', $this->set_logged_in_cookie(...), 25, 4);
+		add_action('wp_login', $this->record_login(...), 999, 1);
+		add_action('register_post', $this->register_post(...), 25, 3);
+		add_filter('wp_login_errors', $this->wp_login_errors(...), 25, 2);
+		add_action('user_new_form', $this->user_new_form(...));
+		add_action('user_register', $this->user_register(...));
 
-		add_action('admin_menu', [$this, '_admin_menu'], 10);
+		add_action('admin_menu', $this->admin_menu(...), 10);
 		if (is_multisite()) {
-			add_action('network_admin_menu', [$this, '_admin_menu'], 10);
+			add_action('network_admin_menu', $this->admin_menu(...), 10);
 		}
-		add_action('admin_enqueue_scripts', [$this, '_admin_enqueue_scripts']);
-		add_action('admin_post_wfls_save_settings', [$this, '_save_settings_form']);
+		add_action('admin_enqueue_scripts', $this->admin_enqueue_scripts(...));
+		add_action('admin_post_wfls_save_settings', $this->save_settings_form(...));
 
-		add_action('show_user_profile', [$this, '_edit_user_profile'], 0); // We can't add it to the password section directly -- priority 0 is as close as we can get
-		add_action('edit_user_profile', [$this, '_edit_user_profile'], 0);
+		add_action('show_user_profile', $this->edit_user_profile(...), 0); // We can't add it to the password section directly -- priority 0 is as close as we can get
+		add_action('edit_user_profile', $this->edit_user_profile(...), 0);
 
-		Controller_Permissions::_init_actions();
-	}
-
-	public function _admin_init(): void
-	{
-		if (Controller_Permissions::shared()->can_manage_settings() && ((is_plugin_active('jetpack/jetpack.php') || (is_multisite() && is_plugin_active_for_network('jetpack/jetpack.php'))))) {
-			if (is_multisite()) {
-				add_action('network_admin_notices', [$this, '_jetpack_xml_rpc_notice']);
-			} else {
-				add_action('admin_notices', [$this, '_jetpack_xml_rpc_notice']);
-			}
-		}
-	}
-
-	/**
-	 * Notices
-	 */
-	public function _jetpack_xml_rpc_notice(): void
-	{
-		echo '<div class="notice notice-warning"><p>' . wp_kses(sprintf( /* translators: Configuration URL */__('XML-RPC authentication is disabled. Jetpack is currently active and requires XML-RPC authentication to work correctly. <a href="%s">Manage Settings</a>', '2fa-login-security'), esc_url(network_admin_url('admin.php?page=WFLS#top#settings'))), ['a' => ['href' => []]]) . '</p></div>';
+		Controller_Permissions::init_actions();
 	}
 
 	/**
 	 * Installation/Uninstallation
 	 */
-	public function _install_plugin(): void
+	private function install_plugin(): void
 	{
-		$this->_install();
+		$this->install();
 	}
 
-	public function _uninstall_plugin(): void
+	private function uninstall_plugin(): void
 	{
 		Controller_Time::shared()->uninstall();
 		Controller_Permissions::shared()->uninstall();
@@ -126,7 +105,7 @@ class Controller_TFAuthLS
 		$this->purge_rewrite_rules();
 	}
 
-	protected function _install()
+	protected function install()
 	{
 		static $_runInstallCalled = false;
 		if ($_runInstallCalled) {
@@ -177,7 +156,7 @@ class Controller_TFAuthLS
 	/**
 	 * Login Page
 	 */
-	public function _login_enqueue_scripts(): void
+	private function login_enqueue_scripts(): void
 	{
 		$useCAPTCHA = false;
 
@@ -305,7 +284,7 @@ class Controller_TFAuthLS
 	/**
 	 * Admin Pages
 	 */
-	public function _admin_enqueue_scripts($hookSuffix): void
+	private function admin_enqueue_scripts($hookSuffix): void
 	{
 
 		wp_enqueue_style('2fa-ls-admin-global', Model_Asset::css('admin-global.css'), [], TFA_LS_VERSION);
@@ -328,7 +307,7 @@ class Controller_TFAuthLS
 		}
 	}
 
-	public function _save_settings_form(): void
+	private function save_settings_form(): void
 	{
 		if (! current_user_can(Controller_Permissions::CAP_MANAGE_SETTINGS)) {
 			wp_die(esc_html__('You do not have permission to change options.', '2fa-login-security'));
@@ -388,7 +367,7 @@ class Controller_TFAuthLS
 		exit;
 	}
 
-	public function _edit_user_profile($user): void
+	private function edit_user_profile($user): void
 	{
 		if (get_current_user_id() === $user->ID || ! current_user_can(Controller_Permissions::CAP_ACTIVATE_2FA_OTHERS)) {
 			$manageURL = admin_url('admin.php?page=WFLS');
@@ -483,7 +462,7 @@ class Controller_TFAuthLS
 	/**
 	 * Authentication
 	 */
-	public function _authenticate($user, $username, $password)
+	private function authenticate($user, $username, $password)
 	{
 		if (defined('XMLRPC_REQUEST')) { // XML-RPC call and we're not enforcing 2FA on it
 			return $user;
@@ -562,7 +541,7 @@ class Controller_TFAuthLS
 		return $user;
 	}
 
-	public function _set_logged_in_cookie($logged_in_cookie, $expire, $expiration, $user_id): void
+	private function set_logged_in_cookie($logged_in_cookie, $expire, $expiration, $user_id): void
 	{
 		$user = new \WP_User($user_id);
 		if (Controller_Users::shared()->has_2fa_active($user) && isset($_POST['wfls-remember-device'])) {
@@ -573,7 +552,7 @@ class Controller_TFAuthLS
 		}
 	}
 
-	public function _record_login($user_login/*, $user -- we'd like to use the second parameter instead, but too many plugins call this hook and only provide one of the two required parameters*/): void
+	private function record_login($user_login/*, $user -- we'd like to use the second parameter instead, but too many plugins call this hook and only provide one of the two required parameters*/): void
 	{
 		$user = get_user_by('login', $user_login);
 		if ($user instanceof \WP_User  && $user->exists()) {
@@ -581,7 +560,7 @@ class Controller_TFAuthLS
 		}
 	}
 
-	public function _register_post($sanitized_user_login, $user_email, $errors): void
+	private function register_post($sanitized_user_login, $user_email, $errors): void
 	{
 		// CAPTCHA checks have been removed from registration flow.
 	}
@@ -601,7 +580,7 @@ class Controller_TFAuthLS
 	 * @return \WP_Error
 	 */
 	// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- WordPress requires the redirect parameter in this filter signature.
-	public function _wp_login_errors($errors, $redirect_to)
+	private function wp_login_errors($errors, $redirect_to)
 	{
 		$has_errors                     = (method_exists($errors, 'has_errors') ? $errors->has_errors() : ! empty($errors->errors)); // has_errors was added in WP 5.1
 		$email_verification_token_valid = $this->validate_email_verification_token();
@@ -618,7 +597,7 @@ class Controller_TFAuthLS
 	/**
 	 * Menu
 	 */
-	public function _admin_menu(): void
+	private function admin_menu(): void
 	{
 		$user         = wp_get_current_user();
 		$grace_period = false;
@@ -645,12 +624,12 @@ class Controller_TFAuthLS
 			__('Login Security', '2fa-login-security'),
 			Controller_Permissions::CAP_ACTIVATE_2FA_SELF,
 			'WFLS',
-			[$this, '_menu'],
+			$this->menu(...),
 			'dashicons-lock'
 		);
 	}
 
-	public function _menu(): void
+	private function menu(): void
 	{
 		$user           = wp_get_current_user();
 		$administrator  = false;
@@ -755,7 +734,7 @@ class Controller_TFAuthLS
 		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
-	public function _user_new_form(): void
+	private function user_new_form(): void
 	{
 		if (Controller_Settings::shared()->get_user_2fa_grace_period()) {
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- The view renderer escapes contextual data and returns trusted template markup.
@@ -764,7 +743,7 @@ class Controller_TFAuthLS
 		}
 	}
 
-	public function _user_register($new_user_id): void
+	private function user_register($new_user_id): void
 	{
 		$creator = wp_get_current_user();
 		if (! Controller_Permissions::shared()->can_manage_settings($creator) || $creator->ID === $new_user_id) {

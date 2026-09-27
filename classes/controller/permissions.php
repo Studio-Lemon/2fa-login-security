@@ -63,8 +63,15 @@ class Controller_Permissions
 		}
 	}
 
-	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress cron callback.
-	public static function _init_actions(): void
+	/**
+	 * Initializes the actions for the permissions controller.
+	 *
+	 * This sets up the necessary WordPress hooks for handling role synchronization via cron.
+	 * @internal This method is intended for internal use within the plugin and should not be called directly.
+	 * @return void
+	 * phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress cron callback.
+	 */
+	public static function init_actions(): void
 	{
 		add_action('TFA_LS_role_sync_cron', array(self::shared(), '_role_sync_cron'));
 	}
@@ -76,21 +83,6 @@ class Controller_Permissions
 			add_action('wp_initialize_site', array($this, '_wp_initialize_site'), 99);
 			add_action('init', array($this, '_validate_role_sync_cron'), 1);
 		}
-	}
-
-	/**
-	 * Syncs roles to the new multisite blog.
-	 *
-	 * @param $site_id
-	 * @param $user_id
-	 * @param $domain
-	 * @param $path
-	 * @param $network_id
-	 */
-	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress action callback.
-	public function _wpmu_new_blog($site_id, $user_id, $domain, $path, $network_id): void
-	{
-		$this->sync_roles($network_id, $site_id);
 	}
 
 	/**
