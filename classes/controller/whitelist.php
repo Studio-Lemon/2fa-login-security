@@ -6,8 +6,6 @@
  * @package TFAuthLS
  */
 
-// phpcs:disable PSR2.Methods.MethodDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual, Universal.Operators.StrictComparisons.LooseNotEqual -- Legacy private helper names and validated string-to-number range comparisons are retained for compatibility.
-
 namespace TFAuthLS;
 
 /**
@@ -43,7 +41,7 @@ class Controller_Whitelist
 	{
 		if (strpos($range, '/') !== false) {
 			// CIDR range -- 127.0.0.1/24
-			return $this->_cidr_contains_ip($range, $ip);
+			return $this->cidr_contains_ip($range, $ip);
 		}
 		if (strpos($range, '[') !== false) { // Bracketed range -- 127.0.0.[1-100]
 			// IPv4 range
@@ -139,7 +137,7 @@ class Controller_Whitelist
 	 * @param string $ip A human-readable IP.
 	 * @return bool
 	 */
-	protected function _cidr_contains_ip($subnet, $ip)
+	protected function cidr_contains_ip($subnet, $ip)
 	{
 		list($network, $prefix) = array_pad(explode('/', $subnet, 2), 2, null);
 

@@ -6,8 +6,6 @@
  * @package TFAuthLS
  */
 
-// phpcs:disable PSR2.Methods.MethodDeclaration.Underscore, Universal.Operators.StrictComparisons.LooseEqual -- Legacy private helper names and notice identifier/category comparisons are retained for compatibility.
-
 namespace TFAuthLS;
 
 use TFAuthLS\Text\Model_HTML;
@@ -67,7 +65,7 @@ class Controller_Notices
 			$notices[$id]['category'] = $category;
 		}
 
-		$this->_save_notices($notices, $user);
+		$this->save_notices($notices, $user);
 	}
 
 	/**
@@ -104,7 +102,7 @@ class Controller_Notices
 				unset($notices[$nid]);
 			}
 		}
-		$this->_save_notices($notices, $user);
+		$this->save_notices($notices, $user);
 	}
 
 	/**
@@ -181,7 +179,7 @@ class Controller_Notices
 	 * @param bool|\WP_User $user User whose notices are saved.
 	 * @return void
 	 */
-	protected function _save_notices($notices, $user)
+	protected function save_notices($notices, $user)
 	{
 		if ($user instanceof \WP_User) {
 			update_user_meta($user->ID, self::USER_META_KEY, $notices);

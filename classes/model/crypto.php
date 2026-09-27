@@ -6,7 +6,7 @@
  * @package TFAuthLS
  */
 
-// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, PSR2.Methods.MethodDeclaration.Underscore, Squiz.PHP.CommentedOutCode.Found, Universal.NamingConventions.NoReservedKeywordParameterNames.functionFound, Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound, WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.rand_mt_rand -- Legacy compatibility helpers retain their signatures, method names, fallback behavior, and guarded PHP calls.
+// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed, Squiz.PHP.CommentedOutCode.Found, Universal.NamingConventions.NoReservedKeywordParameterNames.functionFound, Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound, WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.rand_mt_rand -- Legacy compatibility helpers retain their signatures, method names, fallback behavior, and guarded PHP calls.
 
 namespace TFAuthLS;
 
@@ -177,10 +177,10 @@ abstract class Model_Crypto
 	 * `reset_mbstring_encoding` function.
 	 *
 	 * It is safe to recursively call this function, however each
-	 * `_mbstring_binary_safe_encoding()` call must be followed up with an equal number
-	 * of `_reset_mbstring_encoding()` calls.
+	 * `mbstring_binary_safe_encoding()` call must be followed up with an equal number
+	 * of `reset_mbstring_encoding()` calls.
 	 *
-	 * @see Model_Crypto::_reset_mbstring_encoding
+	 * @see Model_Crypto::reset_mbstring_encoding
 	 *
 	 * @staticvar array $encodings
 	 * @staticvar bool  $overloaded
@@ -188,7 +188,7 @@ abstract class Model_Crypto
 	 * @param bool $reset Optional. Whether to reset the encoding back to a previously-set encoding.
 	 *                    Default false.
 	 */
-	protected static function _mbstring_binary_safe_encoding($reset = false)
+	protected static function mbstring_binary_safe_encoding($reset = false)
 	{
 		static $encodings  = array();
 		static $overloaded = null;
@@ -217,11 +217,11 @@ abstract class Model_Crypto
 	/**
 	 * Reset the mbstring internal encoding to a users previously set encoding.
 	 *
-	 * @see Model_Crypto::_mbstring_binary_safe_encoding
+	 * @see Model_Crypto::mbstring_binary_safe_encoding
 	 */
-	protected static function _reset_mbstring_encoding()
+	protected static function reset_mbstring_encoding()
 	{
-		self::_mbstring_binary_safe_encoding(true);
+		self::mbstring_binary_safe_encoding(true);
 	}
 
 	/**
@@ -233,9 +233,9 @@ abstract class Model_Crypto
 	 */
 	protected static function _call_mb_string_function($function, $args)
 	{
-		self::_mbstring_binary_safe_encoding();
+		self::mbstring_binary_safe_encoding();
 		$return = call_user_func_array($function, $args);
-		self::_reset_mbstring_encoding();
+		self::reset_mbstring_encoding();
 		return $return;
 	}
 

@@ -69,19 +69,18 @@ class Controller_Permissions
 	 * This sets up the necessary WordPress hooks for handling role synchronization via cron.
 	 * @internal This method is intended for internal use within the plugin and should not be called directly.
 	 * @return void
-	 * phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress cron callback.
 	 */
 	public static function init_actions(): void
 	{
-		add_action('TFA_LS_role_sync_cron', array(self::shared(), '_role_sync_cron'));
+		add_action('TFA_LS_role_sync_cron', self::shared()->role_sync_cron(...));
 	}
 
 	public function init(): void
 	{
 		global $wp_version;
 		if (is_multisite()) {
-			add_action('wp_initialize_site', array($this, '_wp_initialize_site'), 99);
-			add_action('init', array($this, '_validate_role_sync_cron'), 1);
+			add_action('wp_initialize_site', $this->wp_initialize_site(...), 99);
+			add_action('init', $this->validate_role_sync_cron(...), 1);
 		}
 	}
 
@@ -90,8 +89,7 @@ class Controller_Permissions
 	 *
 	 * @param $new_site
 	 */
-	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress action callback.
-	public function _wp_initialize_site($new_site): void
+	private function wp_initialize_site($new_site): void
 	{
 		$this->sync_roles($new_site->site_id, $new_site->blog_id);
 	}
@@ -106,8 +104,7 @@ class Controller_Permissions
 	 *
 	 * Multisite only.
 	 */
-	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress action callback.
-	public function _validate_role_sync_cron(): void
+	private function validate_role_sync_cron(): void
 	{
 		if (! wp_next_scheduled('TFA_LS_role_sync_cron')) {
 			wp_schedule_event(time(), 'hourly', 'TFA_LS_role_sync_cron');
@@ -122,8 +119,7 @@ class Controller_Permissions
 	/**
 	 * Handles syncing the roles/permissions for the current blog when the cron fires.
 	 */
-	// phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore -- Preserves the existing WordPress cron callback.
-	public function _role_sync_cron(): void
+	private function role_sync_cron(): void
 	{
 		$last_role_change = (int) get_site_option(self::SETTING_LAST_ROLE_CHANGE, 0);
 		if (0 === $last_role_change) {

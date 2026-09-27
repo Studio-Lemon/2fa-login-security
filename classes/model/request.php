@@ -126,11 +126,11 @@ class Model_Request
 			$source = Controller_Settings::shared()->get(Controller_Settings::OPTION_IP_SOURCE);
 		}
 
-		$possible_ips = $this->_possible_ips($source);
+		$possible_ips = $this->possible_ips($source);
 		if (null === $trusted_proxies) {
 			$trusted_proxies = array();
 		}
-		return $this->_find_preferred_ip($possible_ips, $trusted_proxies);
+		return $this->find_preferred_ip($possible_ips, $trusted_proxies);
 	}
 
 	/**
@@ -139,7 +139,7 @@ class Model_Request
 	 * @param string|null $source Source header to inspect.
 	 * @return mixed[][]
 	 */
-	protected function _possible_ips($source = null): array
+	protected function possible_ips($source = null): array
 	{
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Header values are validated as IP addresses before use.
 		$default_i_p = isset($_SERVER[self::IP_SOURCE_REMOTE_ADDR]) ? array($_SERVER[self::IP_SOURCE_REMOTE_ADDR], self::IP_SOURCE_REMOTE_ADDR) : array('127.0.0.1', self::IP_SOURCE_REMOTE_ADDR);
@@ -176,7 +176,7 @@ class Model_Request
 	 * @param array $trusted_proxies Trusted proxy ranges.
 	 * @return array|false Detected address and source header, or false.
 	 */
-	protected function _find_preferred_ip($possible_ips, $trusted_proxies): array|false
+	protected function find_preferred_ip($possible_ips, $trusted_proxies): array|false
 	{
 		$privates = array();
 		foreach ($possible_ips as $entry) {
