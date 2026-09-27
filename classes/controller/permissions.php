@@ -73,12 +73,7 @@ class Controller_Permissions
 	{
 		global $wp_version;
 		if (is_multisite()) {
-			if (version_compare($wp_version, '5.1.0', '>=')) {
-				add_action('wp_initialize_site', array($this, '_wp_initialize_site'), 99);
-			} else {
-				add_action('wpmu_new_blog', array($this, '_wpmu_new_blog'), 10, 5);
-			}
-
+			add_action('wp_initialize_site', array($this, '_wp_initialize_site'), 99);
 			add_action('init', array($this, '_validate_role_sync_cron'), 1);
 		}
 	}
@@ -289,20 +284,8 @@ class Controller_Permissions
 	private function wp_roles($site_id = null)
 	{
 		require ABSPATH . 'wp-includes/version.php';
-		/** @var string $wp_version */
-		if (version_compare($wp_version, '4.9', '>=')) {
-			return new \WP_Roles($site_id);
-		}
 
-		// \WP_Roles in WP < 4.9 initializes based on the current blog ID
-		if (is_multisite()) {
-			switch_to_blog($site_id);
-		}
-		$wp_roles = new \WP_Roles();
-		if (is_multisite()) {
-			restore_current_blog();
-		}
-		return $wp_roles;
+		return new \WP_Roles($site_id);
 	}
 
 	private function add_cap_multisite($role_name, string $cap, $blog_ids = null)

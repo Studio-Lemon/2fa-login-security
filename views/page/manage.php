@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Two-factor management page.
  *
@@ -50,7 +51,7 @@ $locked_out   = $requires2fa && ! $enabled;
 			<div class="wfls-block-header wfls-block-header-border-bottom">
 				<div class="wfls-block-header-content">
 					<div class="wfls-block-title">
-						<strong><?php echo wp_kses(sprintf( /* translators: 1. WordPress avatar tag; 2. WordPress username */__('Editing User:&nbsp;&nbsp;%1$s <span class="wfls-text-plain">%2$s</span>', '2fa-login-security'), get_avatar($user->ID, 16, '', $user->user_login), \TFAuthLS\Text\Model_HTML::esc_html($user->user_login) . ($own_account ? ' ' . __('(you)', '2fa-login-security') : '')), array( 'span' => array( 'class' => array() ) )); ?></strong>
+						<strong><?php echo wp_kses(sprintf( /* translators: 1. WordPress avatar tag; 2. WordPress username */__('Editing User:&nbsp;&nbsp;%1$s <span class="wfls-text-plain">%2$s</span>', '2fa-login-security'), get_avatar($user->ID, 16, '', $user->user_login), \TFAuthLS\Text\Model_HTML::esc_html($user->user_login) . ($own_account ? ' ' . __('(you)', '2fa-login-security') : '')), array('span' => array('class' => array()))); ?></strong>
 					</div>
 				</div>
 			</div>
@@ -62,8 +63,7 @@ $locked_out   = $requires2fa && ! $enabled;
 	if (! $enabled) {
 		echo ' style="display: none;"';
 	}
-	?>
-	>
+	?>>
 	<!-- begin status content -->
 	<div class="wfls-flex-row wfls-flex-row-equal-heights wfls-flex-item-xs-100">
 		<?php
@@ -95,8 +95,7 @@ $locked_out   = $requires2fa && ! $enabled;
 	if ($enabled) {
 		echo ' style="display: none;"';
 	}
-	?>
-	>
+	?>>
 	<?php
 	$initialization_data = new \TFAuthLS\Model_2fainitialization_data($user);
 	?>
@@ -130,8 +129,7 @@ $locked_out   = $requires2fa && ! $enabled;
 	if ($enabled || ! ($locked_out || $in_grace_period)) {
 		echo ' style="display: none;"';
 	}
-	?>
-	>
+	?>>
 	<div class="wfls-flex-row wfls-flex-row-equal-heights wfls-flex-item-xs-100 wfls-add-top">
 		<?php
 		echo \TFAuthLS\Model_View::create(
@@ -166,5 +164,6 @@ if (empty($tz)) {
 			echo esc_html__('Corrected Time (NTP):', '2fa-login-security') . ' ' . gmdate('Y-m-d H:i:s', $corrected_time) . ' UTC (' . \TFAuthLS\Controller_Time::format_local_time('Y-m-d H:i:s', $corrected_time) . ' ' . esc_html($tz) . ')<br>';
 		}
 		?>
-		<?php esc_html_e('Detected IP:', '2fa-login-security'); ?> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo \TFAuthLS\Text\Model_HTML::esc_html(\TFAuthLS\Model_Request::current()->ip()); ?></p>
+		<?php esc_html_e('Detected IP:', '2fa-login-security'); ?> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+																						?><?php echo \TFAuthLS\Text\Model_HTML::esc_html(\TFAuthLS\Model_Request::current()->ip()); ?></p>
 <?php endif; ?>

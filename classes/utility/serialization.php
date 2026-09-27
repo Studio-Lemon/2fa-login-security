@@ -42,7 +42,7 @@ class Utility_Serialization
 		if (! is_serialized($data)) {
 			throw new RuntimeException('Input data is not serialized');
 		}
-		$unserialized = version_compare(PHP_VERSION, '5.6', '<=') ? @unserialize($data) : @unserialize($data, $options);
+		$unserialized = @unserialize($data, $options);
 		if (false === $unserialized) {
 			throw new RuntimeException('Deserialization failed');
 		}
