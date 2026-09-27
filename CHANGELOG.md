@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.0-beta.3](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.2...2.0.0-beta.3) (2026-09-27)
+
+
+### 🐛 Bug Fixes
+
+* normalize action hook name for 2FA activation ([73ddd39](https://github.com/Studio-Lemon/2fa-login-security/commit/73ddd3907e259888d8fbc91caa617a620a2a21cc))
+* update author URI to point to GitHub repository ([32f945f](https://github.com/Studio-Lemon/2fa-login-security/commit/32f945f6293982a09cd0f70171c43bdd978b91fe))
+* update composer.json and composer.lock to include 10up/phpcs-composer and adjust PHP CodeSniffer ruleset ([d6f1957](https://github.com/Studio-Lemon/2fa-login-security/commit/d6f1957a481930341272328d0d75cd017bcc940a))
+
+
+### 🚜 Refactor
+
+* remove unused verification token methods ([d4918e3](https://github.com/Studio-Lemon/2fa-login-security/commit/d4918e378bdb13e7589806ecbde10002d525b480))
+* simplify authentication logic by removing legacy 2FA check ([bb6adab](https://github.com/Studio-Lemon/2fa-login-security/commit/bb6adabbacba6de66d21a935cfb7c008991f7b94))
+
+
+### ⚙️ Miscellaneous Tasks
+
+* cleanup ([d3ccb77](https://github.com/Studio-Lemon/2fa-login-security/commit/d3ccb77bc3f59599bc0843346a95c67b8712cc37))
+* cleanup unused view ([de73c6a](https://github.com/Studio-Lemon/2fa-login-security/commit/de73c6a8acb804cd3dfc63bf939d523321e68e62))
+* docs ([b952f19](https://github.com/Studio-Lemon/2fa-login-security/commit/b952f197a4bfbc58f2b2880d7e93e11fe207f971))
+* more phpcs ([47a0902](https://github.com/Studio-Lemon/2fa-login-security/commit/47a090215506c529a823cc0df0fe9480c7df64e7))
+* phpcs everything ([20c318e](https://github.com/Studio-Lemon/2fa-login-security/commit/20c318e9c9ab1f00410fd24ea3187c8fcf113dd3))
+* remove legacy code for old PHP versions ([ebd7861](https://github.com/Studio-Lemon/2fa-login-security/commit/ebd786123ad722e5124edc76c4046c49031aef65))
+* update phpcs rules ([c7bae8a](https://github.com/Studio-Lemon/2fa-login-security/commit/c7bae8a602eab8db08e2e4366b0120f7953d2002))
+
 ## [2.0.0-beta.2](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.1...2.0.0-beta.2) (2026-09-25)
 
 
