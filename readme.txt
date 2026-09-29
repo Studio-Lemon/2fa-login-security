@@ -2,7 +2,7 @@
 Contributors: 2fa-login-security
 Tags: security, login security, 2fa, two factor authentication, xml-rpc, mfa, 2 factor
 Tested up to: 7.1.2
-Stable tag: 2.0.0-beta.3 // x-release-please-version
+Stable tag: 2.0.0-beta.4 // x-release-please-version
 
 
 Secure your website with 2FA Login Security, providing focused two-factor authentication for WordPress logins.

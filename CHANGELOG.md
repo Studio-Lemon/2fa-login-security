@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0-beta.4](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.3...2.0.0-beta.4) (2026-09-27)
+
+
+### 🚜 Refactor
+
+* **models:** remove underscores from helper methods ([1737ee4](https://github.com/Studio-Lemon/2fa-login-security/commit/1737ee49dbf6e3e5220fe5e94ab96ba51bcf4586))
+* **request:** rename IP accessor to get_ip ([ebc61ab](https://github.com/Studio-Lemon/2fa-login-security/commit/ebc61abd524a7373d77c759b379555cb9f53426a))
+* **settings:** remove underscores from cache helpers ([dca87e2](https://github.com/Studio-Lemon/2fa-login-security/commit/dca87e2753f63cc726ec2c54652ebbc982f5bd10))
+* update method names to remove underscores for consistency ([c66feab](https://github.com/Studio-Lemon/2fa-login-security/commit/c66feabae68dc7ba2906fd8eac9362e2efe93c53))
+* update method names to remove underscores for consistency ([5f34a26](https://github.com/Studio-Lemon/2fa-login-security/commit/5f34a26064db238668c49c89a66599bf1639d884))
+
 ## [2.0.0-beta.3](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.2...2.0.0-beta.3) (2026-09-27)
 
 
