@@ -20,7 +20,7 @@
 
 namespace TFAuthLS;
 
-use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+use YahnisElsts\PluginUpdateChecker\v6\PucFactory;
 
 if (function_exists('wp_installing') && wp_installing()) {
 	return;
