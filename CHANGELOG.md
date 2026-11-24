@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.5...2.0.0) (2026-11-24)
+
+
+### ⚙️ Miscellaneous Tasks
+
+* stop prereleasing, release stable 2.0.0 ([b48c74f](https://github.com/Studio-Lemon/2fa-login-security/commit/b48c74f6cb6b14c256887edf4f19bb8d75acdc0b))
+
 ## [2.0.0-beta.5](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.4...2.0.0-beta.5) (2026-11-24)
 
 
