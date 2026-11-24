@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-beta.5](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.4...2.0.0-beta.5) (2026-11-24)
+
+
+### 🐛 Bug Fixes
+
+* update PluginUpdateChecker to version 6 ([820d31c](https://github.com/Studio-Lemon/2fa-login-security/commit/820d31ce763d46ec775e464c34f949b31a11d3eb))
+
+
+### ⚙️ Miscellaneous Tasks
+
+* update to PUC v6 ([c1d5de4](https://github.com/Studio-Lemon/2fa-login-security/commit/c1d5de416dfefbc2bf2fbb332505df6bc0be7fd9))
+
 ## [2.0.0-beta.4](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.3...2.0.0-beta.4) (2026-09-27)
 
 
