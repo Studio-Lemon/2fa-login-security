@@ -25,10 +25,6 @@
   "include-v-in-release-name": false,
   "packages": {
     ".": {
-      "prerelease": true,
-      "prerelease-type": "beta",
-      "versioning": "prerelease",
-      "initial-version": "2.0.0-beta.1",
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         { "type": "generic", "path": "2fa-login-security.php" },
