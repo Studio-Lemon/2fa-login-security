@@ -1,0 +1,29 @@
+name: Plugin Update Checker - update checker :)
+on:
+    schedule:
+        - cron: '0 6 * * 1'
+    workflow_dispatch:
+        inputs:
+            target_version:
+                description: 'Specific tag to install (empty = latest)'
+                required: false
+                default: ''
+            draft:
+                description: 'Open the pull request as a draft'
+                type: boolean
+                required: false
+                default: false
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    puc:
+        uses: Studio-Lemon/workflows/.github/workflows/plugin-update-checker-sync.yml@main
+        with:
+            target_version: ${{ inputs.target_version }}
+            draft: ${{ inputs.draft == true }}
+            reviewers: 'Levdbas'
+        secrets:
+            pr_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
