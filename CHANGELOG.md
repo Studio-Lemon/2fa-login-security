@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0...2.1.0) (2026-11-25)
+
+
+### ⛰️ Features
+
+* add plugin update checker workflow ([ed52d8a](https://github.com/Studio-Lemon/2fa-login-security/commit/ed52d8a044d571cb18b8aa00e3fa181655568f0a))
+
 ## [2.0.0](https://github.com/Studio-Lemon/2fa-login-security/compare/2.0.0-beta.5...2.0.0) (2026-11-24)
 
 
